@@ -10,7 +10,7 @@ struct	KRFState {
 
 //#define	KRF_KITCHEN	"ksense"
 #define	KRF_KITCHEN	"2Node"
-//#define	KRF_DESK0	"desk00"
+#define	KRF_DESK0	"desk00"
 
 class KRF{
 	RF24		radio;
@@ -24,6 +24,6 @@ public:
 	void	listenTo(uint8_t idx,const char*_myAddr);
 	void 	begin();
 	void	send();
-	void 	listen(int timeout);
+	void 	listen(uint32_t timeout);
 	void	debug();
 };

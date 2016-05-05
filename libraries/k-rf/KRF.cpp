@@ -16,20 +16,21 @@ void KRF::send() {
     }
 	radio.startListening();
 }
-void KRF::listen(int timeout) {
+void KRF::listen(uint32_t timeout) {
 
 	unsigned long deadline = micros() + timeout;
 
 	while (!radio.available() && micros() < deadline) {
 		delayMicroseconds(100);
 	}
-	if(radio.available()){
+	while(radio.available()){
 //        unsigned long got_time;                                 // Grab the response, compare, and send to debugging spew
+		Serial.print(F("."));
         radio.read( &state, sizeof(state) );
 //        unsigned long end_time = micros();
 
         // Spew it
-        Serial.print(F("Sent "));
+//        Serial.print(F("Sent "));
 //        Serial.print(start_time);
 //        Serial.print(F(", Got response "));
 //        Serial.print(got_time);
@@ -50,4 +51,5 @@ void KRF::debug(){
 	Serial.print(state.pir);
 	Serial.print("	L:");
 	Serial.print(state.lum);
+	Serial.println();
 }
