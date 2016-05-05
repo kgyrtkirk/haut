@@ -1,10 +1,11 @@
 #pragma once
+#include "stdint.h"
 
 class LightMeter {
-	int adChannel;
+	uint8_t adChannel;
 
 public:
-	LightMeter(int _adChannel);
+	LightMeter(uint8_t _adChannel);
 	/* returns luminous flux estimation in lux */
 	double	light();
 };

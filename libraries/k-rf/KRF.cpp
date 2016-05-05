@@ -1,0 +1,53 @@
+#include "KRF.h"
+
+void KRF::listenTo(uint8_t idx, const char*_myAddr) {
+	radio.openReadingPipe(idx, (const uint8_t*) _myAddr);
+}
+void KRF::begin() {
+	radio.begin();
+	radio.setPALevel(RF24_PA_LOW);
+	radio.openWritingPipe((const uint8_t*) myAddr);
+	radio.startListening();
+}
+void KRF::send() {
+	radio.stopListening();
+    if (!radio.write( &state, sizeof(state) )){
+      Serial.println(F("failed"));
+    }
+	radio.startListening();
+}
+void KRF::listen(int timeout) {
+
+	unsigned long deadline = micros() + timeout;
+
+	while (!radio.available() && micros() < deadline) {
+		delayMicroseconds(100);
+	}
+	if(radio.available()){
+//        unsigned long got_time;                                 // Grab the response, compare, and send to debugging spew
+        radio.read( &state, sizeof(state) );
+//        unsigned long end_time = micros();
+
+        // Spew it
+        Serial.print(F("Sent "));
+//        Serial.print(start_time);
+//        Serial.print(F(", Got response "));
+//        Serial.print(got_time);
+//        Serial.print(F(", Round-trip delay "));
+//        Serial.print(end_time-start_time);
+//        Serial.println(F(" microseconds"));
+
+	}
+
+}
+
+void KRF::debug(){
+	Serial.print("	T:");
+	Serial.print(state.temp);
+	Serial.print("	H:");
+	Serial.print(state.hum);
+	Serial.print("	PIR:");
+	Serial.print(state.pir);
+	Serial.print("	L:");
+	Serial.print(state.lum);
+}

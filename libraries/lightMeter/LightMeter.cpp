@@ -1,11 +1,12 @@
 #include "LightMeter.h"
+#include "Arduino.h"
 
-LightMeter::LightMeter(int _adChannel) : adChannel(_adChannel){
+LightMeter::LightMeter(uint8_t _adChannel) : adChannel(_adChannel){
 
 }
 
 double LightMeter::light(){
-	int v = analogRead(0);
+	int v = analogRead(adChannel);
 	int	RawADC0=1023 - v;
 
 	double Vout = RawADC0 * 0.0048828125;
