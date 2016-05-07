@@ -28,10 +28,19 @@ byte addresses[][6] = {"1Node","2Node"};
 // Used to control whether this node is sending or receiving
 bool role = 0;
 
+
+int my_putc( char c, FILE *t) {
+  Serial.write( c );
+}
+
+
 #define	STR(A)	#A
 void setup() {
   Serial.begin(115200);
   Serial.println(F("*** KS " __FILE__));
+
+  fdevopen( &my_putc, 0);
+  printf("hello, world!\n");
   
   Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
   dht.begin();

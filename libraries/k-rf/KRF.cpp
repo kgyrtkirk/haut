@@ -5,7 +5,7 @@ void KRF::listenTo(uint8_t idx, const char*_myAddr) {
 }
 void KRF::begin() {
 	radio.begin();
-	radio.setPALevel(RF24_PA_LOW);
+	radio.setPALevel(RF24_PA_MAX);
 	radio.openWritingPipe((const uint8_t*) myAddr);
 	radio.startListening();
 }
@@ -43,7 +43,8 @@ void KRF::listen(uint32_t timeout) {
 }
 
 void KRF::debug(){
-	Serial.print("	T:");
+	radio.printDetails();
+	Serial.print("x	T:");
 	Serial.print(state.temp);
 	Serial.print("	H:");
 	Serial.print(state.hum);

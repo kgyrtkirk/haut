@@ -11,12 +11,18 @@
 
 KRF			krf(9,10,KRF_DESK0);
 
+int my_putc( char c, FILE *t) {
+  Serial.write( c );
+}
+
 #define	STR(A)	#A
 void setup() {
   Serial.begin(115200);
   Serial.println(F("*** KS " __FILE__));
-  
+  fdevopen( &my_putc, 0);
+  printf("hello, world!\n");
   krf.begin();
+  krf.listenTo(1,KRF_KITCHEN);
   Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
 //  radio.begin();
 
@@ -41,6 +47,7 @@ void setup() {
 
 void loop() {
   
+
 	krf.listen(200000);
 	krf.debug();
 	digitalWrite(2,krf.state.pir);
