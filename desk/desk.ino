@@ -45,8 +45,49 @@ void setup() {
 
 #define	pirPin	3
 
+//#include "AES.h"
+//#include "CBC.h"
+//void	aesT(){
+//	AES128	s;
+//	uint8_t	o[16];
+//	uint8_t	i[16];
+//	s.setKey(o,16);
+//	s.encryptBlock(o,i);
+////	s.decrypt(i,o,16);
+//
+//
+//
+//}
+#include "ChaCha.h"
+//#include "OMAC.h"
+void chaT(){
+	ChaCha	s;
+	uint8_t	o[16];
+	uint8_t	i[16];
+	s.setKey(o,16);
+	s.setIV(o,12);
+	s.setCounter(o,4);
+	s.encrypt(o,i,16);
+	s.decrypt(i,o,16);
+
+}
+
+#include "ChaChaPoly.h"
+void cha2T(){
+	ChaChaPoly	s;
+	uint8_t	o[16];
+	uint8_t	i[16];
+	s.setKey(o,16);
+	s.encrypt(o,i,16);
+	s.decrypt(i,o,16);
+
+}
+//
 void loop() {
-  
+
+//	randomSeed(analogRead(0));
+//	random();
+//	chaT();
 
 	krf.listen(200000);
 	krf.debug();

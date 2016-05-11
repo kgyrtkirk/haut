@@ -43,7 +43,7 @@ void KRF::listen(uint32_t timeout) {
 }
 
 void KRF::debug(){
-	radio.printDetails();
+//	radio.printDetails();
 	Serial.print("x	T:");
 	Serial.print(state.temp);
 	Serial.print("	H:");

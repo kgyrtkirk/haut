@@ -72,3 +72,6 @@ void loop() {
   Serial.print(digitalRead(DIGITAL_INPUT_SENSOR));
   Serial.println(" *F");
 }
+
+
+

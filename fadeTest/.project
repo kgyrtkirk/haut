@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>t0</name>
+	<name>fadeTest</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -39,17 +39,7 @@
 		<link>
 			<name>core/variant</name>
 			<type>2</type>
-			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/variants/mega</location>
-		</link>
-		<link>
-			<name>libraries/Crypto</name>
-			<type>2</type>
-			<location>/home/kirk/Arduino/libraries/Crypto</location>
-		</link>
-		<link>
-			<name>libraries/DHT_sensor_library</name>
-			<type>2</type>
-			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/libraries/DHT_sensor_library/1.2.3</location>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/variants/eightanaloginputs</location>
 		</link>
 		<link>
 			<name>libraries/RF24</name>
