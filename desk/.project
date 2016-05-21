@@ -42,11 +42,6 @@
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/variants/mega</location>
 		</link>
 		<link>
-			<name>libraries/Crypto</name>
-			<type>2</type>
-			<location>/home/kirk/ws/arduino/rweather/libraries/Crypto</location>
-		</link>
-		<link>
 			<name>libraries/RF24</name>
 			<type>2</type>
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/libraries/RF24/1.1.6</location>
@@ -60,6 +55,11 @@
 			<name>libraries/k-rf</name>
 			<type>2</type>
 			<location>/home/kirk/Arduino/libraries/k-rf</location>
+		</link>
+		<link>
+			<name>libraries/rweatherCrypto</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/rweatherCrypto</location>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -1,0 +1,3 @@
+[submodule "rweather"]
+	path = rweather
+	url = https://github.com/rweather/arduinolibs
