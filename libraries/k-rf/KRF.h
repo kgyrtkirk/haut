@@ -6,11 +6,13 @@ struct	KRFState {
 	uint16_t	lum:15;
 	float		temp;
 	float		hum;
+	uint8_t		strip_bright;
 };
 
 //#define	KRF_KITCHEN	"ksense"
-#define	KRF_KITCHEN	"2Node"
-#define	KRF_DESK0	"desk00"
+#define	KRF_KITCHEN_STRIP	"strip0"
+#define	KRF_KITCHEN			"2Node"
+#define	KRF_DESK0			"desk00"
 
 class KRF{
 	RF24		radio;

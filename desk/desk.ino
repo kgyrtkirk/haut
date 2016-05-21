@@ -29,7 +29,7 @@ void setup() {
   // Set the PA Level low to prevent power supply related issues since this is a
  // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
 //  radio.setPALevel(RF24_PA_LOW);
-  
+
   // Open a writing and reading pipe on each radio, with opposite addresses
 //  if(radioNumber){
 //    radio.openWritingPipe(addresses[1]);
@@ -83,17 +83,56 @@ void cha2T(){
 
 }
 //
+uint8_t lightState=0;
+uint8_t	cLS=0;
 void loop() {
 
 //	randomSeed(analogRead(0));
 //	random();
 //	chaT();
 
-	krf.listen(200000);
+	krf.listen(20000);
+	while(Serial.available()){
+		int	c=Serial.read();
+		int16_t	new_val=lightState;
+		switch(c){
+		case 'q':	new_val-=32;	break;
+		case 'w':	new_val-=4;		break;
+		case 'e':	new_val-=1;		break;
+		case 'r':	new_val+=1;	break;
+		case 't':	new_val+=4;		break;
+		case 'y':	new_val+=32;		break;
+		case 'z':	new_val=0;		break;
+		case 'x':	new_val=255;		break;
+		default:break;
+		}
+		Serial.print('!');
+		Serial.print(c);
+		if(new_val<0)
+			new_val=0;
+		if(new_val>255)
+			new_val=255;
+		lightState=new_val;
+	}
+	if(lightState>cLS){
+		cLS++;
+	}
+	if(lightState<cLS){
+		cLS--;
+	}
+	if(krf.state.pir){
+		lightState=255;
+	}else{
+		lightState=0;
+	}
+
+	krf.state.strip_bright=cLS;
+//	krf.state.hum=88;
+//	krf.state.pir=1;
+	krf.send();
 	krf.debug();
 	digitalWrite(2,krf.state.pir);
-//	delay(1000);
-  
+
 ///****************** Ping Out Role ***************************/
 //if (role == 1)  {
 //

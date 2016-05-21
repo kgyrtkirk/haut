@@ -52,5 +52,7 @@ void KRF::debug(){
 	Serial.print(state.pir);
 	Serial.print("	L:");
 	Serial.print(state.lum);
+	Serial.print("	S:");
+	Serial.print(state.strip_bright);
 	Serial.println();
 }
