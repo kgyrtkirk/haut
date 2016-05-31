@@ -10,6 +10,7 @@ KRF krf(7, 8, KRF_KITCHEN_STRIP);
 int my_putc( char c, FILE *t) {
   Serial.write( c );
 }
+//#include "bootloaders/optiboot/optiboot.h"
 
 void setup() {
 	Serial.begin(115200);
@@ -20,10 +21,9 @@ void setup() {
 //	cbi(TCCR1B, CS11);
 //	cbi(TCCR1B, CS10);
 }
-
+//#include "avr/boot.h"
 void loop() {
-
-	krf.debug();
+//	krf.debug();
 	krf.listen(20000);
 //	Serial.println(krf.state.hum)
 	analogWrite(ledPin, krf.state.strip_bright);

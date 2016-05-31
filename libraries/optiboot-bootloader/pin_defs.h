@@ -1,0 +1,1 @@
+../../external/optiboot/optiboot/bootloaders/optiboot/pin_defs.h

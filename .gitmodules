@@ -1,3 +1,6 @@
 [submodule "rweather"]
-	path = rweather
+	path = external/rweather
 	url = https://github.com/rweather/arduinolibs
+[submodule "optiboot"]
+	path = external/optiboot
+	url = git@github.com:kgyrtkirk/optiboot
