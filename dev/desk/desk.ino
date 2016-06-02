@@ -73,25 +73,35 @@ public:
 
 FwFragments<128>	fwFrags(krf.packet);
 SeqHandler			seqH;
+#include "KChannel.h"
 
+KChannelTx			channel(krf,KRF_ADDR::KITCHEN_STRIP);
 int cnt=5;
 void loop() {
 
 //	krf.debug();
 	if (krf.listen(1000)) {
-		if(seqH.confirmed(krf.packet.hdr.seqId)){
+		if(channel.isValid()){
 			// dispatch to application
-			fwFrags.ack();
+			if(channel.dispatch()){
+				fwFrags.ack();
+			}
+			Serial.println("!");
 		}
-		Serial.println("!");
 	}
 
-	if(fwFrags.takeInitiative()){
-		krf.packet.hdr.seqId=seqH.get();
-		Serial.println(krf.packet.hdr.seqId);
-		krf.packet.hdr.source=KRF_ADDR::KITCHEN_STRIP;
-		krf.sendTo(KRF_ADDR::KITCHEN_STRIP, "hello", 5);
+	if(channel.connected()) {
+		if(fwFrags.takeInitiative()){
+			channel.send();
+		}
+	}else{
+		channel.connect();
 	}
+//		krf.packet.hdr.seqId=seqH.get();
+//		Serial.println(krf.packet.hdr.seqId);
+//		krf.packet.hdr.source=KRF_ADDR::KITCHEN_STRIP;
+//		krf.sendTo(KRF_ADDR::KITCHEN_STRIP, "hello", 5);
+//	}
 ////	krf.sendTo(KRF_ADDR::KITCHEN, "hello", 5);
 //	cnt--;
 //	if(cnt==0){

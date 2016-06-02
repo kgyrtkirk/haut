@@ -1,9 +1,9 @@
-#pragma "once"
+#pragma once
 
 class SeqHandler{
 	uint32_t	seqNo;
 public:
-	SeqHandler() : seqNo(0) {}
+	SeqHandler() : seqNo(1) {}
 	uint32_t get() {
 		return seqNo;
 	}
@@ -20,5 +20,9 @@ public:
 			return true;
 		}
 		return  (_seqNo+1==seqNo);
+	}
+
+	void reset(){
+		seqNo=1;
 	}
 };

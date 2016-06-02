@@ -65,17 +65,23 @@ public:
 };
 
 
+#include "KChannel.h"
 FwFragments<128>	fwFrag(krf.packet);
 SeqHandler	seqH;
+KChannel			channel(krf, KRF_ADDR::DESK0);
 
 void loop() {
 	analogWrite(ledPin, 0);
 //	krf.debug();
-	if(krf.listen(1000)){
-		if(seqH.confirmedWithPrev(krf.packet.hdr.seqId)){
-			fwFrag.ack();
-			krf.sendTo(KRF_ADDR::DESK0,"pong",4);
+	if(krf.listen(1000)) {
+		if(channel.isValid()){
+			if(channel.dispatch()) {
+				fwFrag.ack();
+			}
+			channel.send();
 		}
+//		if(seqH.confirmedWithPrev(krf.packet.hdr.seqId)){
+//		}
 //		if(true){//krf.packet.hdr.seqId
 //		}
 //		int error=0;
