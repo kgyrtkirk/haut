@@ -1,5 +1,6 @@
 #pragma	once
 #include "RF24.h"
+#include "SeqHandler.h"
 
 struct	KRFState {
 	uint16_t	pir:1;
@@ -35,7 +36,8 @@ public:
 		struct PacketHeader _hdr;
 		uint8_t				application;
 		uint8_t				opcode;
-		uint16_t			offset;
+		uint8_t				page;
+		uint8_t				offset;
 		uint8_t				content[16];
 	} PACKED;
 
@@ -46,6 +48,7 @@ public:
 	};
 
 //	KRFState	state;
+//	static
 	Packet		packet;
 
 	KRF(uint8_t cepin,uint8_t cspin,const uint32_t _myAddr) : radio(cepin,cspin) {

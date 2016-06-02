@@ -1,5 +1,7 @@
 #include "KRF.h"
 
+//KRF::Packet		KRF::packet;
+
 void KRF::listenTo(uint8_t idx, uint32_t _myAddr) {
 	radio.openReadingPipe(idx, _myAddr);
 }
