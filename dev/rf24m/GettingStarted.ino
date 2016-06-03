@@ -20,7 +20,9 @@ void setup() {
 	krf.listenTo(1, KRF_ADDR::DESK0);
 }
 
+#include "avr/pgmspace.h"
 #define WRITE	1
+#define READ	2
 #define ERROR	4
 template<uint8_t S>
 class FwFragments{
@@ -42,7 +44,7 @@ public:
 	bool	takeInitiative(){
 		if(opcode==0)
 			return false;
-		if(opcode==WRITE){
+		if(opcode==WRITE || opcode==READ){
 			packet.fw.opcode=opcode;
 			packet.fw.page=page;
 			packet.fw.offset=offset;
@@ -52,11 +54,34 @@ public:
 	void	ack(){
 		if(krf.packet.fw.opcode==WRITE){
 			offset=krf.packet.fw.offset;
+			uint16_t	i;
+			for(i=0;i<sizeof(packet.fw.content);i++){
+				Serial.print(packet.fw.content[i]);
+				Serial.print(",");
+			}
+			Serial.println();
+
 			memcpy(content+offset,krf.packet.fw.content,sizeof(packet.fw.content));
 			Serial.print("o:");
 			Serial.println(offset);
 			if(offset+sizeof(packet.fw.content)>=S){
+				for(i=0;i<S;i++){
+					Serial.print(content[i]>>4,16);
+					Serial.print(content[i]&0xf,16);
+					Serial.print(content[i]);
+					Serial.print(",");
+				}
 				Serial.println("full!");
+			}
+		}
+		if(krf.packet.fw.opcode==READ){
+			uint16_t	o;
+			uint8_t		i;
+			o=krf.packet.fw.page;
+			o*=128;
+			o+=krf.packet.fw.offset;
+			for(i=0;i<sizeof(krf.packet.fw.content);i++){
+				krf.packet.fw.content[i]=pgm_read_byte_near(o+i);
 			}
 		}
 

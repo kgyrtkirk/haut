@@ -16,7 +16,7 @@ void KRF::begin() {
 void KRF::send() {
 	radio.stopListening();
     if (!radio.write( &packet, sizeof(packet) )){
-      Serial.println(F("failed"));
+      Serial.println(F("# failed0"));
     }
 	radio.startListening();
 	radio.setRetries(15,15);
@@ -52,11 +52,8 @@ bool KRF::listen(uint16_t timeout) {
 void KRF::sendTo(const uint32_t dest,const char*packet0,uint8_t len) {
 	int i=0;
 	radio.stopListening();
-	for(i=0;i<16;i++){
-		packet.fw.content[i]=i;
-	}
     if (!radio.write( &packet, sizeof(packet) )){
-      Serial.println(F("failed"));
+      Serial.println(F("# failed"));
     }
 	radio.startListening();
 }

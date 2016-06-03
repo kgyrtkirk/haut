@@ -79,6 +79,9 @@ public:
 	}
 
 	void send(){
+		errors++;
+		if(errors>8)
+			up=false;
 		krf.packet.hdr.seqId=seqH.get();
 		krf.packet.hdr.source=0xbdbd;
 		krf.sendTo(addr, "pong", 5);
@@ -88,7 +91,7 @@ public:
 		return up;
 	}
 	void connect(){
-		Serial.println("connect");
+		Serial.println("# connect");
 		seqH.reset();
 		errors=0;
 		krf.packet.hdr.seqId=0;
