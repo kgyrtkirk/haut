@@ -3,3 +3,7 @@ Release
 /RemoteSystemsTempFiles
 .ino.cpp
 .settings
+Debug
+Release
+tmp.*
+_*
