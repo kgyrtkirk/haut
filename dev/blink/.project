@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>rf24m</name>
+	<name>blink</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -50,16 +50,6 @@
 			<name>libraries/SPI</name>
 			<type>2</type>
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/libraries/SPI</location>
-		</link>
-		<link>
-			<name>libraries/k-rf</name>
-			<type>2</type>
-			<location>/home/kirk/Arduino/libraries/k-rf</location>
-		</link>
-		<link>
-			<name>libraries/optiboot-service</name>
-			<type>2</type>
-			<location>/home/kirk/Arduino/libraries/optiboot-service</location>
 		</link>
 	</linkedResources>
 </projectDescription>

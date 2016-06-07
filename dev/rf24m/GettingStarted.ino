@@ -2,7 +2,7 @@
 #include "KRF.h"
 
 #include "wiring_private.h"
-
+#include "optiboot-service.h"
 int ledPin = 9;    // LED connected to digital pin 9
 
 KRF krf(7, 8, KRF_ADDR::KITCHEN_STRIP);
@@ -55,23 +55,27 @@ public:
 		if(krf.packet.fw.opcode==WRITE){
 			offset=krf.packet.fw.offset;
 			uint16_t	i;
-			for(i=0;i<sizeof(packet.fw.content);i++){
-				Serial.print(packet.fw.content[i]);
-				Serial.print(",");
-			}
-			Serial.println();
+//			for(i=0;i<sizeof(packet.fw.content);i++){
+//				Serial.print(packet.fw.content[i]);
+//				Serial.print(",");
+//			}
+//			Serial.println();
 
 			memcpy(content+offset,krf.packet.fw.content,sizeof(packet.fw.content));
 			Serial.print("o:");
 			Serial.println(offset);
 			if(offset+sizeof(packet.fw.content)>=S){
-				for(i=0;i<S;i++){
-					Serial.print(content[i]>>4,16);
-					Serial.print(content[i]&0xf,16);
-					Serial.print(content[i]);
-					Serial.print(",");
-				}
+//				for(i=0;i<S;i++){
+//					Serial.print(content[i]>>4,16);
+//					Serial.print(content[i]&0xf,16);
+//					Serial.print(content[i]);
+//					Serial.print(",");
+//				}
 				Serial.println("full!");
+				uint16_t dstAddr=krf.packet.fw.page;
+				dstAddr*=128;
+				dstAddr+=OTA_FLASH_START;
+				optiboot_service('F',content,dstAddr,sizeof(content));
 			}
 		}
 		if(krf.packet.fw.opcode==READ){

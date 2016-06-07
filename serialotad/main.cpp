@@ -361,6 +361,7 @@ public:
 		      verifySpace();
 
 //		      write
+		      write_mem(memtype,buffer,address,length);
 //		      stk500service(cmd.memtype, cmd.buffer, cmd.address, cmd.length);
 
 
@@ -437,8 +438,38 @@ putch(SIGNATURE_0);
 	    }
 	}
 
+	void write_mem(uint8_t memtype,uint8_t*buf,uint16_t addrss,uint16_t length){
+		BOOST_LOG_TRIVIAL(info)<< "write@" << addrss;
+		char s[111];
+		usleep(100);
+		sp.resetCap();
+		sp.read0();
+		int l=sprintf(s,"W%d ",addrss);
+		sp.write0(s,l);
+		for(int i=0;i<length;i++){
+			int l=sprintf(s,"%02x ",buf[i]);
+			sp.write0(s,2);
+		}
+		sp.write0("\r\n",2);
+		sp.resetCap();
+
+
+		int	t=1000;
+		while(!sp.read0() && t > 0) {
+			usleep(10);
+//			t--;
+		}
+		if(sp.hasResult()){
+			string res=sp.getResult();
+			BOOST_LOG_TRIVIAL(error)<< "res: " << res;
+			BOOST_LOG_TRIVIAL(error)<< "l: " << res.length();;
+		}else{
+			BOOST_LOG_TRIVIAL(error)<< "nores!" ;
+			error=3;
+		}
+	}
 	void read_mem(uint8_t memtype,uint16_t addrss,uint16_t length){
-		BOOST_LOG_TRIVIAL(info)<< "read@" << addrss;
+		BOOST_LOG_TRIVIAL(info)<< "read@" << addrss << " :: " << length;
 		char s[111];
 		usleep(100);
 		sp.resetCap();
@@ -465,6 +496,7 @@ putch(SIGNATURE_0);
 
 		}else{
 			BOOST_LOG_TRIVIAL(error)<< "nores!" ;
+			error=3;
 		}
 
 	}

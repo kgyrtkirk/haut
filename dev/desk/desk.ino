@@ -68,6 +68,7 @@ public:
 			offset+=sizeof(packet.fw.content);
 			if(offset>=S){
 				Serial.println("# sent!");
+				Serial.println("WRITE-OK");
 				opcode=0;
 			}
 		}
@@ -96,6 +97,14 @@ public:
 		offset=0;
 		opcode=READ;
 	}
+	void setWrite(uint16_t o,uint8_t*b){
+		Serial.print("# >W @");
+		Serial.println(o);
+		page=o/S;
+		offset=0;
+		opcode=WRITE;
+		memcpy(content,b,sizeof(content));
+	}
 
 //	FwFragments()  {};
 };
@@ -107,6 +116,18 @@ SeqHandler			seqH;
 
 KChannelTx			channel(krf,KRF_ADDR::KITCHEN_STRIP);
 int cnt=5;
+
+
+uint8_t	parseB16(uint8_t c){
+	if('0'<=c && c<='9')
+		return c-'0';
+	if('a'<=c && c<='f')
+		return c-'a'+10;
+	if('A'<=c && c<='F')
+		return c-'A'+10;
+	return 0xb;
+}
+
 void loop() {
 
 //	krf.debug();
@@ -125,9 +146,29 @@ void loop() {
 			channel.send();
 		}else{
 			if(Serial.available()){
-				if(Serial.read() == 'R'){
+				char c=Serial.read();
+				if(c == 'R'){
 					uint16_t o=Serial.parseInt();
 					fwFrags.setRead(o);
+				}
+				if(c == 'W'){
+//					Serial.println("# W");
+					uint16_t o=Serial.parseInt();
+					uint8_t	b[128];
+					Serial.print("# W@");
+					Serial.println(o);
+					Serial.read(); // throw away space
+					size_t i;
+					for(i=0;i<sizeof(b);i++){
+//						Serial.print("# ...");
+//						Serial.println(i);
+						uint8_t h=parseB16(Serial.read());
+						uint8_t l=parseB16(Serial.read());
+						b[i]=(h<<4)|l;
+					}
+//					Serial.println("# setW");
+					fwFrags.setWrite(o,b);
+//					fwFrags.setWrite(o);
 				}
 			}
 		}
