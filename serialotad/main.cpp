@@ -332,7 +332,8 @@ public:
 		      RAMPZ = (newAddress & 0x8000) ? 1 : 0;
 		#endif
 		      newAddress += newAddress; // Convert from word address to byte address
-		      address=newAddress;
+		      BOOST_LOG_TRIVIAL(info)<< "offset added";
+		      address=newAddress+16128;
 //		      cmd.address = newAddress;
 		      verifySpace();
 		    }
@@ -348,6 +349,7 @@ public:
 		      uint8_t *bufPtr;
 		      uint16_t length;
 		      length = getch()<<8; length |= getch();
+		      uint16_t length0=length;
 
 //		      cmd.length=length;
 		      uint8_t memtype = getch();
@@ -361,7 +363,7 @@ public:
 		      verifySpace();
 
 //		      write
-		      write_mem(memtype,buffer,address,length);
+		      write_mem(memtype,buffer,address,length0);
 //		      stk500service(cmd.memtype, cmd.buffer, cmd.address, cmd.length);
 
 
@@ -439,22 +441,26 @@ putch(SIGNATURE_0);
 	}
 
 	void write_mem(uint8_t memtype,uint8_t*buf,uint16_t addrss,uint16_t length){
-		BOOST_LOG_TRIVIAL(info)<< "write@" << addrss;
-		char s[111];
+		BOOST_LOG_TRIVIAL(info)<< "write@" << addrss << ":" << length;
+		char s[1110];
 		usleep(100);
 		sp.resetCap();
 		sp.read0();
 		int l=sprintf(s,"W%d ",addrss);
 		sp.write0(s,l);
+		l=0;
+		usleep(1000);
 		for(int i=0;i<length;i++){
-			int l=sprintf(s,"%02x ",buf[i]);
-			sp.write0(s,2);
+			int n=sprintf(s+l,"%02x",buf[i]);
+			l+=n;
+//			sp.write0(s,2);
 		}
+		sp.write0(s,l);
 		sp.write0("\r\n",2);
 		sp.resetCap();
 
 
-		int	t=1000;
+		int	t=10000;
 		while(!sp.read0() && t > 0) {
 			usleep(10);
 //			t--;

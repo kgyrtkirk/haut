@@ -54,6 +54,9 @@ public:
 			packet.fw.opcode=opcode;
 			packet.fw.page=page;
 			packet.fw.offset=offset;
+			if(offset>=S){
+				Serial.println("# overflow");
+			}
 			memcpy(packet.fw.content,content+packet.fw.offset,sizeof(packet.fw.content));
 			return true;
 		}
@@ -70,6 +73,7 @@ public:
 				Serial.println("# sent!");
 				Serial.println("WRITE-OK");
 				opcode=0;
+				return;
 			}
 		}
 		if(opcode==READ){
@@ -157,14 +161,14 @@ void loop() {
 					uint8_t	b[128];
 					Serial.print("# W@");
 					Serial.println(o);
-					Serial.read(); // throw away space
+					Serial.find(' ');// throw away space
 					size_t i;
 					for(i=0;i<sizeof(b);i++){
-//						Serial.print("# ...");
+//						Serial.print("#");
 //						Serial.println(i);
-						uint8_t h=parseB16(Serial.read());
-						uint8_t l=parseB16(Serial.read());
-						b[i]=(h<<4)|l;
+						uint8_t	bb[2];
+						Serial.readBytes(bb,2);
+						b[i]=(parseB16(bb[0])<<4)|parseB16(bb[1]);
 					}
 //					Serial.println("# setW");
 					fwFrags.setWrite(o,b);

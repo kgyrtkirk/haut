@@ -31,7 +31,7 @@ class FwFragments{
 	uint8_t		opcode;
 	uint8_t		state;
 	uint8_t		content[S];
-
+uint8_t	written;
 	KRF::Packet	&packet;
 public:
 	FwFragments(KRF::Packet	&_p) : packet(_p) {
@@ -55,6 +55,8 @@ public:
 		if(krf.packet.fw.opcode==WRITE){
 			offset=krf.packet.fw.offset;
 			uint16_t	i;
+			if(offset==0)
+				written=0;
 //			for(i=0;i<sizeof(packet.fw.content);i++){
 //				Serial.print(packet.fw.content[i]);
 //				Serial.print(",");
@@ -72,10 +74,13 @@ public:
 //					Serial.print(",");
 //				}
 				Serial.println("full!");
+				if(!written){
+					written=1;
 				uint16_t dstAddr=krf.packet.fw.page;
 				dstAddr*=128;
-				dstAddr+=OTA_FLASH_START;
+//				dstAddr+=OTA_FLASH_START;
 				optiboot_service('F',content,dstAddr,sizeof(content));
+				}
 			}
 		}
 		if(krf.packet.fw.opcode==READ){
