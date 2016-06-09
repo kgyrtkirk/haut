@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(serialotad)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
+
 set(CMAKE_CXX_FLAGS "-Wall -O0 -Wextra -std=c++0x ${CMAKE_CXX_FLAGS}")
 add_definitions(-DBOOST_LOG_DYN_LINK)
 
