@@ -15,8 +15,8 @@ endif(CCACHE_FOUND)
 
 
 file(GLOB serialotad_SRC
-    "*.h"
-    "*.cpp"
+    "src/*.h"
+    "src/*.cpp"
 )
 
 FIND_PACKAGE( Boost 1.40 COMPONENTS program_options log log_setup iostreams REQUIRED )
