@@ -256,7 +256,7 @@ class STK500Emulator {
 
 public:
 	STK500Emulator(LocalPty &_pty,SerialPort &_sp) : pty(_pty),sp(_sp){
-
+		error=0;
 	}
 	void verifySpace(){
 		if(pty.readChar()!=' '){
