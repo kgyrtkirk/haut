@@ -22,11 +22,11 @@ using namespace std;
 
 const int BUF_SIZ =1024;
 
-class LocalPty {
+class PtyChannel {
 	int fd, fds;
 	char n[100];
 public:
-	LocalPty() {
+	PtyChannel() {
 		bpos=0;
 		struct termios tp;
 		struct termios *termios_p = &tp;
@@ -261,12 +261,12 @@ bpos=0;
 
 #include "stk500.h"
 class STK500Emulator {
-	LocalPty &pty;
+	PtyChannel &pty;
 	SerialPort &sp;
 	int	error;
 
 public:
-	STK500Emulator(LocalPty &_pty,SerialPort &_sp) : pty(_pty),sp(_sp){
+	STK500Emulator(PtyChannel &_pty,SerialPort &_sp) : pty(_pty),sp(_sp){
 		error=0;
 	}
 	void verifySpace(){
@@ -537,7 +537,7 @@ int main(int ac, char**av) {
 	}
 
 	SerialPort sp("/dev/arduino_mega_75237333536351E00181");
-	LocalPty pt1;
+	PtyChannel pt1;
 
 	STK500Emulator	stk500(pt1,sp);
 	pt1.createLink("_ota1");
