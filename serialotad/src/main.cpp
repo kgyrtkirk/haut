@@ -22,251 +22,18 @@ using namespace std;
 
 const int BUF_SIZ =1024;
 
-class PtyChannel {
-	int fd, fds;
-	char n[100];
-public:
-	PtyChannel() {
-		bpos=0;
-		struct termios tp;
-		struct termios *termios_p = &tp;
-		memset(&tp,0,sizeof(tp));
-		termios_p->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR
-				| IGNCR | ICRNL | IXON);
-//		termios_p->c_iflag |= IGNBRK;
-		termios_p->c_oflag &= ~OPOST ;
-		termios_p->c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-//		termios_p->c_lflag=0;
-		termios_p->c_cflag &= ~(CSIZE | PARENB);
-		termios_p->c_cflag |= CS8;
-//		termios_p->c_cc[VMIN]=0;
-//		termios_p->c_cc[VTIME]=1;
+#include "PtyChannel.h"
+#include "SerialChannel.h"
 
-
-		BOOST_LOG_TRIVIAL(debug)<< "allocating pty";
-		int ret = openpty(&fd, &fds, n, termios_p, 0);
-		BOOST_LOG_TRIVIAL(debug)<< "openpty: " <<ret;
-		if (ret != 0) {
-			throw std::runtime_error("openpty error");
-		}
-		BOOST_LOG_TRIVIAL(info)<< "pty allocated: "<< n;
-//		int flags = fcntl(fd, F_GETFL, 0);
-//		fcntl(fd, F_SETFL, O_NONBLOCK);
-
-
-	}
-
-	void run() {
-		printf("%s\n",n);
-		while(1) {
-			read(fd,n,1);
-			printf("%x ",n[0]);
-			fflush(stdout);
-			//		write(fd,n,1);
-			//		write(fd,"\n",1);
-			//		read(fd,n,1);
-			//		sleep(1000);
-		}
-	}
-
-	void createLink(const char*linkpath) {
-		struct stat buf;
-		if(lstat(linkpath,&buf) == 0) {
-			if((buf.st_mode & S_IFLNK) != S_IFLNK) {
-				BOOST_LOG_TRIVIAL(error)<< "exists, and is not a link: " << linkpath;
-				throw std::runtime_error("exists; wont unlink");
-			}
-			BOOST_LOG_TRIVIAL(error)<< "unlinking: " << linkpath;
-			if(0!=unlink(linkpath)) {
-				throw std::runtime_error("error; unlink");
-			}
-		}
-		BOOST_LOG_TRIVIAL(info)<< "creating link: " << linkpath;
-		if(0!=symlink(n,linkpath)) {
-			throw std::runtime_error("error; symlink");
-		}
-	}
-	char	buffer[BUF_SIZ+1];
-	int		bpos;
-
-	void fill(){
-		fd_set	fdr;
-		FD_ZERO(&fdr);
-		FD_SET(fd,&fdr);
-//		select(fd+1,)
-//		usleep(100000000);
-//		struct pollfd pofd;
-		struct timeval tv;		tv.tv_sec=0;	tv.tv_usec=10000;
-//		pofd.fd=fd;
-//		pofd.events=1;
-//		pofd.revents=0;
-//		if(poll(&pofd,1,100)<=0){
-//			return;
-//		}
-		if(select(fd+1,&fdr,NULL,NULL,&tv)<=0){
-			return;
-		}
-
-		int ret=read(fd,buffer+bpos,BUF_SIZ-bpos);
-		if(ret<0 && errno==EAGAIN){
-			return;
-		}
-		if(ret<0){
-			BOOST_LOG_TRIVIAL(info)<< "err:  " << ret;
-			throw std::runtime_error("error reading");
-		}
-		bpos+=ret;
-
-	}
-
-	bool hasChar(){
-		if(bpos==0){
-			fill();
-		}
-		return bpos>0;
-	}
-	uint8_t	readChar(){
-		if(bpos==0){
-			fill();
-		}
-		if(bpos>0){
-			uint8_t ret=buffer[0];
-			memmove(buffer,buffer+1,BUF_SIZ);
-			bpos--;
-			return ret;
-		}else{
-			return -1;
-		}
-	}
-	void writeChar(uint8_t c){
-		write(fd,&c,1);
-	}
-
-};
-
-
-class SerialPort {
-
-	char	buffer[BUF_SIZ+1];
-	char	line[BUF_SIZ+1];
-	int		bpos;
-	string	res;
-	bool	hasRes;
-
-
-	int fd; // file description for the serial port
-	void configurePort() {
-		BOOST_LOG_TRIVIAL(info)<< "configure port";
-		struct termios port_settings; // structure to store the port settings in
-
-		tcgetattr(fd, &port_settings);
-
-		cfsetispeed(&port_settings, B115200);    // set baud rates
-		cfsetospeed(&port_settings, B115200);
-
-		port_settings.c_cflag &= ~PARENB; // set no parity, stop bits, data bits
-		port_settings.c_cflag &= ~CSTOPB;
-		port_settings.c_cflag &= ~CSIZE;
-		port_settings.c_cflag |= CS8;
-
-		struct termios &toptions=port_settings;
-		/* no hardware flow control */
-		 toptions.c_cflag &= ~CRTSCTS;
-		 /* enable receiver, ignore status lines */
-		 toptions.c_cflag |= CREAD | CLOCAL;
-		 /* disable input/output flow control, disable restart chars */
-		 toptions.c_iflag &= ~(IXON | IXOFF | IXANY);
-		 /* disable canonical input, disable echo,
-		 disable visually erase chars,
-		 disable terminal-generated signals */
-		 toptions.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-		 /* disable output processing */
-		 toptions.c_oflag &= ~OPOST;
-
-		tcsetattr(fd, TCSANOW, &port_settings); // apply the settings to the port
-	}
-public:
-	SerialPort(const char*dev) {
-bpos=0;
-		BOOST_LOG_TRIVIAL(info)<< "opening serial: " << dev;
-		fd = open(dev, O_RDWR | O_NOCTTY | O_NDELAY);
-		BOOST_LOG_TRIVIAL(info)<< "putting exclusive lock onto: " << dev;
-
-		if(flock(fd,LOCK_EX | LOCK_NB) != 0){
-			BOOST_LOG_TRIVIAL(info)<< "error locking: " << dev;
-			exit(2);
-		}
-
-		if (fd == -1) {
-			throw std::runtime_error("can't open serial port");
-		} else {
-			fcntl(fd, F_SETFL, 0);
-		}
-		configurePort();
-
-	}
-
-	int	read0(){
-
-		int k=read(fd,buffer+bpos,BUF_SIZ-bpos);
-		if(k<0){
-			throw std::runtime_error("error reading?");
-		}
-		bpos+=k;
-		buffer[BUF_SIZ]=0;
-
-		char*ptr;
-		while((ptr=(char*)memchr(buffer,'\n',bpos))!=0){
-			int	l=ptr-buffer;
-			memcpy(line,buffer,ptr-buffer);
-			line[l]=0;
-			if(line[0] == '#'){
-				BOOST_LOG_TRIVIAL(debug)<< "on serial: "<<line;
-			}else{
-				hasRes=true;
-				res=line;
-				BOOST_LOG_TRIVIAL(debug)<< "serial ret: "<<line;
-			}
-			memmove(buffer,ptr+1,bpos-l);
-			bpos-=l;
-			bpos--;
-
-			if(hasRes){
-				return 1;
-			}
-		}
-		return 0;
-	}
-	void write0(char*b,int l){
-		int k=write(fd,b,l);
-		if(k<0){
-			throw std::runtime_error("error writing!");
-		}
-		if(k!=l){
-			throw std::runtime_error("short write!");
-		}
-	}
-
-	bool resetCap(){
-		hasRes=false;
-	}
-
-	bool hasResult(){
-		return hasRes;
-	}
-	string getResult(){
-		return res;
-	}
-};
 
 #include "stk500.h"
 class STK500Emulator {
 	PtyChannel &pty;
-	SerialPort &sp;
+	SerialChannel &sp;
 	int	error;
 
 public:
-	STK500Emulator(PtyChannel &_pty,SerialPort &_sp) : pty(_pty),sp(_sp){
+	STK500Emulator(PtyChannel &_pty,SerialChannel &_sp) : pty(_pty),sp(_sp){
 		error=0;
 	}
 	void verifySpace(){
@@ -536,7 +303,7 @@ int main(int ac, char**av) {
 		return 1;
 	}
 
-	SerialPort sp("/dev/arduino_mega_75237333536351E00181");
+	SerialChannel sp("/dev/arduino_mega_75237333536351E00181");
 	PtyChannel pt1;
 
 	STK500Emulator	stk500(pt1,sp);
