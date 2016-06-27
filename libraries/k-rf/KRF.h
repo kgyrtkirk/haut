@@ -10,6 +10,8 @@ struct	KRFState {
 	uint8_t		strip_bright;
 };
 
+#define SERVICE_FW	17
+
 //#define	KRF_KITCHEN	"ksense"
 //#define	KRF_KITCHEN_STRIP	"strip0"
 //#define	KRF_KITCHEN			"2Node"

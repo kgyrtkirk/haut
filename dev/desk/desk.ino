@@ -22,10 +22,10 @@ void setup() {
 
 }
 
-#define WRITE	1
-#define READ	2
-#define SWAP	3
-#define ERROR	4
+#define FW_OPCODE_WRITE	1
+#define FW_OPCODE_READ	2
+#define FW_OPCODE_SWAP	3
+#define FW_OPCODE_ERROR	4
 template<size_t S>
 class FwFragments{
 	uint8_t		page;
@@ -43,15 +43,15 @@ public:
 //		packet.fw.opcode=1;
 		page=0;
 		offset=0;
-		opcode=READ;
+		opcode=FW_OPCODE_READ;
 	};
 
 	bool	takeInitiative(){
 		if(opcode==0)
 			return false;
-		if(opcode==WRITE || opcode==READ || opcode == SWAP){
+		if(opcode==FW_OPCODE_WRITE || opcode==FW_OPCODE_READ || opcode == FW_OPCODE_SWAP){
 			uint8_t i;
-
+			packet.ahdr.application=SERVICE_FW;
 			packet.fw.opcode=opcode;
 			packet.fw.page=page;
 			packet.fw.offset=offset;
@@ -64,11 +64,11 @@ public:
 		return false;
 	}
 	void	ack(){
-		if(packet.fw.opcode == ERROR){
+		if(packet.fw.opcode == FW_OPCODE_ERROR){
 			Serial.println("error!");
 			opcode=0;
 		}
-		if(opcode==WRITE){
+		if(opcode==FW_OPCODE_WRITE){
 			offset+=sizeof(packet.fw.content);
 			if(offset>=S){
 				Serial.println("# sent!");
@@ -77,7 +77,7 @@ public:
 				return;
 			}
 		}
-		if(opcode==READ){
+		if(opcode==FW_OPCODE_READ){
 //			Serial.println(packet.fw.offset);
 			memcpy(content+packet.fw.offset,packet.fw.content,sizeof(packet.fw.content));
 			offset+=sizeof(packet.fw.content);
@@ -92,7 +92,7 @@ public:
 				opcode=0;
 			}
 		}
-		if(opcode==SWAP){
+		if(opcode==FW_OPCODE_SWAP){
 			opcode=0;
 		}
 	}
@@ -101,14 +101,14 @@ public:
 		Serial.println(o);
 		page=o/S;
 		offset=0;
-		opcode=READ;
+		opcode=FW_OPCODE_READ;
 	}
 	void setWrite(uint16_t o,uint8_t*b){
 		Serial.print("# >W @");
 		Serial.println(o);
 		page=o/S;
 		offset=0;
-		opcode=WRITE;
+		opcode=FW_OPCODE_WRITE;
 		memcpy(content,b,sizeof(content));
 	}
 	void setSwap(uint16_t o){
@@ -116,7 +116,7 @@ public:
 		Serial.println(o);
 		page=o/S;
 		offset=0;
-		opcode=SWAP;
+		opcode=FW_OPCODE_SWAP;
 	}
 
 //	FwFragments()  {};
