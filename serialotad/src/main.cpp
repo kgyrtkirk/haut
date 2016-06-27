@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <pty.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>
@@ -189,6 +190,12 @@ public:
 bpos=0;
 		BOOST_LOG_TRIVIAL(info)<< "opening serial: " << dev;
 		fd = open(dev, O_RDWR | O_NOCTTY | O_NDELAY);
+		BOOST_LOG_TRIVIAL(info)<< "putting exclusive lock onto: " << dev;
+
+		if(flock(fd,LOCK_EX | LOCK_NB) != 0){
+			BOOST_LOG_TRIVIAL(info)<< "error locking: " << dev;
+			exit(2);
+		}
 
 		if (fd == -1) {
 			throw std::runtime_error("can't open serial port");
