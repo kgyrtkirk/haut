@@ -26,8 +26,10 @@ class LocalPty {
 	char n[100];
 public:
 	LocalPty() {
+		bpos=0;
 		struct termios tp;
 		struct termios *termios_p = &tp;
+		memset(&tp,0,sizeof(tp));
 		termios_p->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR
 				| IGNCR | ICRNL | IXON);
 //		termios_p->c_iflag |= IGNBRK;
@@ -155,6 +157,8 @@ class SerialPort {
 	void configurePort() {
 		BOOST_LOG_TRIVIAL(info)<< "configure port";
 		struct termios port_settings; // structure to store the port settings in
+
+		tcgetattr(fd, &port_settings);
 
 		cfsetispeed(&port_settings, B115200);    // set baud rates
 		cfsetospeed(&port_settings, B115200);
