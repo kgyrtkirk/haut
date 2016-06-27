@@ -76,7 +76,7 @@ bpos=0;
 			memcpy(line,buffer,ptr-buffer);
 			line[l]=0;
 			if(line[0] == '#'){
-				BOOST_LOG_TRIVIAL(debug)<< "on serial: "<<line;
+				BOOST_LOG_TRIVIAL(trace)<< "on serial: "<<line;
 			}else{
 				hasRes=true;
 				res=line;

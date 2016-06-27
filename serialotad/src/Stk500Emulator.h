@@ -5,6 +5,8 @@ class STK500Emulator {
 	SerialChannel &sp;
 	int	error;
 
+	char	writtenFw[1<<16];
+	char	readFw[1<<16];
 public:
 	STK500Emulator(PtyChannel &_pty,SerialChannel &_sp) : pty(_pty),sp(_sp){
 		error=0;
@@ -28,11 +30,14 @@ public:
       }
 
 	void run(){
+		int pageWrites=0;
 		int address;
 		uint8_t	buffer[BUF_SIZ];
 		error=0;
 //		BOOST_LOG_TRIVIAL(info)<< "entering stk500 emulator";
 		  /* Forever loop: exits by causing WDT reset */
+		memset(writtenFw,0xbd,sizeof(writtenFw));
+		memset(readFw,0xbd,sizeof(readFw));
 		bool first=true;
 		  while(error==0) {
 			  sp.resetCap();
@@ -95,6 +100,7 @@ public:
 		    }
 		    /* Write memory, length is big endian and is in bytes */
 		    else if(ch == STK_PROG_PAGE) {
+		    	pageWrites++;
 		      // PROGRAM PAGE - we support flash programming only, not EEPROM
 		      uint8_t desttype;
 		      uint8_t *bufPtr;
@@ -148,7 +154,15 @@ putch(SIGNATURE_0);
 		    else if (ch == STK_LEAVE_PROGMODE) { /* 'Q' */
 		      // Adaboot no-wait mod
 //		      watchdogConfig(WATCHDOG_16MS);
-				BOOST_LOG_TRIVIAL(info)<< "leaving program mode - requested";
+				BOOST_LOG_TRIVIAL(info)<< "leaving program mode - requested writes:" << pageWrites;
+				if(pageWrites > 0 && memcmp(readFw,writtenFw,sizeof(readFw))==0){
+					BOOST_LOG_TRIVIAL(info)<< "sending switch cmd";
+					char s[128];
+					int l=sprintf(s,"SWAP\r\n");
+					sp.write0(s,l);
+					l=0;
+
+				}
 		      error=1;
 		      verifySpace();
 		    }
@@ -192,6 +206,8 @@ putch(SIGNATURE_0);
 	}
 
 	void write_mem(uint8_t memtype,uint8_t*buf,uint16_t addrss,uint16_t length){
+		memcpy(writtenFw+addrss,buf,length);
+
 		BOOST_LOG_TRIVIAL(info)<< "write@" << addrss << ":" << length;
 		char s[1110];
 		usleep(100);
@@ -248,6 +264,7 @@ putch(SIGNATURE_0);
 			uint8_t	payload[BUF_SIZ];
 			fromHex(res,payload);
 			l=128;
+			memcpy(readFw+addrss,payload,length);
 			for(int i=0;i<l;i++)
 				pty.writeChar(payload[i]);
 
