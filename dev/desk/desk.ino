@@ -22,10 +22,6 @@ void setup() {
 
 }
 
-#define FW_OPCODE_WRITE	1
-#define FW_OPCODE_READ	2
-#define FW_OPCODE_SWAP	3
-#define FW_OPCODE_ERROR	4
 template<size_t S>
 class FwFragments{
 	uint8_t		page;

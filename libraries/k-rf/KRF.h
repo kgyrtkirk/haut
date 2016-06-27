@@ -11,6 +11,10 @@ struct	KRFState {
 };
 
 #define SERVICE_FW	17
+#define FW_OPCODE_WRITE	1
+#define FW_OPCODE_READ	2
+#define FW_OPCODE_SWAP	3
+#define FW_OPCODE_ERROR	4
 
 //#define	KRF_KITCHEN	"ksense"
 //#define	KRF_KITCHEN_STRIP	"strip0"
