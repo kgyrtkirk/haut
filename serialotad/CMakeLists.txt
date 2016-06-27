@@ -3,7 +3,7 @@ project(serialotad)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 
-set(CMAKE_CXX_FLAGS "-Wall -O0 -Wextra -g -ggdb3 -std=c++0x ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-Wall -O0 -Wextra -g -ggdb3 -std=c++11 ${CMAKE_CXX_FLAGS}")
 add_definitions(-DBOOST_LOG_DYN_LINK)
 
 # Configure CCache if available
