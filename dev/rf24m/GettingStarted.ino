@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "KRF.h"
+#include "avr/wdt.h"
 
 #include "wiring_private.h"
 #include "optiboot-service.h"
@@ -12,12 +13,19 @@ int my_putc(char c, FILE *t) {
 }
 //#include "bootloaders/optiboot/optiboot.h"
 
+uint8_t	clear;
+
 void setup() {
+	clear=0;
+	wdt_disable();
+	wdt_reset();
+	wdt_enable(WDTO_8S);
 	Serial.begin(115200);
 	Serial.println(KRF_ADDR::KITCHEN_STRIP);
 	fdevopen(&my_putc, 0);
 	krf.begin();
 	krf.listenTo(1, KRF_ADDR::DESK0);
+
 }
 
 #include "avr/pgmspace.h"
@@ -27,15 +35,16 @@ void setup() {
 #define ERROR	4
 template<uint8_t S>
 class FwFragments{
+	uint16_t	newFwLength;
 	uint8_t		page;
 	uint8_t		offset;
 	uint8_t		opcode;
 	uint8_t		state;
 	uint8_t		content[S];
-uint8_t	written;
+	uint8_t	written;
 	KRF::Packet	&packet;
 public:
-	FwFragments(KRF::Packet	&_p) : packet(_p) {
+	FwFragments(KRF::Packet	&_p) : packet(_p),newFwLength(0) {
 //
 //		packet.fw.application=81;
 //		packet.fw.offset=9;
@@ -99,10 +108,17 @@ public:
 		}
 		if(krf.packet.fw.opcode==SWAP){
 			Serial.println("/\/\/ swap!");
-			uint16_t dstAddr=krf.packet.fw.page;
-			dstAddr*=128;
-			delay(100);
-			optiboot_service('X',content,dstAddr,sizeof(content));
+			newFwLength = krf.packet.fw.page;
+			newFwLength*=128;
+		}
+
+	}
+
+	void swapOpportunity(){
+		if(newFwLength){
+			delay(1000);
+			wdt_reset();
+			optiboot_service('X',content,newFwLength,sizeof(content));
 		}
 
 	}
@@ -115,10 +131,16 @@ FwFragments<128>	fwFrag(krf.packet);
 SeqHandler	seqH;
 KChannel			channel(krf, KRF_ADDR::DESK0);
 
+
 void loop() {
+	wdt_reset();
+	if(clear>=255){
+	fwFrag.swapOpportunity();
+	}
 	analogWrite(ledPin, 0);
 //	krf.debug();
 	if(krf.listen(1000)) {
+		clear=0;
 		if(channel.isValid()){
 			if(channel.dispatch()) {
 				fwFrag.ack();
@@ -140,6 +162,9 @@ void loop() {
 //		Serial.println("!");
 //}else{
 //	Serial.println("E");
+}else{
+	if(clear<255)
+		clear++;
 }
 //		Serial.println("!");
 

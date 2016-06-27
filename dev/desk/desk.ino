@@ -92,8 +92,9 @@ public:
 				opcode=0;
 			}
 		}
-
-
+		if(opcode==SWAP){
+			opcode=0;
+		}
 	}
 	void setRead(uint16_t o){
 		Serial.print("# >R @");
