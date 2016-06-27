@@ -32,9 +32,12 @@ public:
 		uint16_t	source;
 		uint32_t	seqId;
 	} PACKED;
-	struct Packet_Fw{
+	struct ApplcationHeader {
 		struct PacketHeader _hdr;
 		uint8_t				application;
+	} PACKED;
+	struct Packet_Fw{
+		struct ApplcationHeader _hdr;
 		uint8_t				opcode;
 		uint8_t				page;
 		uint8_t				offset;
@@ -42,9 +45,10 @@ public:
 	} PACKED;
 
 	union Packet {
-		struct PacketHeader hdr;
-		struct Packet_Fw	fw;
-		KRFState			state;
+		struct PacketHeader 	hdr;
+		struct ApplcationHeader ahdr;
+		struct Packet_Fw		fw;
+		KRFState				state;
 	};
 
 //	KRFState	state;
