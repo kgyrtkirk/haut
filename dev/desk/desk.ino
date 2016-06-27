@@ -24,6 +24,7 @@ void setup() {
 
 #define WRITE	1
 #define READ	2
+#define SWAP	3
 #define ERROR	4
 template<size_t S>
 class FwFragments{
@@ -48,7 +49,7 @@ public:
 	bool	takeInitiative(){
 		if(opcode==0)
 			return false;
-		if(opcode==WRITE || opcode==READ){
+		if(opcode==WRITE || opcode==READ || opcode == SWAP){
 			uint8_t i;
 
 			packet.fw.opcode=opcode;
@@ -108,6 +109,13 @@ public:
 		offset=0;
 		opcode=WRITE;
 		memcpy(content,b,sizeof(content));
+	}
+	void setSwap(uint16_t o){
+		Serial.print("# >SWAP");
+		Serial.println(o);
+		page=o/S;
+		offset=0;
+		opcode=SWAP;
 	}
 
 //	FwFragments()  {};
@@ -173,6 +181,15 @@ void loop() {
 //					Serial.println("# setW");
 					fwFrags.setWrite(o,b);
 //					fwFrags.setWrite(o);
+				}
+				if(c == 'S'){
+					Serial.print("# S?");
+					uint16_t o=Serial.parseInt();
+					Serial.println(o);
+					if(o==1234){
+						uint16_t o=Serial.parseInt();
+						fwFrags.setSwap(o);
+					}
 				}
 			}
 		}

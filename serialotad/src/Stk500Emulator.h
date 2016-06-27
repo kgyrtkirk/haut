@@ -32,6 +32,7 @@ public:
 	void run(){
 		int pageWrites=0;
 		int address;
+		int fwLength=0;
 		uint8_t	buffer[BUF_SIZ];
 		error=0;
 //		BOOST_LOG_TRIVIAL(info)<< "entering stk500 emulator";
@@ -121,6 +122,7 @@ public:
 
 //		      write
 		      write_mem(memtype,buffer,address,length0);
+		      fwLength=address+length0-16128;
 //		      stk500service(cmd.memtype, cmd.buffer, cmd.address, cmd.length);
 
 
@@ -158,7 +160,7 @@ putch(SIGNATURE_0);
 				if(pageWrites > 0 && memcmp(readFw,writtenFw,sizeof(readFw))==0){
 					BOOST_LOG_TRIVIAL(info)<< "sending switch cmd";
 					char s[128];
-					int l=sprintf(s,"SWAP\r\n");
+					int l=sprintf(s,"S 1234 %d\r\n",fwLength);
 					sp.write0(s,l);
 					l=0;
 
@@ -234,8 +236,8 @@ putch(SIGNATURE_0);
 		}
 		if(sp.hasResult()){
 			string res=sp.getResult();
-			BOOST_LOG_TRIVIAL(error)<< "res: " << res;
-			BOOST_LOG_TRIVIAL(error)<< "l: " << res.length();;
+			BOOST_LOG_TRIVIAL(debug)<< "res: " << res;
+			BOOST_LOG_TRIVIAL(debug)<< "l: " << res.length();;
 		}else{
 			BOOST_LOG_TRIVIAL(error)<< "nores!" ;
 			error=3;
@@ -258,8 +260,8 @@ putch(SIGNATURE_0);
 		}
 		if(sp.hasResult()){
 			string res=sp.getResult();
-			BOOST_LOG_TRIVIAL(error)<< "res: " << res;
-			BOOST_LOG_TRIVIAL(error)<< "l: " << res.length();;
+			BOOST_LOG_TRIVIAL(trace)<< "res: " << res;
+			BOOST_LOG_TRIVIAL(trace)<< "l: " << res.length();;
 			int	l=res.length()/2;
 			uint8_t	payload[BUF_SIZ];
 			fromHex(res,payload);

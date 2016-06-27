@@ -80,7 +80,7 @@ bpos=0;
 			}else{
 				hasRes=true;
 				res=line;
-				BOOST_LOG_TRIVIAL(debug)<< "serial ret: "<<line;
+				BOOST_LOG_TRIVIAL(trace)<< "serial ret: "<<line;
 			}
 			memmove(buffer,ptr+1,bpos-l);
 			bpos-=l;

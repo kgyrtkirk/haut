@@ -23,6 +23,7 @@ void setup() {
 #include "avr/pgmspace.h"
 #define WRITE	1
 #define READ	2
+#define SWAP	3
 #define ERROR	4
 template<uint8_t S>
 class FwFragments{
@@ -78,8 +79,11 @@ public:
 					written=1;
 				uint16_t dstAddr=krf.packet.fw.page;
 				dstAddr*=128;
-//				dstAddr+=OTA_FLASH_START;
-				optiboot_service('F',content,dstAddr,sizeof(content));
+				if(OTA_FLASH_START  <= dstAddr && dstAddr < OTA_FLASH_END){
+					optiboot_service('F',content,dstAddr,sizeof(content));
+				}else{
+					// notify?
+				}
 				}
 			}
 		}
@@ -92,6 +96,13 @@ public:
 			for(i=0;i<sizeof(krf.packet.fw.content);i++){
 				krf.packet.fw.content[i]=pgm_read_byte_near(o+i);
 			}
+		}
+		if(krf.packet.fw.opcode==SWAP){
+			Serial.println("/\/\/ swap!");
+			uint16_t dstAddr=krf.packet.fw.page;
+			dstAddr*=128;
+			delay(100);
+			optiboot_service('X',content,dstAddr,sizeof(content));
 		}
 
 	}
