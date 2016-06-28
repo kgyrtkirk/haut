@@ -24,7 +24,7 @@ struct	KRFState {
 enum KRF_ADDR {
 	DESK0=0xa01,
 	KITCHEN_STRIP,
-	KITCHEN,
+	KITCHEN_SENSOR,
 };
 
 #define PACKED __attribute__((packed))

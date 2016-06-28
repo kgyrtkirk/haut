@@ -52,6 +52,11 @@
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/libraries/SPI</location>
 		</link>
 		<link>
+			<name>libraries/haut-core</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/haut-core</location>
+		</link>
+		<link>
 			<name>libraries/k-rf</name>
 			<type>2</type>
 			<location>/home/kirk/Arduino/libraries/k-rf</location>

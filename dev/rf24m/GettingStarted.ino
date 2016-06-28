@@ -6,6 +6,7 @@
 int ledPin = 9;    // LED connected to digital pin 9
 
 KRF krf(7, 8, KRF_ADDR::KITCHEN_STRIP);
+HautCore hc(krf);
 
 int my_putc(char c, FILE *t) {
 	Serial.write(c);

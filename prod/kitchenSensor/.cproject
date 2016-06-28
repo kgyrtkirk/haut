@@ -24,10 +24,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/SPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/SPI/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/RF24}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/RF24/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/lightMeter}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/DHT_sensor_library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/haut-core}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.596424792" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -38,10 +39,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/SPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/SPI/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/RF24}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/RF24/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/lightMeter}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/DHT_sensor_library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenSensor/libraries/haut-core}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.2001996480" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

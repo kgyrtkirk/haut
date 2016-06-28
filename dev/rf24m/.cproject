@@ -26,6 +26,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/RF24}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/haut-core}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.939700742" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -38,6 +39,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/RF24}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rf24m/libraries/haut-core}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.552053772" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

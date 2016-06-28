@@ -13,7 +13,7 @@
 
 LightMeter	lm(0);
 DHT 		dht(9, DHT22);
-KRF			krf(7,8,KRF_KITCHEN);
+KRF			krf(7,8,KITCHEN_SENSOR);
 
 /****************** User Config ***************************/
 /***      Set this radio as radio number 0 or 1         ***/
@@ -70,10 +70,10 @@ void setup() {
 
 void loop() {
   
-	krf.state.pir=	digitalRead(pirPin);
-	krf.state.hum= dht.readHumidity();
-	krf.state.temp=dht.readTemperature();
-	krf.state.lum=lm.light();
+	krf.packet.state.pir=	digitalRead(pirPin);
+	krf.packet.state.hum= dht.readHumidity();
+	krf.packet.state.temp=dht.readTemperature();
+	krf.packet.state.lum=lm.light();
 
 	  Serial.println(F("***  " __FILE__));
 	krf.send();
