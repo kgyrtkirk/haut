@@ -122,7 +122,7 @@ FwFragments<128>	fwFrags(krf.packet);
 SeqHandler			seqH;
 #include "KChannel.h"
 
-KChannelTx			channel(krf,KRF_ADDR::KITCHEN_STRIP);
+KChannelTx			channel_fw(krf,KRF_ADDR::KITCHEN_STRIP);
 int cnt=5;
 
 
@@ -140,18 +140,18 @@ void loop() {
 
 //	krf.debug();
 	if (krf.listen(1000)) {
-		if(channel.isValid()){
+		if(channel_fw.isValid()){
 			// dispatch to application
-			if(channel.dispatch()){
+			if(channel_fw.dispatch()){
 				fwFrags.ack();
 			}
 			Serial.println("# !");
 		}
 	}
 
-	if(channel.connected()) {
+	if(channel_fw.connected()) {
 		if(fwFrags.takeInitiative()){
-			channel.send();
+			channel_fw.send();
 		}else{
 			if(Serial.available()){
 				char c=Serial.read();
@@ -190,7 +190,7 @@ void loop() {
 			}
 		}
 	}else{
-		channel.connect();
+		channel_fw.connect();
 	}
 //		krf.packet.hdr.seqId=seqH.get();
 //		Serial.println(krf.packet.hdr.seqId);

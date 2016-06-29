@@ -125,7 +125,7 @@ FwFragments<128>	fwFrags(krf.packet);
 SeqHandler			seqH;
 #include "KChannel.h"
 
-KChannelTx			channel(krf,KRF_ADDR::KITCHEN_STRIP);
+KChannelTx			channel_fw(krf,KRF_ADDR::KITCHEN_STRIP);
 int cnt=5;
 
 
@@ -143,7 +143,7 @@ void loop() {
 
 //	krf.debug();
 	if (krf.listen(1000)) {
-		channel.service_rx(SERVICE_FW,fwFrags);
+		channel_fw.service_rx(SERVICE_FW,fwFrags);
 //		if(channel.isValid()){
 //			// dispatch to application
 //			if(channel.dispatch()){
@@ -190,7 +190,7 @@ void loop() {
 			}
 		}
 	}
-	channel.service_tx(SERVICE_FW,fwFrags);
+	channel_fw.service_tx(SERVICE_FW,fwFrags);
 //	if(channel.connected()) {
 //		if(fwFrags.takeInitiative()){
 //			channel.send();
