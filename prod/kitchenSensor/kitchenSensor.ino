@@ -140,9 +140,12 @@ void loop() {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
 	}
-	if(freeWheel==0) {
-		// at every ~250ms try to send it
-		channel_kitchen.service_tx(SERVICE_KITCHEN, kss);
+//	else
+	{
+		if(freeWheel==0) {
+			// at every ~250ms try to send it
+			channel_kitchen.service_tx(SERVICE_KITCHEN, kss);
+		}
 	}
 //		if (ch2.connected()) {
 //

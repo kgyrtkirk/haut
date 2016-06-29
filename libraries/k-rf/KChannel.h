@@ -56,10 +56,13 @@ public:
 	// XXX: code duplication
 	template<class T>
 	void service_rx(uint8_t serviceId,T&service){
+		if(krf.packet.ahdr.application != serviceId){
+			return;
+		}
 		if(isValid()){
-//			Serial.println("Valid");
+			Serial.println("Valid");
 			if(dispatch()) {
-				if(krf.packet.ahdr.application == serviceId)
+				Serial.println("Disp!");
 					service.ack();
 //				else
 //					channel.reset();
@@ -125,7 +128,7 @@ public:
 	template<class T>
 	inline void service_rx(uint8_t serviceId,T&service){
 		if(isValid()){
-//			Serial.println("Valid");
+			Serial.println("Valid");
 			if(dispatch()) {
 				if(krf.packet.ahdr.application == serviceId)
 					service.ack();
