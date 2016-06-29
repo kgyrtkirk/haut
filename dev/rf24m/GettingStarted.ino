@@ -44,18 +44,18 @@ void loop() {
 	if(clear>=255){
 	fwFrag.swapOpportunity();
 	}
-	analogWrite(ledPin, 0);
+//	analogWrite(ledPin, 0);
 //	krf.debug();
 	if(krf.listen(1000)) {
 		clear=0;
+//		channel.service(SERVICE_FW,fwFrag);
 		if(channel.isValid()){
 			Serial.println("Valid");
 			if(channel.dispatch()) {
-				switch(krf.packet.ahdr.application){
-				case SERVICE_FW:
+				if(krf.packet.ahdr.application == SERVICE_FW)
 					fwFrag.ack();
-					break;
-				}
+//				else
+//					channel.reset();
 			}
 			channel.send();
 		}
