@@ -32,11 +32,11 @@ void setup() {
 
 #include "KChannel.h"
 FlashUpdateService<128>	fwFrag(krf.packet);
-SeqHandler	seqH;
 KChannel			channel(krf, KRF_ADDR::DESK0);
 
 
 void loop() {
+
 	wdt_reset();
 	if(clear>=255){
 	fwFrag.swapOpportunity();

@@ -183,8 +183,8 @@ void loop() {
 					Serial.print("# S?");
 					uint16_t o=Serial.parseInt();
 					Serial.println(o);
-					if(o==1234){
-						uint16_t o=Serial.parseInt();
+					if (o == 1234) {
+						uint16_t o = Serial.parseInt();
 						fwFrags.setSwap(o);
 					}
 				}
