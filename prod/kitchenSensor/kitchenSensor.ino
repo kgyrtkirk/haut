@@ -11,76 +11,6 @@
 #include <LightMeter.h>
 #include <KRF.h>
 
-LightMeter	lm(0);
-DHT 		dht(9, DHT22);
-KRF			krf(7,8,KITCHEN_SENSOR);
-
-/****************** User Config ***************************/
-/***      Set this radio as radio number 0 or 1         ***/
-bool radioNumber = 1;
-
-/* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 7 & 8 */
-/**********************************************************/
-
-
-byte addresses[][6] = {"1Node","2Node"};
-
-// Used to control whether this node is sending or receiving
-bool role = 0;
-
-
-
-
-#define	STR(A)	#A
-void setup1() {
-  Serial.begin(115200);
-  Serial.println(F("*** KS " __FILE__));
-
-  fdevopen( &my_putc, 0);
-  printf("hello, world!\n");
-  
-  Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
-  dht.begin();
-  Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
-  krf.begin();
-  Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
-//  radio.begin();
-
-  // Set the PA Level low to prevent power supply related issues since this is a
- // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
-//  radio.setPALevel(RF24_PA_LOW);
-  
-  // Open a writing and reading pipe on each radio, with opposite addresses
-//  if(radioNumber){
-//    radio.openWritingPipe(addresses[1]);
-//    radio.openReadingPipe(1,addresses[0]);
-//  }else{
-//    radio.openWritingPipe(addresses[0]);
-//    radio.openReadingPipe(1,addresses[1]);
-//  }
-//
-//  // Start the radio listening for data
-//  radio.startListening();
-}
-
-#define	pirPin	3
-
-void loop1() {
-  
-	krf.packet.state.pir=	digitalRead(pirPin);
-	krf.packet.state.hum= dht.readHumidity();
-	krf.packet.state.temp=dht.readTemperature();
-	krf.packet.state.lum=lm.light();
-
-	  Serial.println(F("***  " __FILE__));
-	krf.send();
-	krf.debug();
-	delay(1000);
-  
-
-} // Loop
-
-
 #include "HautCore.h"
 #include "Arduino.h"
 #include "KRF.h"
@@ -88,7 +18,13 @@ void loop1() {
 #include "KChannel.h"
 #include "wiring_private.h"
 
-int ledPin = 9;    // LED connected to digital pin 9
+#define	pirPin	3
+
+LightMeter	lm(0);
+DHT 		dht(9, DHT22);
+KRF			krf(7,8,KITCHEN_SENSOR);
+
+
 
 HautCore hc(krf);
 
@@ -118,7 +54,7 @@ FlashUpdateService<128> fwFrag(krf.packet);
 KitchenSensorService	kss;
 
 KChannel channel_fw(krf, KRF_ADDR::DESK0);
-KChannelTx channel_kitchen(krf, KRF_ADDR::DESK1);
+KChannelTx channel_kitchen(krf, KRF_ADDR::KITCHEN_STRIP);
 
 
 void setup() {
@@ -128,7 +64,7 @@ void setup() {
 	fdevopen(&my_putc, 0);
 	krf.begin();
 	krf.listenTo(1, KRF_ADDR::DESK0);
-	krf.listenTo(2, KRF_ADDR::DESK1);
+	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
 	kss.init();
 }
 
