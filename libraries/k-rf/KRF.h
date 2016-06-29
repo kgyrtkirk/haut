@@ -11,6 +11,7 @@ struct	KRFState {
 };
 
 #define SERVICE_FW	17
+#define SERVICE_KITCHEN	1
 #define FW_OPCODE_WRITE	1
 #define FW_OPCODE_READ	2
 #define FW_OPCODE_SWAP	3
@@ -25,6 +26,7 @@ enum KRF_ADDR {
 	DESK0=0xa01,
 	KITCHEN_STRIP,
 	KITCHEN_SENSOR,
+	DESK1
 };
 
 #define PACKED __attribute__((packed))
@@ -49,11 +51,17 @@ public:
 		uint8_t				offset;
 		uint8_t				content[16];
 	} PACKED;
+	struct Packet_Kitchen	{
+		struct ApplcationHeader _hdr;
+		KRFState				state;
+	} PACKED;
 
 	union Packet {
 		struct PacketHeader 	hdr;
 		struct ApplcationHeader ahdr;
 		struct Packet_Fw		fw;
+		struct Packet_Kitchen	kitchen;
+		// FIXME: remove
 		KRFState				state;
 	};
 

@@ -140,6 +140,7 @@ public:
 
 	template<class T>
 	inline void service_tx(uint8_t serviceId, T&service) {
+		krf.packet.ahdr.application=serviceId;
 		if (connected()) {
 			if (service.takeInitiative()) {
 				send();

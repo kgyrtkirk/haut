@@ -92,24 +92,44 @@ int ledPin = 9;    // LED connected to digital pin 9
 
 HautCore hc(krf);
 
+class KitchenSensorService {
+public:
+	void init(){
+		dht.begin();
+	}
+	void ack(){
+	}
+	bool takeInitiative(){
+		krf.packet.kitchen.state.pir=	digitalRead(pirPin);
+		krf.packet.kitchen.state.hum= dht.readHumidity();
+		krf.packet.kitchen.state.temp=dht.readTemperature();
+		krf.packet.kitchen.state.lum=lm.light();
+		return true;
+	}
+
+};
+
 int my_putc(char c, FILE *t) {
 	Serial.write(c);
 }
 //#include "bootloaders/optiboot/optiboot.h"
 
 FlashUpdateService<128> fwFrag(krf.packet);
+KitchenSensorService	kss;
+
 KChannel channel_fw(krf, KRF_ADDR::DESK0);
-KChannelTx ch2(krf, KRF_ADDR::KITCHEN_SENSOR);
+KChannelTx channel_kitchen(krf, KRF_ADDR::DESK1);
 
 
 void setup() {
 	fwFrag.init();
 	Serial.begin(115200);
-	Serial.println(KRF_ADDR::KITCHEN_STRIP);
+	Serial.println("# this is: " __FILE__);
 	fdevopen(&my_putc, 0);
 	krf.begin();
 	krf.listenTo(1, KRF_ADDR::DESK0);
-
+	krf.listenTo(2, KRF_ADDR::DESK1);
+	kss.init();
 }
 
 
@@ -118,14 +138,18 @@ void loop() {
 	fwFrag.swapOpportunity();
 	if (krf.listen(1000)) {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
-	} else {
-		if (ch2.connected()) {
-
-		} else {
-			if (!freeWheel) {
-				ch2.connect();
-			}
-		}
-		freeWheel++;
+		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
 	}
+	if(freeWheel==0) {
+		// at every ~250ms try to send it
+		channel_kitchen.service_tx(SERVICE_KITCHEN, kss);
+	}
+//		if (ch2.connected()) {
+//
+//		} else {
+//			if (!freeWheel) {
+//				ch2.connect();
+//			}
+//		}
+		freeWheel++;
 }
