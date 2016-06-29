@@ -141,13 +141,14 @@ void loop() {
 
 //	krf.debug();
 	if (krf.listen(1000)) {
-		if(channel.isValid()){
-			// dispatch to application
-			if(channel.dispatch()){
-				fwFrags.ack();
-			}
-			Serial.println("# !");
-		}
+		channel.service_rx(SERVICE_FW,fwFrags);
+//		if(channel.isValid()){
+//			// dispatch to application
+//			if(channel.dispatch()){
+//				fwFrags.ack();
+//			}
+//			Serial.println("# !");
+//		}
 	}
 
 	if(channel.connected()) {

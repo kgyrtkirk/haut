@@ -48,17 +48,17 @@ void loop() {
 //	krf.debug();
 	if(krf.listen(1000)) {
 		clear=0;
-//		channel.service(SERVICE_FW,fwFrag);
-		if(channel.isValid()){
-			Serial.println("Valid");
-			if(channel.dispatch()) {
-				if(krf.packet.ahdr.application == SERVICE_FW)
-					fwFrag.ack();
-//				else
-//					channel.reset();
-			}
-			channel.send();
-		}
+		channel.service_rx(SERVICE_FW,fwFrag);
+//		if(channel.isValid()){
+//			Serial.println("Valid");
+//			if(channel.dispatch()) {
+//				if(krf.packet.ahdr.application == SERVICE_FW)
+//					fwFrag.ack();
+////				else
+////					channel.reset();
+//			}
+//			channel.send();
+//		}
 //		if(seqH.confirmedWithPrev(krf.packet.hdr.seqId)){
 //		}
 //		if(true){//krf.packet.hdr.seqId

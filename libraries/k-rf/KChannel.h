@@ -52,6 +52,21 @@ public:
 //
 //		krf.sendTo(KRF_ADDR::DESK0,"pong",4);
 	}
+
+	// XXX: code duplication
+	template<class T>
+	void service_rx(uint8_t serviceId,T&service){
+		if(isValid()){
+//			Serial.println("Valid");
+			if(dispatch()) {
+				if(krf.packet.ahdr.application == serviceId)
+					service.ack();
+//				else
+//					channel.reset();
+			}
+			send();
+		}
+	}
 };
 
 class KChannelTx : public KChannel{
@@ -104,6 +119,22 @@ public:
 		krf.packet.hdr.source=0xbdbd;
 		krf.sendTo(addr, "pong", 5);
 
+	}
+
+	// XXX: code duplication
+	template<class T>
+	inline void service_rx(uint8_t serviceId,T&service){
+		if(isValid()){
+//			Serial.println("Valid");
+			if(dispatch()) {
+				if(krf.packet.ahdr.application == serviceId)
+					service.ack();
+//				else
+//					channel.reset();
+			}
+//			Serial.println("# !");
+///////////			send();
+		}
 	}
 
 };
