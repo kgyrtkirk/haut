@@ -137,4 +137,17 @@ public:
 		}
 	}
 
+
+	template<class T>
+	inline void service_tx(uint8_t serviceId, T&service) {
+		if (connected()) {
+			if (service.takeInitiative()) {
+				send();
+			} else {
+			}
+		} else {
+			connect();
+		}
+	}
+
 };
