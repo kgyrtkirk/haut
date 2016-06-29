@@ -11,10 +11,11 @@ int my_putc(char c, FILE *t) {
 #define	STR(A)	#A
 void setup() {
 	Serial.begin(115200);
-	Serial.println(F("# " __FILE__));
+	Serial.println(F("*** KS " __FILE__));
 	fdevopen(&my_putc, 0);
+	Serial.println("hello, world!");
 	krf.begin();
-	krf.listenTo(1, KRF_ADDR::KITCHEN);
+//	krf.listenTo(1, KRF_ADDR::KITCHEN);
 	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
 //	Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
 	Serial.println("READY");
@@ -40,9 +41,11 @@ public:
 		offset=0;
 		opcode=FW_OPCODE_READ;
 	};
-
+	bool	idle(){
+		return opcode==0;
+	}
 	bool	takeInitiative(){
-		if(opcode==0)
+		if(idle())
 			return false;
 		if(opcode==FW_OPCODE_WRITE || opcode==FW_OPCODE_READ || opcode == FW_OPCODE_SWAP){
 			uint8_t i;
@@ -140,68 +143,53 @@ void loop() {
 
 //	krf.debug();
 	if (krf.listen(1000)) {
-		if(channel_fw.isValid()){
-			// dispatch to application
-			if(channel_fw.dispatch()){
-				fwFrags.ack();
-			}
-			Serial.println("# !");
-		}
+		channel_fw.service_rx(SERVICE_FW,fwFrags);
+//		if(channel.isValid()){
+//			// dispatch to application
+//			if(channel.dispatch()){
+//				fwFrags.ack();
+//			}
+//			Serial.println("# !");
+//		}
 	}
 
-	if(channel_fw.connected()) {
-		if(fwFrags.takeInitiative()){
-			channel_fw.send();
-		}else{
-			if(Serial.available()){
-				char c=Serial.read();
-				if(c == 'R'){
-					uint16_t o=Serial.parseInt();
-					fwFrags.setRead(o);
-				}
-				if(c == 'W'){
+	if(fwFrags.idle()){
+		if(Serial.available()){
+			char c=Serial.read();
+			if(c == 'R'){
+				uint16_t o=Serial.parseInt();
+				fwFrags.setRead(o);
+			}
+			if(c == 'W'){
 //					Serial.println("# W");
-					uint16_t o=Serial.parseInt();
-					uint8_t	b[128];
-					Serial.print("# W@");
-					Serial.println(o);
-					Serial.find(' ');// throw away space
-					size_t i;
-					for(i=0;i<sizeof(b);i++){
+				uint16_t o=Serial.parseInt();
+				uint8_t	b[128];
+				Serial.print("# W@");
+				Serial.println(o);
+				Serial.find(' ');// throw away space
+				size_t i;
+				for(i=0;i<sizeof(b);i++){
 //						Serial.print("#");
 //						Serial.println(i);
-						uint8_t	bb[2];
-						Serial.readBytes(bb,2);
-						b[i]=(parseB16(bb[0])<<4)|parseB16(bb[1]);
-					}
-//					Serial.println("# setW");
-					fwFrags.setWrite(o,b);
-//					fwFrags.setWrite(o);
+					uint8_t	bb[2];
+					Serial.readBytes(bb,2);
+					b[i]=(parseB16(bb[0])<<4)|parseB16(bb[1]);
 				}
-				if(c == 'S'){
-					Serial.print("# S?");
-					uint16_t o=Serial.parseInt();
-					Serial.println(o);
-					if(o==1234){
-						uint16_t o=Serial.parseInt();
-						fwFrags.setSwap(o);
-					}
+//					Serial.println("# setW");
+				fwFrags.setWrite(o,b);
+//					fwFrags.setWrite(o);
+			}
+			if(c == 'S'){
+				Serial.print("# S?");
+				uint16_t o=Serial.parseInt();
+				Serial.println(o);
+				if (o == 1234) {
+					uint16_t o = Serial.parseInt();
+					fwFrags.setSwap(o);
 				}
 			}
 		}
-	}else{
-		channel_fw.connect();
 	}
-//		krf.packet.hdr.seqId=seqH.get();
-//		Serial.println(krf.packet.hdr.seqId);
-//		krf.packet.hdr.source=KRF_ADDR::KITCHEN_STRIP;
-//		krf.sendTo(KRF_ADDR::KITCHEN_STRIP, "hello", 5);
-//	}
-////	krf.sendTo(KRF_ADDR::KITCHEN, "hello", 5);
-//	cnt--;
-//	if(cnt==0){
-//		cnt=30;
-//	}
-
+	channel_fw.service_tx(SERVICE_FW,fwFrags);
 }
 
