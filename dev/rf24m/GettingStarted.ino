@@ -20,7 +20,7 @@ void setup() {
 	clear=0;
 	wdt_disable();
 	wdt_reset();
-	wdt_enable(WDTO_8S);
+	wdt_enable(WDTO_1S);
 	Serial.begin(115200);
 	Serial.println(KRF_ADDR::KITCHEN_STRIP);
 	fdevopen(&my_putc, 0);
@@ -41,39 +41,15 @@ uint8_t	freeWheel=0;
 void loop() {
 
 	wdt_reset();
-	if(clear>=255){
+//	if(clear>=255){
+//		micros();
 	fwFrag.swapOpportunity();
-	}
+//	}
 //	analogWrite(ledPin, 0);
 //	krf.debug();
 	if(krf.listen(1000)) {
 		clear=0;
 		channel.service_rx(SERVICE_FW,fwFrag);
-//		if(channel.isValid()){
-//			Serial.println("Valid");
-//			if(channel.dispatch()) {
-//				if(krf.packet.ahdr.application == SERVICE_FW)
-//					fwFrag.ack();
-////				else
-////					channel.reset();
-//			}
-//			channel.send();
-//		}
-//		if(seqH.confirmedWithPrev(krf.packet.hdr.seqId)){
-//		}
-//		if(true){//krf.packet.hdr.seqId
-//		}
-//		int error=0;
-//		int i;
-//		for(i=0;i<16;i++){
-//			if(krf.packet.fw.content[i]==i){
-//				error++;
-//			}
-//		}
-//if(error==0){
-//		Serial.println("!");
-//}else{
-//	Serial.println("E");
 }else{
 	if(ch2.connected()){
 

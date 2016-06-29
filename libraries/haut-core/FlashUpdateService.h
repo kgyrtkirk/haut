@@ -16,6 +16,8 @@ class FlashUpdateService{
 	uint8_t		content[S];
 	uint8_t	written;
 	KRF::Packet	&packet;
+	unsigned long int swapTime;
+
 public:
 	FlashUpdateService(KRF::Packet	&_p) : packet(_p),newFwLength(0) {
 	};
@@ -57,12 +59,13 @@ public:
 			Serial.println("/\/\/ swap!");
 			newFwLength = packet.fw.page;
 			newFwLength*=128;
+			swapTime=millis()+1000;
 		}
 
 	}
 
 	void swapOpportunity(){
-		if(newFwLength){
+		if(newFwLength && swapTime < millis()){
 			delay(1000);
 			wdt_reset();
 			optiboot_service('X',content,newFwLength,sizeof(content));
