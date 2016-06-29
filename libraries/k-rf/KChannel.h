@@ -22,6 +22,9 @@ public:
 	}
 
 	bool isValid(){
+		if(krf.packet.hdr.source != krf.myAddr){
+			return false;
+		}
 		if(krf.packet.hdr.seqId == 0)
 			return true;
 		if(krf.packet.hdr.seqId == 1) {
@@ -44,7 +47,7 @@ public:
 		if(krf.packet.hdr.seqId==0) {
 			// send IV
 		}
-		krf.packet.hdr.source=0xbdbd;
+		krf.packet.hdr.source=addr;
 		krf.sendTo(addr, "pong", 5);
 //
 //		krf.sendTo(KRF_ADDR::DESK0,"pong",4);
@@ -58,6 +61,9 @@ public:
 	}
 
 	bool isValid(){
+		if(krf.packet.hdr.source != krf.myAddr){
+			return false;
+		}
 		if(krf.packet.hdr.seqId == 0){
 			// load IV
 			up=true;

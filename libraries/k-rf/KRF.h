@@ -31,8 +31,8 @@ enum KRF_ADDR {
 
 class KRF{
 	RF24		radio;
-	uint32_t	myAddr;
 public:
+	uint32_t	myAddr;
 
 	struct PacketHeader {
 		uint16_t	source;

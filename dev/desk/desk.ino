@@ -15,7 +15,7 @@ void setup() {
 	fdevopen(&my_putc, 0);
 	Serial.println("hello, world!");
 	krf.begin();
-	krf.listenTo(1, KRF_ADDR::KITCHEN);
+//	krf.listenTo(1, KRF_ADDR::KITCHEN);
 	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
 //	Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
 	Serial.println("READY");

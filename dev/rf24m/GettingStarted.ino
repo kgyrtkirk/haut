@@ -1,3 +1,4 @@
+#include "HautCore.h"
 #include "Arduino.h"
 #include "KRF.h"
 #include "FlashUpdateService.h"
@@ -33,8 +34,10 @@ void setup() {
 #include "KChannel.h"
 FlashUpdateService<128>	fwFrag(krf.packet);
 KChannel			channel(krf, KRF_ADDR::DESK0);
+KChannelTx			ch2(krf, KRF_ADDR::KITCHEN_SENSOR);
 
 
+uint8_t	freeWheel=0;
 void loop() {
 
 	wdt_reset();
@@ -46,6 +49,7 @@ void loop() {
 	if(krf.listen(1000)) {
 		clear=0;
 		if(channel.isValid()){
+			Serial.println("Valid");
 			if(channel.dispatch()) {
 				switch(krf.packet.ahdr.application){
 				case SERVICE_FW:
@@ -71,8 +75,16 @@ void loop() {
 //}else{
 //	Serial.println("E");
 }else{
+	if(ch2.connected()){
+
+	}else{
+		if(!freeWheel) {
+			ch2.connect();
+		}
+	}
 	if(clear<255)
 		clear++;
+	freeWheel++;
 }
 //		Serial.println("!");
 
