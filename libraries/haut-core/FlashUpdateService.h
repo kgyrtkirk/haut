@@ -21,7 +21,11 @@ class FlashUpdateService{
 public:
 	FlashUpdateService(KRF::Packet	&_p) : packet(_p),newFwLength(0) {
 	};
-
+	void init(){
+		wdt_disable();
+		wdt_reset();
+		wdt_enable(WDTO_1S);
+	}
 	void	ack(){
 		if(packet.fw.opcode==FW_OPCODE_WRITE){
 			offset=packet.fw.offset;
@@ -65,6 +69,7 @@ public:
 	}
 
 	void swapOpportunity(){
+		wdt_reset();
 		if(newFwLength && swapTime < millis()){
 			delay(1000);
 			wdt_reset();
