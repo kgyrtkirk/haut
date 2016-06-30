@@ -55,6 +55,7 @@ KitchenSensorService	kss;
 
 KChannel channel_fw(krf, KRF_ADDR::DESK0);
 KChannelTx channel_kitchen(krf, KRF_ADDR::KITCHEN_STRIP);
+KChannelTx channel_debug(krf, KRF_ADDR::DESK1);
 
 
 void setup() {
@@ -64,7 +65,9 @@ void setup() {
 	fdevopen(&my_putc, 0);
 	krf.begin();
 	krf.listenTo(1, KRF_ADDR::DESK0);
+
 	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
+	krf.listenTo(3, KRF_ADDR::DESK1);
 	kss.init();
 }
 
@@ -75,12 +78,14 @@ void loop() {
 	if (krf.listen(1000)) {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
+		channel_debug.service_rx(SERVICE_KITCHEN, kss);
 	}
 //	else
 	{
 		if(freeWheel==0) {
 			// at every ~250ms try to send it
 			channel_kitchen.service_tx(SERVICE_KITCHEN, kss);
+			channel_debug.service_tx(SERVICE_KITCHEN, kss);
 		}
 	}
 //		if (ch2.connected()) {
