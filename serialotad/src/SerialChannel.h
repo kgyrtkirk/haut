@@ -16,8 +16,8 @@ class SerialChannel {
 
 		tcgetattr(fd, &port_settings);
 
-		cfsetispeed(&port_settings, B115200);    // set baud rates
-		cfsetospeed(&port_settings, B115200);
+		cfsetispeed(&port_settings, B19200);    // set baud rates
+		cfsetospeed(&port_settings, B19200);
 
 		port_settings.c_cflag &= ~PARENB; // set no parity, stop bits, data bits
 		port_settings.c_cflag &= ~CSTOPB;
@@ -94,6 +94,7 @@ bpos=0;
 	}
 	void write0(char*b,int l){
 		int k=write(fd,b,l);
+		fsync(fd);
 		if(k<0){
 			throw std::runtime_error("error writing!");
 		}

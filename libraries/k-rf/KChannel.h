@@ -72,6 +72,7 @@ public:
 	}
 };
 
+#define MAX_ERRORS 8
 class KChannelTx : public KChannel{
 	SeqHandler	seqH;
 public:
@@ -104,7 +105,7 @@ public:
 
 	void send(){
 		errors++;
-		if(errors>8)
+		if(errors>MAX_ERRORS)
 			up=false;
 		krf.packet.hdr.seqId=seqH.get();
 		krf.packet.hdr.source=0xbdbd;

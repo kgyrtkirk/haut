@@ -28,7 +28,7 @@ bool KRF::listen(uint16_t timeout) {
 	while (!radio.available() && micros() < deadline) {
 		delayMicroseconds(100);
 	}
-	while(radio.available()){
+	if(radio.available()){
 //        unsigned long got_time;                                 // Grab the response, compare, and send to debugging spew
 //		Serial.print(F("."));
         radio.read( &packet, sizeof(packet) );

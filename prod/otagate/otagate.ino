@@ -13,7 +13,7 @@ const int OTA_TARGET = KRF_ADDR::KITCHEN_SENSOR;
 
 #define	STR(A)	#A
 void setup() {
-	Serial.begin(115200);
+	Serial.begin(19200);
 	Serial.println(F("*** KS " __FILE__));
 	fdevopen(&my_putc, 0);
 	Serial.println("hello, world!");
@@ -143,20 +143,23 @@ uint8_t	parseB16(uint8_t c){
 }
 
 void loop() {
-
+//	unsigned long int deadline;
 //	krf.debug();
-	if (krf.listen(1000)) {
-		channel_fw.service_rx(SERVICE_FW,fwFrags);
-//		if(channel.isValid()){
-//			// dispatch to application
-//			if(channel.dispatch()){
-//				fwFrags.ack();
-//			}
-			Serial.println("# !");
-//		}
-	}
+//	deadline=micros()+1000;
+//	while(micros() < deadline){
+		if (krf.listen(1000)) {
+			channel_fw.service_rx(SERVICE_FW,fwFrags);
+	//		if(channel.isValid()){
+	//			// dispatch to application
+	//			if(channel.dispatch()){
+	//				fwFrags.ack();
+	//			}
+				Serial.println("# !");
+	//		}
+		}
+//	}
 	else
-	channel_fw.service_tx(SERVICE_FW,fwFrags);
+		channel_fw.service_tx(SERVICE_FW,fwFrags);
 
 	if(fwFrags.idle()){
 		if(Serial.available()){

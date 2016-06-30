@@ -229,11 +229,14 @@ putch(SIGNATURE_0);
 			l+=n;
 //			sp.write0(s,2);
 		}
-//		sp.write0(s,l);
-		for(int off=0;off<l;off+=8){
-			sp.write0(s+off,std::min(l-off,8));
-			usleep(100);
-		}
+//		sp.write0(s,1);
+//		usleep(200000);
+//		sp.write0(s+1,l-1);
+		sp.write0(s,l);
+//		for(int off=0;off<l;off+=1){
+//			sp.write0(s+off,std::min(l-off,1));
+//			usleep(10000);
+//		}
 
 
 		sp.write0("\r\n",2);
