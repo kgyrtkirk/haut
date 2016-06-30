@@ -8,8 +8,8 @@ int my_putc(char c, FILE *t) {
 	Serial.write(c);
 }
 
-const int OTA_TARGET = KRF_ADDR::KITCHEN_STRIP;
-//const int OTA_TARGET = KRF_ADDR::KITCHEN_SENSOR;
+//const int OTA_TARGET = KRF_ADDR::KITCHEN_STRIP;
+const int OTA_TARGET = KRF_ADDR::KITCHEN_SENSOR;
 
 #define	STR(A)	#A
 void setup() {

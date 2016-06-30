@@ -1,4 +1,7 @@
 #pragma once
+#include "common.h"
+#include "stk500.h"
+
 
 class STK500Emulator {
 	PtyChannel &pty;
@@ -113,9 +116,11 @@ public:
 		      uint8_t memtype = getch();
 
 		      // read a page worth of contents
+				BOOST_LOG_TRIVIAL(info)<< "reading page";
 		      bufPtr = buffer;//cmd.buffer;
 		      do *bufPtr++ = getch();
 		      while (--length);
+				BOOST_LOG_TRIVIAL(info)<< "done";
 
 		      // Read command terminator, start reply
 		      verifySpace();
@@ -224,7 +229,13 @@ putch(SIGNATURE_0);
 			l+=n;
 //			sp.write0(s,2);
 		}
-		sp.write0(s,l);
+//		sp.write0(s,l);
+		for(int off=0;off<l;off+=8){
+			sp.write0(s+off,std::min(l-off,8));
+			usleep(100);
+		}
+
+
 		sp.write0("\r\n",2);
 		sp.resetCap();
 

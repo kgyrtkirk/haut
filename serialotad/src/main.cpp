@@ -1,19 +1,4 @@
-#include <poll.h>
-#include <sys/select.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <pty.h>
-#include <sys/stat.h>
-#include <sys/file.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string>
-#include <errno.h>
-
-#include <boost/program_options.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/core.hpp>
-
+#include "common.h"
 //#include <boost/iostreams/device/file_descriptor.hpp>
 //#include <boost/iostreams/stream.hpp>
 //
@@ -30,7 +15,6 @@ const int BUF_SIZ =1024;
 #include "stk500.h"
 #include "Stk500Emulator.h"
 
-#include <boost/log/expressions.hpp>
 
 int main(int ac, char**av) {
 

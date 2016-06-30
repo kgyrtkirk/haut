@@ -65,7 +65,6 @@ void setup() {
 	fdevopen(&my_putc, 0);
 	krf.begin();
 	krf.listenTo(1, KRF_ADDR::DESK0);
-
 	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
 	krf.listenTo(3, KRF_ADDR::DESK1);
 	kss.init();
