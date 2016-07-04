@@ -70,6 +70,9 @@ public:
 			send();
 		}
 	}
+	void setRemote(uint16_t _addr){
+		addr=_addr;
+	}
 };
 
 #define MAX_ERRORS 8

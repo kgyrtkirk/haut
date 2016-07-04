@@ -71,7 +71,7 @@ public:
 	void swapOpportunity(){
 		wdt_reset();
 		if(newFwLength && swapTime < millis()){
-			delay(1000);
+			delay(700);
 			wdt_reset();
 			optiboot_service('X',content,newFwLength,sizeof(content));
 		}

@@ -14,19 +14,55 @@
 
 KRF			krf(7,8,KITCHEN_STRIP);
 
+struct	FaderTargetValue {
+	uint8_t	target;
+	uint8_t	skipCount;
+};
+
+
+
+template<class VT,size_t CNT>
+class DelayControlValue {
+	struct DelayedValue{
+		VT			value;
+		uint64_t	until;
+	};
+	DelayedValue	dv[CNT];
+public:
+	void command(uint8_t priority,uint64_t until,const VT&value) {
+		if(priority>=CNT){
+			return;
+		}
+		dv[priority].value=value;
+		dv[priority].until=until;
+	}
+
+	VT getActiveValue(){
+		uint8_t	i;
+		uint64_t	now=millis();
+		for(i=CNT-1;i>0;i--){
+			if(dv[i].until > now){
+				goto return_active;
+//				return dv[i].value;
+			}
+		}
+		return_active:
+		return dv[i].value;
+	}
+
+};
+DelayControlValue<FaderTargetValue,2>	dcv;
 
 class Fader {
 	uint8_t	value;
 	uint8_t	skips;
 public:
-	uint8_t	target;
-	uint8_t	skipCount;
+//	uint8_t	target;
+//	uint8_t	skipCount;
 
 	Fader(){
 		value=0;
-		target=0;
 		skips=0;
-		skipCount=0;
 	}
 	void init() {
 		TCCR2B = (4<<CS20);
@@ -37,15 +73,15 @@ public:
 			skips--;
 			return;
 		}
-		skips=skipCount;
-		if(value==target){
-//			if(value==0)
-//				target=255;
-//			else
-//				target=0;
+		FaderTargetValue v=dcv.getActiveValue();
+//		skipCount=v.skipCount;
+//		target=v.target;
+
+		skips=v.skipCount;
+		if(value==v.target){
 			return;
 		}
-		if(value<target){
+		if(value<v.target){
 			value++;
 		}else{
 			value--;
@@ -53,6 +89,8 @@ public:
 		analogWrite(LED_PIN, value);
 	}
 };
+
+
 
 Fader	fader;
 ISR(TIMER2_OVF_vect){
@@ -62,18 +100,25 @@ ISR(TIMER2_OVF_vect){
 HautCore hc(krf);
 
 class KitchenStripService {
+	FaderTargetValue	newTarget;
 public:
 	void init(){
+		newTarget.skipCount=3;
+		newTarget.target=0;
+		dcv.command(0,0,newTarget);
 	}
 	void ack(){
 		showState(krf.packet.kitchen);
 		if(krf.packet.kitchen.state.pir) {
-			fader.target=255;
-			fader.skipCount=0;
+			newTarget.skipCount=0;
+			newTarget.target=255;
+			dcv.command(1,millis()+60000,newTarget);
+//			fader.target=255;
+//			fader.skipCount=0;
 //			analogWrite(LED_PIN, 100);
 		}else{
-			fader.target=0;
-			fader.skipCount=3;
+//			fader.target=0;
+//			fader.skipCount=3;
 //			analogWrite(LED_PIN, 0);
 		}
 	}
