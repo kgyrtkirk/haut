@@ -12,6 +12,9 @@ class STK500Emulator {
 	char	readFw[1<<16];
 public:
 	STK500Emulator(PtyChannel &_pty,SerialChannel &_sp) : pty(_pty),sp(_sp){
+		char s[128];
+		int l=sprintf(s,"\r\nC%d\r\n",_pty.getChannelId());
+		sp.write0(s,l);
 		error=0;
 	}
 	void verifySpace(){

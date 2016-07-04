@@ -196,6 +196,13 @@ void loop() {
 					fwFrags.setSwap(o);
 				}
 			}
+			if(c == 'C') {
+				Serial.print("# C");
+				uint16_t o=Serial.parseInt();
+				krf.listenTo(1, o);
+				channel_fw.setRemote(o);
+
+			}
 		}
 	}
 }

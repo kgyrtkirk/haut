@@ -3,8 +3,10 @@
 class PtyChannel {
 	int fd, fds;
 	char n[100];
+	int channelId;
 public:
-	PtyChannel() {
+	PtyChannel(int _channelId) {
+		channelId=_channelId;
 		bpos=0;
 		struct termios tp;
 		struct termios *termios_p = &tp;
@@ -31,7 +33,9 @@ public:
 
 
 	}
-
+	int	getChannelId(){
+		return channelId;
+	}
 	void createLink(const char*linkpath) {
 		struct stat buf;
 		if(lstat(linkpath,&buf) == 0) {
