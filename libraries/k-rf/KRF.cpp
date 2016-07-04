@@ -12,6 +12,7 @@ void KRF::begin() {
 //	radio.setDataRate(RF24_250KBPS);
 	radio.openWritingPipe( myAddr);
 	radio.startListening();
+	radio.setRetries(2,3);
 }
 void KRF::send() {
 	radio.stopListening();

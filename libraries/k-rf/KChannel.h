@@ -11,6 +11,7 @@
 #include "KRF.h"
 
 class KChannel {
+protected:
 	SeqHandler	seqH;
 public:
 	KRF			&krf;
@@ -75,9 +76,9 @@ public:
 	}
 };
 
-#define MAX_ERRORS 8
+#define MAX_ERRORS 32
 class KChannelTx : public KChannel{
-	SeqHandler	seqH;
+//	SeqHandler	seqH;
 public:
 	KChannelTx(KRF &_krf,uint16_t _addr) : 		KChannel(_krf,_addr) {
 	}
@@ -96,7 +97,7 @@ public:
 			return true;
 		}else{
 			errors++;
-			if(errors>8)
+			if(errors>MAX_ERRORS)
 				up=false;
 			return false;
 		}
@@ -131,6 +132,8 @@ public:
 	// XXX: code duplication
 	template<class T>
 	inline void service_rx(uint8_t serviceId,T&service){
+		if(krf.packet.ahdr.application != serviceId)
+			return;
 		if(isValid()){
 //			Serial.println("Valid");
 			if(dispatch()) {

@@ -74,16 +74,20 @@ void setup() {
 uint8_t freeWheel = 0;
 void loop() {
 	fwFrag.swapOpportunity();
-	if (krf.listen(1000)) {
+	unsigned long deadline = micros() + 1000;
+
+	while (deadline > micros() && krf.listen(1000)) {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
 		channel_debug.service_rx(SERVICE_KITCHEN, kss);
 	}
 //	else
 	{
-		if(freeWheel==0) {
+		if(freeWheel==128) {
 			// at every ~250ms try to send it
 			channel_kitchen.service_tx(SERVICE_KITCHEN, kss);
+		}
+		if(freeWheel==0){
 			channel_debug.service_tx(SERVICE_KITCHEN, kss);
 		}
 	}

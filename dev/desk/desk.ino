@@ -55,7 +55,10 @@ void setup() {
 
 void loop() {
 	if (krf.listen(1000)) {
-        Serial.println("# rx");
+        Serial.print("# rx ");
+        Serial.print(krf.packet.hdr.seqId);
+        Serial.print(" ");
+        Serial.println(krf.packet.hdr.source);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
 	}
 }
