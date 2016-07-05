@@ -45,10 +45,6 @@ public:
 
 };
 
-int my_putc(char c, FILE *t) {
-	Serial.write(c);
-}
-//#include "bootloaders/optiboot/optiboot.h"
 
 FlashUpdateService<128> fwFrag(krf.packet);
 KitchenSensorService	kss;
@@ -62,7 +58,6 @@ void setup() {
 	fwFrag.init();
 	Serial.begin(115200);
 	Serial.println("# this is: " __FILE__);
-	fdevopen(&my_putc, 0);
 	krf.begin();
 	channel_fw.init();
 	channel_kitchen.init();
