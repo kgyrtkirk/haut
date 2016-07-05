@@ -30,15 +30,5 @@ void KRF::sendTo(const uint32_t dest) {
 
 void KRF::debug(){
 	radio.printDetails();
-	Serial.print("x	T:");
-	Serial.print(packet.state.temp);
-	Serial.print("	H:");
-	Serial.print(packet.state.hum);
-	Serial.print("	PIR:");
-	Serial.print(packet.state.pir);
-	Serial.print("	L:");
-	Serial.print(packet.state.lum);
-	Serial.print("	S:");
-	Serial.print(packet.state.strip_bright);
 	Serial.println();
 }

@@ -61,8 +61,6 @@ public:
 		struct ApplcationHeader ahdr;
 		struct Packet_Fw		fw;
 		struct Packet_Kitchen	kitchen;
-		// FIXME: remove
-		KRFState				state;
 	};
 
 //	KRFState	state;
