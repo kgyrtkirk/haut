@@ -25,19 +25,8 @@ bool KRF::listen(uint16_t timeout) {
 		delayMicroseconds(100);
 	}
 	if(radio.available(&rx_channel)){
-//        unsigned long got_time;                                 // Grab the response, compare, and send to debugging spew
 //		Serial.print(F("."));
         radio.read( &packet, sizeof(packet) );
-//        unsigned long end_time = micros();
-//
-//         Spew it
-//        Serial.print(F("Sent "));
-//        Serial.print(start_time);
-//        Serial.print(F(", Got response "));
-//        Serial.print(got_time);
-//        Serial.print(F(", Round-trip delay "));
-//        Serial.print(end_time-start_time);
-//        Serial.println(F(" microseconds"));
         return true;
 	}
 	return false;
