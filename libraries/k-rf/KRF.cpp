@@ -1,5 +1,5 @@
 #include "KRF.h"
-
+#include "RF24.h"
 //KRF::Packet		KRF::packet;
 
 void KRF::listenTo(uint8_t idx, uint32_t _myAddr) {
@@ -13,6 +13,8 @@ void KRF::begin() {
 	radio.openWritingPipe( myAddr);
 	radio.startListening();
 	radio.setRetries(2,3);
+	radio.setAutoAck(true);
+//	radio.enableAckPayload();
 }
 void KRF::send() {
 	radio.stopListening();
@@ -29,7 +31,7 @@ bool KRF::listen(uint16_t timeout) {
 	while (!radio.available() && micros() < deadline) {
 		delayMicroseconds(100);
 	}
-	if(radio.available()){
+	if(radio.available(&rx_channel)){
 //        unsigned long got_time;                                 // Grab the response, compare, and send to debugging spew
 //		Serial.print(F("."));
         radio.read( &packet, sizeof(packet) );

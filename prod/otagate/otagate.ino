@@ -11,14 +11,21 @@ int my_putc(char c, FILE *t) {
 //const int OTA_TARGET = KRF_ADDR::KITCHEN_STRIP;
 const int OTA_TARGET = KRF_ADDR::KITCHEN_SENSOR;
 
+SeqHandler			seqH;
+#include "KChannel.h"
+
+KChannelTx			channel_fw(krf,OTA_TARGET,1);
+int cnt=5;
+
+
 #define	STR(A)	#A
 void setup() {
-	Serial.begin(19200);
+	Serial.begin(57600);
 	Serial.println(F("*** KS " __FILE__));
 	fdevopen(&my_putc, 0);
 	Serial.println("hello, world!");
 	krf.begin();
-	krf.listenTo(1, OTA_TARGET);
+	channel_fw.init();
 //	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
 //	Serial.println(F("*** KS " __FILE__ ":" STR(__LINE__)));
 	Serial.println("READY");
@@ -123,13 +130,8 @@ public:
 //	FwFragments()  {};
 };
 
-
 FwFragments<128>	fwFrags(krf.packet);
-SeqHandler			seqH;
-#include "KChannel.h"
 
-KChannelTx			channel_fw(krf,OTA_TARGET);
-int cnt=5;
 
 
 uint8_t	parseB16(uint8_t c){
@@ -171,7 +173,9 @@ void loop() {
 //	else
 		delayMicroseconds(100);
 		channel_fw.service_tx(SERVICE_FW,fwFrags);
-
+		if(!channel_fw.connected()){
+			delayMicroseconds(1000);
+		}
 	if(fwFrags.idle()){
 		if(Serial.available()){
 			char c=Serial.read();
@@ -210,7 +214,6 @@ void loop() {
 			if(c == 'C') {
 				Serial.print("# C");
 				uint16_t o=Serial.parseInt();
-				krf.listenTo(1, o);
 				channel_fw.setRemote(o);
 
 			}

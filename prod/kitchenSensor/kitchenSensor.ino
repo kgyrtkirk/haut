@@ -53,9 +53,9 @@ int my_putc(char c, FILE *t) {
 FlashUpdateService<128> fwFrag(krf.packet);
 KitchenSensorService	kss;
 
-KChannel channel_fw(krf, KRF_ADDR::DESK0);
-KChannelTx channel_kitchen(krf, KRF_ADDR::KITCHEN_STRIP);
-KChannelTx channel_debug(krf, KRF_ADDR::DESK1);
+KChannel channel_fw(krf, KRF_ADDR::DESK0,1);
+KChannelTx channel_kitchen(krf, KRF_ADDR::KITCHEN_STRIP,2);
+KChannelTx channel_debug(krf, KRF_ADDR::DESK1,3);
 
 
 void setup() {
@@ -64,9 +64,9 @@ void setup() {
 	Serial.println("# this is: " __FILE__);
 	fdevopen(&my_putc, 0);
 	krf.begin();
-	krf.listenTo(1, KRF_ADDR::DESK0);
-	krf.listenTo(2, KRF_ADDR::KITCHEN_STRIP);
-	krf.listenTo(3, KRF_ADDR::DESK1);
+	channel_fw.init();
+	channel_kitchen.init();
+	channel_debug.init();
 	kss.init();
 }
 

@@ -42,14 +42,15 @@ int my_putc(char c, FILE *t) {
 
 KitchenSensorDebugService	kss;
 
-KChannel channel_kitchen(krf, KRF_ADDR::KITCHEN_SENSOR);
+KChannel channel_kitchen(krf, KRF_ADDR::KITCHEN_SENSOR,1);
 
 void setup() {
 	Serial.begin(115200);
 	Serial.println("# this is: " __FILE__);
 	fdevopen(&my_putc, 0);
 	krf.begin();
-	krf.listenTo(1, KRF_ADDR::KITCHEN_SENSOR);
+	channel_kitchen.init();
+//	krf.listenTo(1, KRF_ADDR::KITCHEN_SENSOR);
 	kss.init();
 }
 

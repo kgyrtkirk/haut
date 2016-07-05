@@ -16,8 +16,8 @@ class SerialChannel {
 
 		tcgetattr(fd, &port_settings);
 
-		cfsetispeed(&port_settings, B19200);    // set baud rates
-		cfsetospeed(&port_settings, B19200);
+		cfsetispeed(&port_settings, B57600);    // set baud rates
+		cfsetospeed(&port_settings, B57600);
 
 		port_settings.c_cflag &= ~PARENB; // set no parity, stop bits, data bits
 		port_settings.c_cflag &= ~CSTOPB;

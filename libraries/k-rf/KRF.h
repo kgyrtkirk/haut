@@ -68,6 +68,7 @@ public:
 //	KRFState	state;
 //	static
 	Packet		packet;
+	uint8_t		rx_channel;
 
 	KRF(uint8_t cepin,uint8_t cspin,const uint32_t _myAddr) : radio(cepin,cspin) {
 		myAddr=_myAddr;

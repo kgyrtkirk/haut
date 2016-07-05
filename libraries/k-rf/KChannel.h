@@ -13,16 +13,25 @@
 class KChannel {
 protected:
 	SeqHandler	seqH;
+	uint8_t		pipeId;
 public:
 	KRF			&krf;
 	uint16_t	addr;
 	uint8_t		errors;
 	bool		up;
 
-	KChannel(KRF &_krf,uint16_t _addr) : 		krf(_krf), addr(_addr),errors(0), up(false) {
+	KChannel(KRF &_krf,uint16_t _addr,uint8_t _pipeId) : 		krf(_krf), addr(_addr),errors(0), up(false),pipeId(_pipeId) {
+	}
+
+	void init(){
+		krf.listenTo(pipeId, addr);
 	}
 
 	bool isValid(){
+
+		if(krf.rx_channel != pipeId){
+			return false;
+		}
 		if(krf.packet.hdr.source != krf.myAddr){
 			return false;
 		}
@@ -72,18 +81,23 @@ public:
 		}
 	}
 	void setRemote(uint16_t _addr){
+//		krf.listenTo(pipeId, o);
 		addr=_addr;
+		init();
 	}
 };
 
-#define MAX_ERRORS 32
+#define MAX_ERRORS 8
 class KChannelTx : public KChannel{
 //	SeqHandler	seqH;
 public:
-	KChannelTx(KRF &_krf,uint16_t _addr) : 		KChannel(_krf,_addr) {
+	KChannelTx(KRF &_krf,uint16_t _addr,uint8_t _pipeId) : 		KChannel(_krf,_addr,_pipeId) {
 	}
 
 	bool isValid(){
+		if(krf.rx_channel != pipeId){
+			return false;
+		}
 		if(krf.packet.hdr.source != krf.myAddr){
 			return false;
 		}
