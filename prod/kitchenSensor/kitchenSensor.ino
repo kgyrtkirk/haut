@@ -71,6 +71,7 @@ void loop() {
 	fwFrag.swapOpportunity();
 	unsigned long deadline = micros() + 1000;
 
+
 	while (deadline > micros() && krf.listen(1000)) {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);

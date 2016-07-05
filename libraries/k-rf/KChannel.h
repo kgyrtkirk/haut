@@ -58,7 +58,7 @@ public:
 			// send IV
 		}
 		krf.packet.hdr.destination=addr;
-		krf.sendTo(addr, "pong", 5);
+		krf.sendTo(addr);
 //
 //		krf.sendTo(KRF_ADDR::DESK0,"pong",4);
 	}
@@ -126,8 +126,7 @@ public:
 		if(errors>MAX_ERRORS)
 			up=false;
 		krf.packet.hdr.seqId=seqH.get();
-		krf.packet.hdr.destination=0xbdbd;
-		krf.sendTo(addr, "pong", 5);
+		krf.sendTo(addr);
 	}
 
 	bool connected(){
@@ -138,8 +137,7 @@ public:
 		seqH.reset();
 		errors=0;
 		krf.packet.hdr.seqId=0;
-		krf.packet.hdr.destination=0xbdbd;
-		krf.sendTo(addr, "pong", 5);
+		krf.sendTo(addr);
 
 	}
 

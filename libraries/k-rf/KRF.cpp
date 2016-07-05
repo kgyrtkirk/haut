@@ -52,7 +52,7 @@ bool KRF::listen(uint16_t timeout) {
 }
 
 
-void KRF::sendTo(const uint32_t dest,const char*packet0,uint8_t len) {
+void KRF::sendTo(const uint32_t dest) {
 	packet.hdr.destination=dest;
 	radio.stopListening();
     if (!radio.write( &packet, sizeof(packet) )){

@@ -78,5 +78,5 @@ public:
 	void	send();
 	bool	listen(uint16_t timeout);
 	void	debug();
-	void sendTo(const uint32_t dest,const char*packet,uint8_t len);
+	void sendTo(const uint32_t dest);
 };
