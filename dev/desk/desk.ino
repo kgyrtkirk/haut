@@ -53,8 +53,11 @@ void setup() {
 //	krf.listenTo(1, KRF_ADDR::KITCHEN_SENSOR);
 	kss.init();
 }
+#include "ChaChaPoly.h"
+
 
 void loop() {
+	ChaChaPoly	cp;
 	if (krf.listen(1000)) {
         Serial.print("# rx ");
         Serial.print(krf.packet.hdr.seqId);
