@@ -138,10 +138,6 @@ public:
 
 };
 
-int my_putc(char c, FILE *t) {
-	Serial.write(c);
-}
-
 FlashUpdateService<128> fwFrag(krf.packet);
 KitchenStripService	kss;
 
@@ -154,7 +150,6 @@ void setup() {
 	fwFrag.init();
 	Serial.begin(115200);
 	Serial.println("# this is:  " __FILE__);
-	fdevopen(&my_putc, 0);
 	krf.begin();
 	channel_fw.init();
 	channel_kitchen.init();

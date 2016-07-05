@@ -20,25 +20,20 @@ public:
 		showState(krf.packet.kitchen);
 	}
 	void showState(KRF::Packet_Kitchen&packet){
-        Serial.print("x T:");
+        Serial.print(F("x T:"));
         Serial.print(packet.state.temp);
-        Serial.print("  H:");
+        Serial.print(F("  H:"));
         Serial.print(packet.state.hum);
-        Serial.print("  PIR:");
+        Serial.print(F("  PIR:"));
         Serial.print(packet.state.pir);
-        Serial.print("  L:");
+        Serial.print(F("  L:"));
         Serial.print(packet.state.lum);
-        Serial.print("  S:");
+        Serial.print(F("  S:"));
         Serial.print(packet.state.strip_bright);
         Serial.println();
 	}
 
 };
-
-int my_putc(char c, FILE *t) {
-	Serial.write(c);
-}
-//#include "bootloaders/optiboot/optiboot.h"
 
 KitchenSensorDebugService	kss;
 
@@ -47,7 +42,6 @@ KChannel channel_kitchen(krf, KRF_ADDR::KITCHEN_SENSOR,1);
 void setup() {
 	Serial.begin(115200);
 	Serial.println("# this is: " __FILE__);
-	fdevopen(&my_putc, 0);
 	krf.begin();
 	channel_kitchen.init();
 //	krf.listenTo(1, KRF_ADDR::KITCHEN_SENSOR);
