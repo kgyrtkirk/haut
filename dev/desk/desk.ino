@@ -52,11 +52,11 @@ void setup() {
 
 void loop() {
 	ChaChaPoly	cp;
-	if (krf.listen(1000)) {
+	krf.listen(1000,[&] {
         Serial.print("# rx ");
         Serial.print(krf.packet.hdr.seqId);
         Serial.print(" ");
-        Serial.println(krf.packet.hdr.source);
+        Serial.println(krf.packet.hdr.destination);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
-	}
+	});
 }

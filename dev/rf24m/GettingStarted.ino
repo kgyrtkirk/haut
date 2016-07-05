@@ -16,8 +16,8 @@ int my_putc(char c, FILE *t) {
 
 #include "KChannel.h"
 FlashUpdateService<128> fwFrag(krf.packet);
-KChannel channel_fw(krf, KRF_ADDR::DESK0);
-KChannelTx ch2(krf, KRF_ADDR::KITCHEN_SENSOR);
+KChannel channel_fw(krf, KRF_ADDR::DESK0,1);
+KChannelTx ch2(krf, KRF_ADDR::KITCHEN_SENSOR,2);
 
 
 void setup() {
@@ -26,7 +26,8 @@ void setup() {
 	Serial.println(KRF_ADDR::KITCHEN_STRIP);
 	fdevopen(&my_putc, 0);
 	krf.begin();
-	krf.listenTo(1, KRF_ADDR::DESK0);
+	channel_fw.init();
+	ch2.init();
 
 }
 
@@ -34,9 +35,10 @@ void setup() {
 uint8_t freeWheel = 0;
 void loop() {
 	fwFrag.swapOpportunity();
-	if (krf.listen(1000)) {
+	krf.listen(1000,[&] {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
-	} else {
+	});
+	{
 		if (ch2.connected()) {
 
 		} else {

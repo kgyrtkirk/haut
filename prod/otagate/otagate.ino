@@ -145,32 +145,12 @@ uint8_t	parseB16(uint8_t c){
 }
 
 void loop() {
-//	unsigned long int deadline;
-//	krf.debug();
-//	deadline=micros()+1000;
-//	while(micros() < deadline){
-	if (krf.listen(1000)) {
+
+	krf.listen(1000, [&] {
 		channel_fw.service_rx(SERVICE_FW,fwFrags);
-//		if(channel.isValid()){
-//			// dispatch to application
-//			if(channel.dispatch()){
-//				fwFrags.ack();
-//			}
-			Serial.println("# !");
-//		}
-	}
-	if (krf.listen(1000)) {
-		channel_fw.service_rx(SERVICE_FW,fwFrags);
-//		if(channel.isValid()){
-//			// dispatch to application
-//			if(channel.dispatch()){
-//				fwFrags.ack();
-//			}
-			Serial.println("# !");
-//		}
-	}
-//	}
-//	else
+		Serial.println("# !");
+	});
+
 		delayMicroseconds(100);
 		channel_fw.service_tx(SERVICE_FW,fwFrags);
 		if(!channel_fw.connected()){

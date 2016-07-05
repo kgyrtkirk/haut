@@ -160,9 +160,9 @@ void setup() {
 uint8_t freeWheel = 0;
 void loop() {
 	fwFrag.swapOpportunity();
-	if (krf.listen(1000)) {
+	krf.listen(1000,[&] {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
-	}
+	});
 	freeWheel++;
 }
