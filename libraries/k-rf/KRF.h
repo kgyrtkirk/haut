@@ -75,8 +75,25 @@ public:
 	}
 	void	listenTo(uint8_t idx,const uint32_t _myAddr);
 	void 	begin();
-	void	send();
-	bool	listen(uint16_t timeout);
+
 	void	debug();
 	void sendTo(const uint32_t dest);
+
+	bool listen(uint16_t timeout) {
+
+		unsigned long deadline = micros() + timeout;
+
+		while (!radio.available() && micros() < deadline) {
+			delayMicroseconds(100);
+		}
+		if (radio.available(&rx_channel)) {
+			//		Serial.print(F("."));
+			radio.read(&packet, sizeof(packet));
+			return true;
+		}
+		return false;
+
+	}
+
+
 };

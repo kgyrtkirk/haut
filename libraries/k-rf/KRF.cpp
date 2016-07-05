@@ -17,22 +17,6 @@ void KRF::begin() {
 //	radio.enableAckPayload();
 }
 
-bool KRF::listen(uint16_t timeout) {
-
-	unsigned long deadline = micros() + timeout;
-
-	while (!radio.available() && micros() < deadline) {
-		delayMicroseconds(100);
-	}
-	if(radio.available(&rx_channel)){
-//		Serial.print(F("."));
-        radio.read( &packet, sizeof(packet) );
-        return true;
-	}
-	return false;
-
-}
-
 
 void KRF::sendTo(const uint32_t dest) {
 	packet.hdr.destination=dest;
