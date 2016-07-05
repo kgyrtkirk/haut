@@ -70,7 +70,7 @@ public:
 	Packet		packet;
 	uint8_t		rx_channel;
 
-	KRF(uint8_t cepin,uint8_t cspin,const uint32_t _myAddr) : radio(cepin,cspin) {
+	KRF(uint8_t cepin,uint8_t cspin,const uint32_t _myAddr) : radio(cepin,cspin),rx_channel(0) {
 		myAddr=_myAddr;
 	}
 	void	listenTo(uint8_t idx,const uint32_t _myAddr);
