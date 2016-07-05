@@ -16,14 +16,7 @@ void KRF::begin() {
 	radio.setAutoAck(true);
 //	radio.enableAckPayload();
 }
-void KRF::send() {
-	radio.stopListening();
-    if (!radio.write( &packet, sizeof(packet) )){
-      Serial.println(F("# failed0"));
-    }
-	radio.startListening();
-	radio.setRetries(15,15);
-}
+
 bool KRF::listen(uint16_t timeout) {
 
 	unsigned long deadline = micros() + timeout;
