@@ -51,7 +51,7 @@ public:
 	}
 
 };
-DelayControlValue<FaderTargetValue,2>	dcv;
+DelayControlValue<FaderTargetValue,3>	dcv;
 
 class Fader {
 	uint8_t	value;
@@ -138,11 +138,23 @@ public:
 
 };
 
+class DebugLedService {
+public:
+	void ack(){
+		FaderTargetValue	target;
+		target.skipCount=0;
+		target.target=krf.packet.debug.level;
+		dcv.command(2,millis()+180000,target);
+	}
+
+};
 FlashUpdateService<128> fwFrag(krf.packet);
 KitchenStripService	kss;
+DebugLedService dls;
 
 KChannel channel_fw(krf, KRF_ADDR::DESK0,1);
 KChannel channel_kitchen(krf, KRF_ADDR::KITCHEN_SENSOR,2);
+KChannel channel_debug(krf, KRF_ADDR::DESK1,3);
 
 
 void setup() {
@@ -153,6 +165,7 @@ void setup() {
 	krf.begin();
 	channel_fw.init();
 	channel_kitchen.init();
+	channel_debug.init();
 	kss.init();
 }
 
@@ -163,6 +176,7 @@ void loop() {
 	krf.listen(1000,[&] {
 		channel_fw.service_rx(SERVICE_FW, fwFrag);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
+		channel_debug.service_rx(SERVICE_KITCHEN, dls);
 	});
 	freeWheel++;
 }

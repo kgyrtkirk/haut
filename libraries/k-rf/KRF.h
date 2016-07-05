@@ -55,12 +55,17 @@ public:
 		struct ApplcationHeader _hdr;
 		KRFState				state;
 	} PACKED;
+	struct Packet_Debug	{
+		struct ApplcationHeader _hdr;
+		uint8_t					level;
+	} PACKED;
 
 	union Packet {
 		struct PacketHeader 	hdr;
 		struct ApplcationHeader ahdr;
 		struct Packet_Fw		fw;
 		struct Packet_Kitchen	kitchen;
+		struct Packet_Debug		debug;
 	};
 
 //	KRFState	state;

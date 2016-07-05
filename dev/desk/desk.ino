@@ -35,15 +35,49 @@ public:
 
 };
 
+class LedDriverControlService {
+	int	remoteValue;
+	int	value;
+public:
+
+	bool	takeInitiative(){
+		if(remoteValue==value){
+			return false;
+		}
+		krf.packet.debug.level=value;
+	}
+	void ack(){
+		remoteValue=krf.packet.debug.level;
+		show();
+	}
+
+	void add(int v){
+		value+=v;
+		if(v<0)
+			value=0;
+		if(v>=255)
+			value=255;
+	}
+	void	show(){
+		Serial.print("v:	");
+		Serial.print(value);
+		Serial.print("	rv:");
+		Serial.print(remoteValue);
+		Serial.println();
+	}
+};
+LedDriverControlService 	ldrvs;
 KitchenSensorDebugService	kss;
 
 KChannel channel_kitchen(krf, KRF_ADDR::KITCHEN_SENSOR,1);
+KChannelTx channel_leddrv(krf, KRF_ADDR::KITCHEN_STRIP,2);
 
 void setup() {
 	Serial.begin(115200);
 	Serial.println("# this is: " __FILE__);
 	krf.begin();
 	channel_kitchen.init();
+	channel_leddrv.init();
 //	krf.listenTo(1, KRF_ADDR::KITCHEN_SENSOR);
 	kss.init();
 }
@@ -58,5 +92,24 @@ void loop() {
         Serial.print(" ");
         Serial.println(krf.packet.hdr.destination);
 		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
+		channel_leddrv.service_rx(SERVICE_KITCHEN, ldrvs);
 	});
+
+	channel_leddrv.service_tx(SERVICE_KITCHEN, ldrvs);
+
+	if(Serial.available()){
+		char c=Serial.read();
+		switch(c){
+		case 'v':
+			ldrvs.add(1);
+		break;
+		case 'c':
+			ldrvs.add(-1);
+		break;
+		default:
+			break;
+		}
+		ldrvs.show();
+
+	}
 }
