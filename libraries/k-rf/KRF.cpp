@@ -53,7 +53,7 @@ bool KRF::listen(uint16_t timeout) {
 
 
 void KRF::sendTo(const uint32_t dest,const char*packet0,uint8_t len) {
-	packet.hdr.source=dest;
+	packet.hdr.destination=dest;
 	radio.stopListening();
     if (!radio.write( &packet, sizeof(packet) )){
       Serial.println(F("# failed"));

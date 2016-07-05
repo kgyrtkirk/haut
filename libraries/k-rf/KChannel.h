@@ -32,7 +32,7 @@ public:
 		if(krf.rx_channel != pipeId){
 			return false;
 		}
-		if(krf.packet.hdr.source != krf.myAddr){
+		if(krf.packet.hdr.destination != krf.myAddr){
 			return false;
 		}
 		if(krf.packet.hdr.seqId == 0)
@@ -57,7 +57,7 @@ public:
 		if(krf.packet.hdr.seqId==0) {
 			// send IV
 		}
-		krf.packet.hdr.source=addr;
+		krf.packet.hdr.destination=addr;
 		krf.sendTo(addr, "pong", 5);
 //
 //		krf.sendTo(KRF_ADDR::DESK0,"pong",4);
@@ -98,7 +98,7 @@ public:
 		if(krf.rx_channel != pipeId){
 			return false;
 		}
-		if(krf.packet.hdr.source != krf.myAddr){
+		if(krf.packet.hdr.destination != krf.myAddr){
 			return false;
 		}
 		if(krf.packet.hdr.seqId == 0){
@@ -126,7 +126,7 @@ public:
 		if(errors>MAX_ERRORS)
 			up=false;
 		krf.packet.hdr.seqId=seqH.get();
-		krf.packet.hdr.source=0xbdbd;
+		krf.packet.hdr.destination=0xbdbd;
 		krf.sendTo(addr, "pong", 5);
 	}
 
@@ -138,7 +138,7 @@ public:
 		seqH.reset();
 		errors=0;
 		krf.packet.hdr.seqId=0;
-		krf.packet.hdr.source=0xbdbd;
+		krf.packet.hdr.destination=0xbdbd;
 		krf.sendTo(addr, "pong", 5);
 
 	}

@@ -37,7 +37,7 @@ public:
 	uint32_t	myAddr;
 
 	struct PacketHeader {
-		uint16_t	source;
+		uint16_t	destination;
 		uint32_t	seqId;
 	} PACKED;
 	struct ApplcationHeader {
