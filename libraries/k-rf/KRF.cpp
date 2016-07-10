@@ -14,6 +14,7 @@ void KRF::begin() {
 	radio.startListening();
 	radio.setRetries(2,3);
 	radio.setAutoAck(true);
+	radio.setAutoAck(false);
 //	radio.enableAckPayload();
 }
 
