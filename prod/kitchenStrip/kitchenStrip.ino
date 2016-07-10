@@ -29,6 +29,13 @@ class DelayControlValue {
 	};
 	DelayedValue	dv[CNT];
 public:
+
+	DelayControlValue(){
+		uint8_t	i;
+		for(i=0;i<CNT;i++){
+			dv[i].until=0;
+		}
+	}
 	void command(uint8_t priority,uint64_t until,const VT&value) {
 		if(priority>=CNT){
 			return;

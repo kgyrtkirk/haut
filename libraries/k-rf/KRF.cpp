@@ -7,7 +7,7 @@ void KRF::listenTo(uint8_t idx, uint32_t _myAddr) {
 }
 void KRF::begin() {
 	radio.begin();
-	radio.setPALevel(RF24_PA_MAX);
+	radio.setPALevel(RF24_PA_MIN);
 //	radio.setCRCLength(RF24_CRC_16);
 //	radio.setDataRate(RF24_250KBPS);
 	radio.openWritingPipe( myAddr);

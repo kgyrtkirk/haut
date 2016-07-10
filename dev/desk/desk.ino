@@ -45,6 +45,7 @@ public:
 			return false;
 		}
 		krf.packet.debug.level=value;
+		return true;
 	}
 	void ack(){
 		remoteValue=krf.packet.debug.level;
@@ -53,9 +54,9 @@ public:
 
 	void add(int v){
 		value+=v;
-		if(v<0)
+		if(value<0)
 			value=0;
-		if(v>=255)
+		if(value>=255)
 			value=255;
 	}
 	void	show(){
@@ -81,23 +82,23 @@ void setup() {
 //	krf.listenTo(1, KRF_ADDR::KITCHEN_SENSOR);
 	kss.init();
 }
-#include "ChaChaPoly.h"
 
-
+uint8_t	freeWheel=0;
 void loop() {
-	ChaChaPoly	cp;
-	krf.listen(1000,[&] {
+	krf.listen(500,[&] {
+		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
+		channel_leddrv.service_rx(SERVICE_KITCHEN, ldrvs);
         Serial.print("# rx ");
         Serial.print(krf.packet.hdr.seqId);
         Serial.print(" ");
         Serial.println(krf.packet.hdr.destination);
-		channel_kitchen.service_rx(SERVICE_KITCHEN, kss);
-		channel_leddrv.service_rx(SERVICE_KITCHEN, ldrvs);
 	});
 
+	if(freeWheel==0)
 	channel_leddrv.service_tx(SERVICE_KITCHEN, ldrvs);
 
-	if(Serial.available()){
+	freeWheel++;
+	while(Serial.available()){
 		char c=Serial.read();
 		switch(c){
 		case 'v':
