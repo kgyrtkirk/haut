@@ -3,6 +3,7 @@
 #include <KRF.h>
 
 #include "HautCore.h"
+#include "Damper.h"
 #include "Arduino.h"
 #include "KRF.h"
 #include "FlashUpdateService.h"
@@ -44,17 +45,18 @@ public:
 		dv[priority].until=until;
 	}
 
-	VT getActiveValue(){
+	const VT& getActiveValue() const{
+		return dv[getActiveState()].value;
+	}
+	uint8_t getActiveState() const{
 		uint8_t	i;
 		uint64_t	now=millis();
 		for(i=CNT-1;i>0;i--){
 			if(dv[i].until > now){
-				goto return_active;
-//				return dv[i].value;
+				return i;
 			}
 		}
-		return_active:
-		return dv[i].value;
+		return 0;
 	}
 
 };
@@ -108,25 +110,28 @@ HautCore hc(krf);
 
 class KitchenStripService {
 	FaderTargetValue	newTarget;
+	Damper				dampedLightSense;
 public:
+	KitchenStripService() : dampedLightSense(0.8) {
+
+	}
+
 	void init(){
 		newTarget.skipCount=3;
 		newTarget.target=0;
 		dcv.command(0,0,newTarget);
 	}
 	void ack(){
-		showState(krf.packet.kitchen);
+		dampedLightSense.update(krf.packet.kitchen.state.lum);
+//		showState(krf.packet.kitchen);
 		if(krf.packet.kitchen.state.pir) {
-			newTarget.skipCount=0;
-			newTarget.target=255;
-			dcv.command(1,millis()+60000,newTarget);
-//			fader.target=255;
-//			fader.skipCount=0;
-//			analogWrite(LED_PIN, 100);
-		}else{
-//			fader.target=0;
-//			fader.skipCount=3;
-//			analogWrite(LED_PIN, 0);
+			if(dcv.getActiveState() == 0 && dampedLightSense.getValue() > 250){
+				// do nothing...there is enough light there
+			}else{
+				newTarget.skipCount=0;
+				newTarget.target=255;
+				dcv.command(1,millis()+60000,newTarget);
+			}
 		}
 	}
 	void showState(KRF::Packet_Kitchen&packet){
