@@ -125,7 +125,7 @@ public:
 		dampedLightSense.update(krf.packet.kitchen.state.lum);
 //		showState(krf.packet.kitchen);
 		if(krf.packet.kitchen.state.pir) {
-			if(dcv.getActiveState() == 0 && dampedLightSense.getValue() > 250){
+			if(dcv.getActiveState() == 0 && dampedLightSense.getValue() > 50){
 				// do nothing...there is enough light there
 			}else{
 				newTarget.skipCount=0;

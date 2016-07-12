@@ -11,17 +11,20 @@ KRF krf(9, 10, KRF_ADDR::DESK1);
 
 int ledPin = 9;    // LED connected to digital pin 9
 
+#include "Damper.h"
 
 class KitchenSensorDebugService {
+	Damper				dampedLightSense;
 public:
-	double	lightAggr=0.0;
+	KitchenSensorDebugService() : dampedLightSense(0.8) {}
 	void init(){
 	}
 	void ack(){
+		dampedLightSense.update(krf.packet.kitchen.state.lum);
 		showState(krf.packet.kitchen);
 	}
 	void showState(KRF::Packet_Kitchen&packet){
-        lightAggr=lightAggr*0.8+0.2*packet.state.lum;
+//        lightAggr=lightAggr*0.8+0.2*packet.state.lum;
 
         Serial.print(F("x T:"));
         Serial.print(packet.state.temp);
@@ -34,7 +37,7 @@ public:
         Serial.print(F("  S:"));
         Serial.print(packet.state.strip_bright);
         Serial.print(F("  LA:"));
-        Serial.print(lightAggr);
+        Serial.print(dampedLightSense.getValue());
         Serial.println();
 	}
 

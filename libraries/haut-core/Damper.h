@@ -11,7 +11,8 @@ public:
 		return value;
 	}
 	void update(float newValue){
-		value*=threshold;
-		value+=(1.0-threshold)*newValue;
+//		value*=threshold;
+//		value+=(1.0-threshold)*newValue;
+		value=threshold * value + (1.0-threshold) * newValue;
 	}
 };
