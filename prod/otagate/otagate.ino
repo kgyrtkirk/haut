@@ -151,7 +151,7 @@ void loop() {
 		Serial.println("# !");
 	});
 
-		delayMicroseconds(100);
+//		delayMicroseconds(100);
 		channel_fw.service_tx(SERVICE_FW,fwFrags);
 		if(!channel_fw.connected()){
 			delayMicroseconds(1000);
