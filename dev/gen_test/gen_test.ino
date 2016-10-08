@@ -3,7 +3,7 @@
 
 #include <IRremote.h>
 
- const int hallPin = 2;     // the number of the hall effect sensor pin
+ const int hallPin = 5;     // the number of the hall effect sensor pin
  const int ledPin =  13;     // the number of the LED pin
 
 //#define HALL
@@ -151,19 +151,24 @@ void loop() {
 #include <DHT.h>
 #include <Wire.h>
 
-DHT 		dht(9, DHT22);
+DHT 		dht(2, DHT22);
 const int pirPin = 4;
+const int LED_PIN = 9;
 
 void setup()
 {
 	  Serial.begin(9600);
 	   pinMode(pirPin, INPUT);
-//	  dht.begin();
+	   pinMode(LED_PIN, OUTPUT);
+	  dht.begin();
 }
+
+uint8_t	value=0;
 
 void loop() {
 	Serial.print("tem:");
-	Serial.println(dht.readTemperature());
+		Serial.println(1.1f);
+		Serial.println(dht.readTemperature());
 	Serial.print("hum:");
 	Serial.println(dht.readHumidity());
 	Serial.print("pir:");
@@ -173,6 +178,11 @@ void loop() {
 		Serial.println("-");
 
 	}
+	analogWrite(LED_PIN, value);
+	if(value==0)
+		value=1;
+	else
+		value<<=1;
 //    digitalWrite(ledPin, digitalRead(pirPin));
 
 	delay(1000);
