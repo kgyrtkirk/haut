@@ -10,13 +10,19 @@
 #include "KChannel.h"
 #include "wiring_private.h"
 #include "FadeController.h"
+#include "LightMeter.h"
+#include "DHT.h"
 
 // fet is connected to Timer1 / OC1A
-#define	LED_PIN	9
+
+#define	pirPin	4
+#define	hallPin	5
 
 KRF			krf(7,8,KRF_ADDR::DESK1);
 
 Fader<3>	fader(9);
+LightMeter2	lightMeter(0);
+DHT 		dht(2, DHT22);
 
 ISR(TIMER2_OVF_vect){
 	fader.isr();
@@ -92,6 +98,7 @@ int my_putc(char c, FILE *t) {
 void setup() {
 	fader.init();
 	fwFrag.init();
+	dht.begin();
 	Serial.begin(115200);
 	fdevopen(&my_putc, 0);
 
@@ -107,6 +114,7 @@ void setup() {
 
 uint16_t	rxCnt=0;
 uint8_t freeWheel = 0;
+
 void loop() {
 	fwFrag.swapOpportunity();
 	krf.listen(1000,[&] {
@@ -119,9 +127,23 @@ void loop() {
 
 	if(rxCnt!=0 && !freeWheel) {
 		Serial.println(rxCnt);
+		Serial.print("error:	");
 		Serial.println(channel_kitchen.errors);
+		Serial.print("seq:	");
 		Serial.println(channel_kitchen.seqH.get());
+		Serial.print("up:	");
 		Serial.println(channel_kitchen.up);
+		Serial.print("lux:	");
+		Serial.println(lightMeter.light());
+		Serial.print("temp:	");
+		Serial.println(dht.readTemperature());
+		Serial.print("hum:	");
+		Serial.println(dht.readHumidity());
+		Serial.print("pir:	");
+		Serial.println(digitalRead(pirPin));
+		Serial.print("hall:	");
+		Serial.println(digitalRead(hallPin));
+
 
 	}
 }

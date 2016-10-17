@@ -32,6 +32,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/optiboot-service}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-fader}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/lightMeter}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.110205393" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -50,6 +51,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/optiboot-service}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-fader}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/lightMeter}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1074568169" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

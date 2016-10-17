@@ -82,6 +82,11 @@
 			<location>/home/kirk/Arduino/libraries/k-rf</location>
 		</link>
 		<link>
+			<name>libraries/lightMeter</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/lightMeter</location>
+		</link>
+		<link>
 			<name>libraries/optiboot-service</name>
 			<type>2</type>
 			<location>/home/kirk/Arduino/libraries/optiboot-service</location>
