@@ -27,6 +27,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/haut-core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/k-fader}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.271234831" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -40,6 +41,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/haut-core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/k-rf}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/kitchenStrip/libraries/k-fader}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1005557721" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

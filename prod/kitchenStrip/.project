@@ -57,6 +57,11 @@
 			<location>/home/kirk/Arduino/libraries/haut-core</location>
 		</link>
 		<link>
+			<name>libraries/k-fader</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/k-fader</location>
+		</link>
+		<link>
 			<name>libraries/k-rf</name>
 			<type>2</type>
 			<location>/home/kirk/Arduino/libraries/k-rf</location>

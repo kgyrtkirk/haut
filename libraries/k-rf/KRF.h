@@ -26,7 +26,8 @@ enum KRF_ADDR {
 	DESK0=0xa01,
 	KITCHEN_STRIP,
 	KITCHEN_SENSOR,
-	DESK1
+	DESK1,
+	DESK2
 };
 
 #define PACKED __attribute__((packed))

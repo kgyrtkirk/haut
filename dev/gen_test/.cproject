@@ -25,6 +25,13 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/DHT_sensor_library}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/Wire/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/SPI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/RF24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/haut-core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-rf}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-fader}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.110205393" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -36,6 +43,13 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/DHT_sensor_library}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/Wire}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/Wire/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/SPI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/SPI/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/RF24}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/haut-core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/optiboot-service}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-rf}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/gen_test/libraries/k-fader}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1074568169" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

@@ -12,9 +12,9 @@
 
 class KChannel {
 protected:
-	SeqHandler	seqH;
 	uint8_t		pipeId;
 public:
+	SeqHandler	seqH;
 	KRF			&krf;
 	uint16_t	addr;
 	uint8_t		errors;

@@ -9,104 +9,24 @@
 #include "FlashUpdateService.h"
 #include "KChannel.h"
 #include "wiring_private.h"
+#include "DelayControlValue.h"
+#include "FadeController.h"
 
 // fet is connected to Timer1 / OC1A
 #define	LED_PIN	9
 
 KRF			krf(7,8,KITCHEN_STRIP);
 
-struct	FaderTargetValue {
-	uint8_t	target;
-	uint8_t	skipCount;
-};
 
+Fader<3>	fader(9);
 
-
-template<class VT,size_t CNT>
-class DelayControlValue {
-	struct DelayedValue{
-		VT			value;
-		uint64_t	until;
-	};
-	DelayedValue	dv[CNT];
-public:
-
-	DelayControlValue(){
-		uint8_t	i;
-		for(i=0;i<CNT;i++){
-			dv[i].until=0;
-		}
-	}
-	void command(uint8_t priority,uint64_t until,const VT&value) {
-		if(priority>=CNT){
-			return;
-		}
-		dv[priority].value=value;
-		dv[priority].until=until;
-	}
-
-	const VT& getActiveValue() const{
-		return dv[getActiveState()].value;
-	}
-	uint8_t getActiveState() const{
-		uint8_t	i;
-		uint64_t	now=millis();
-		for(i=CNT-1;i>0;i--){
-			if(dv[i].until > now){
-				return i;
-			}
-		}
-		return 0;
-	}
-
-};
-DelayControlValue<FaderTargetValue,3>	dcv;
-
-class Fader {
-	uint8_t	value;
-	uint8_t	skips;
-public:
-//	uint8_t	target;
-//	uint8_t	skipCount;
-
-	Fader(){
-		value=0;
-		skips=0;
-	}
-	void init() {
-		TCCR2B = (4<<CS20);
-		TIMSK2 = 1<<TOIE2;
-	}
-	void isr(){
-		if(skips) {
-			skips--;
-			return;
-		}
-		FaderTargetValue v=dcv.getActiveValue();
-//		skipCount=v.skipCount;
-//		target=v.target;
-
-		skips=v.skipCount;
-		if(value==v.target){
-			return;
-		}
-		if(value<v.target){
-			value++;
-		}else{
-			value--;
-		}
-		analogWrite(LED_PIN, value);
-	}
-};
-
-
-
-Fader	fader;
 ISR(TIMER2_OVF_vect){
 	fader.isr();
 }
 
+
 HautCore hc(krf);
+
 
 class KitchenStripService {
 	FaderTargetValue	newTarget;
@@ -119,18 +39,18 @@ public:
 	void init(){
 		newTarget.skipCount=3;
 		newTarget.target=0;
-		dcv.command(0,0,newTarget);
+		fader.dcv.command(0,0,newTarget);
 	}
 	void ack(){
 		dampedLightSense.update(krf.packet.kitchen.state.lum);
 //		showState(krf.packet.kitchen);
 		if(krf.packet.kitchen.state.pir) {
-			if(dcv.getActiveState() == 0 && dampedLightSense.getValue() > 50){
+			if(fader.dcv.getActiveState() == 0 && dampedLightSense.getValue() > 50){
 				// do nothing...there is enough light there
 			}else{
 				newTarget.skipCount=0;
 				newTarget.target=255;
-				dcv.command(1,millis()+60000,newTarget);
+				fader.dcv.command(1,millis()+60000,newTarget);
 			}
 		}
 	}
@@ -156,7 +76,7 @@ public:
 		FaderTargetValue	target;
 		target.skipCount=0;
 		target.target=krf.packet.debug.level;
-		dcv.command(2,millis()+180000,target);
+		fader.dcv.command(2,millis()+180000,target);
 	}
 
 };

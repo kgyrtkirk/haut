@@ -52,9 +52,39 @@
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/libraries/IRremote/2.0.1</location>
 		</link>
 		<link>
+			<name>libraries/RF24</name>
+			<type>2</type>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/libraries/RF24/1.1.6</location>
+		</link>
+		<link>
+			<name>libraries/SPI</name>
+			<type>2</type>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/libraries/SPI</location>
+		</link>
+		<link>
 			<name>libraries/Wire</name>
 			<type>2</type>
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/libraries/Wire</location>
+		</link>
+		<link>
+			<name>libraries/haut-core</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/haut-core</location>
+		</link>
+		<link>
+			<name>libraries/k-fader</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/k-fader</location>
+		</link>
+		<link>
+			<name>libraries/k-rf</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/k-rf</location>
+		</link>
+		<link>
+			<name>libraries/optiboot-service</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/optiboot-service</location>
 		</link>
 	</linkedResources>
 </projectDescription>
