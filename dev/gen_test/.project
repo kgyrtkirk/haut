@@ -77,6 +77,11 @@
 			<location>/home/kirk/Arduino/libraries/k-fader</location>
 		</link>
 		<link>
+			<name>libraries/k-ir</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/k-ir</location>
+		</link>
+		<link>
 			<name>libraries/k-rf</name>
 			<type>2</type>
 			<location>/home/kirk/Arduino/libraries/k-rf</location>

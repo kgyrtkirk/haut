@@ -23,8 +23,8 @@ public:
 		skips=0;
 	}
 	void init() {
-		TCCR2B = (4<<CS20);
-		TIMSK2 = 1<<TOIE2;
+//		TCCR2B = (4<<CS20);
+//		TIMSK2 = 1<<TOIE2;
 	}
 	void isr(){
 		if(skips) {

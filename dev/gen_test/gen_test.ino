@@ -12,6 +12,7 @@
 #include "FadeController.h"
 #include "LightMeter.h"
 #include "DHT.h"
+#include "k-ir.h"
 
 // fet is connected to Timer1 / OC1A
 
@@ -23,10 +24,11 @@ KRF			krf(7,8,KRF_ADDR::DESK1);
 Fader<3>	fader(9);
 LightMeter2	lightMeter(0);
 DHT 		dht(2, DHT22);
+KIR			kir(10);
 
-ISR(TIMER2_OVF_vect){
-	fader.isr();
-}
+//ISR(TIMER2_OVF_vect){
+////	fader.isr();
+//}
 
 HautCore hc(krf);
 
@@ -99,6 +101,7 @@ void setup() {
 	fader.init();
 	fwFrag.init();
 	dht.begin();
+	kir.init();
 	Serial.begin(115200);
 	fdevopen(&my_putc, 0);
 
@@ -124,6 +127,10 @@ void loop() {
 		channel_debug.service_rx(SERVICE_KITCHEN, dls);
 	});
 	freeWheel++;
+
+//	pinMode(3,OUTPUT);
+//	digitalWrite(3,freeWheel<100?1:0);
+	kir.loop();
 
 	if(rxCnt!=0 && !freeWheel) {
 		Serial.println(rxCnt);
