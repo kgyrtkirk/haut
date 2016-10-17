@@ -5,8 +5,10 @@
 
  const int hallPin = 5;     // the number of the hall effect sensor pin
  const int ledPin =  13;     // the number of the LED pin
+ int RECV_PIN = 10; // IR
 
 //#define HALL
+
 //#define RECV
 #define XDHT
 #ifdef HALL
@@ -80,8 +82,7 @@ DIY Hacking
 
 
 #ifdef RECV
-#ifdef RECV_V0
-int RECV_PIN = 6;
+#ifndef RECV_V0
 
 IRrecv irrecv(RECV_PIN);
 
@@ -155,19 +156,52 @@ DHT 		dht(2, DHT22);
 const int pirPin = 4;
 const int LED_PIN = 9;
 
+IRrecv irrecv(RECV_PIN);
+
+decode_results results;
+
+void setupIR()
+{
+//  Serial.begin(9600);
+  irrecv.enableIRIn(); // Start the receiver
+}
+  IRsend irsend;
+
+void loopIR() {
+  if (irrecv.decode(&results)) {
+	    Serial.println(results.decode_type, HEX);
+//	    Serial.println(NEC, HEX);
+	    Serial.println(results.bits, HEX);
+//
+	    Serial.println(results.value, HEX);
+	    irsend.sendNEC(0x20DFC03F,32);
+	    irrecv.enableIRIn();
+
+	    irrecv.resume(); // Receive the next value
+
+//    20DF40BF
+  }
+
+}
+
+
 void setup()
 {
 	  Serial.begin(9600);
 	   pinMode(pirPin, INPUT);
 	   pinMode(LED_PIN, OUTPUT);
 	  dht.begin();
+	  setupIR();
 }
 
 uint8_t	value=0;
 
+
 void loop() {
+	loopIR();
+	if(value==0){
 	Serial.print("tem:");
-		Serial.println(1.1f);
+//		Serial.println(1.1f);
 		Serial.println(dht.readTemperature());
 	Serial.print("hum:");
 	Serial.println(dht.readHumidity());
@@ -178,6 +212,7 @@ void loop() {
 		Serial.println("-");
 
 	}
+	}
 	analogWrite(LED_PIN, value);
 	if(value==0)
 		value=1;
@@ -185,8 +220,9 @@ void loop() {
 		value<<=1;
 //    digitalWrite(ledPin, digitalRead(pirPin));
 
-	delay(1000);
+	delay(100);
 	   // initialize the hall effect sensor pin as an input:
 }
+
 
 #endif
