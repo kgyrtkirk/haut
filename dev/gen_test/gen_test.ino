@@ -26,7 +26,7 @@ LightMeter2	lightMeter(0);
 DHT 		dht(2, DHT22);
 KIR			kir(6);
 
-ISR(TIMER2_OVF_vect){
+ISR(TIMER1_OVF_vect){
 	fader.isr();
 }
 
@@ -142,6 +142,11 @@ void setup() {
 	channel_debug.init();
 	kss.init();
 	krf.debug();
+	FaderTargetValue	ftv;
+	ftv.target=32;
+	ftv.skipCount=0;
+	fader.dcv.command(2,millis()+5000,ftv);
+
 }
 
 

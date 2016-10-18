@@ -24,7 +24,7 @@ public:
 	}
 	void init() {
 //		TCCR2B = (4<<CS20);
-//		TIMSK2 = 1<<TOIE2;
+		TIMSK1 = 1<<TOIE1;
 	}
 	void isr(){
 		if(skips) {
@@ -44,6 +44,7 @@ public:
 		}else{
 			value--;
 		}
+		// FIXME replace this with own code later
 		analogWrite(ledPin, value);
 	}
 };
