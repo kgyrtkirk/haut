@@ -24,11 +24,11 @@ KRF			krf(7,8,KRF_ADDR::DESK1);
 Fader<3>	fader(9);
 LightMeter2	lightMeter(0);
 DHT 		dht(2, DHT22);
-KIR			kir(10);
+KIR			kir(6);
 
-//ISR(TIMER2_OVF_vect){
-////	fader.isr();
-//}
+ISR(TIMER2_OVF_vect){
+	fader.isr();
+}
 
 HautCore hc(krf);
 
@@ -97,12 +97,42 @@ int my_putc(char c, FILE *t) {
 }
 
 
+IRrecv irrecv(6);
+
+decode_results results;
+
+void kirinit()
+{
+//  Serial.begin(9600);
+  irrecv.enableIRIn(); // Start the receiver
+}
+  IRsend irsend;
+
+void kirloop() {
+//	irrecv.isIdle()
+  if (irrecv.decode(&results)) {
+           Serial.println(results.decode_type, HEX);
+//         Serial.println(NEC, HEX);
+           Serial.println(results.bits, HEX);
+//
+           Serial.println(results.value, HEX);
+           irsend.sendNEC(0x20DFC03F,32);
+           irrecv.enableIRIn();
+
+           irrecv.resume(); // Receive the next value
+
+//    20DF40BF
+  }
+
+}
+
+
 void setup() {
 	fader.init();
 	fwFrag.init();
 	dht.begin();
-	kir.init();
 	Serial.begin(115200);
+	kir.init();
 	fdevopen(&my_putc, 0);
 
 	Serial.println("# this is:  " __FILE__);
