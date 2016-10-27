@@ -4,3 +4,6 @@
 [submodule "optiboot"]
 	path = external/optiboot
 	url = git@github.com:kgyrtkirk/optiboot
+[submodule "external/pubsubclient"]
+	path = external/pubsubclient
+	url = git@github.com:knolleary/pubsubclient.git

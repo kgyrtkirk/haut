@@ -12,6 +12,7 @@ function check_header($name, $value = false) {
     return true;
 }
 
+
 function sendFile($path) {
     header($_SERVER["SERVER_PROTOCOL"].' 200 OK', true, 200);
     header('Content-Type: application/octet-stream', true);
@@ -27,6 +28,7 @@ if(!check_header('HTTP_USER_AGENT', 'ESP8266-http-Update')) {
     exit();
 }
 
+error_log(print_R($_SERVER,TRUE));
 if(
     !check_header('HTTP_X_ESP8266_STA_MAC') ||
     !check_header('HTTP_X_ESP8266_AP_MAC') ||
@@ -40,18 +42,22 @@ if(
     echo "only for ESP8266 updater! (header)\n";
     exit();
 }
+error_log("onlyaa");
 
 $db = array(
     "18:FE:AA:AA:AA:AA" => "DOOR-7-g14f53a19",
     "18:FE:AA:AA:AA:BB" => "TEMP-1.0.0",
-	"60:01:94:0f:a8:5e" => "fx1"
+	"60:01:94:0F:8A:5E" => "fx1",
+"60:01:94:0F:A8:5E" => "fx1"
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
     header($_SERVER["SERVER_PROTOCOL"].' 500 ESP MAC not configured for updates', true, 500);
+exit();
 }
 
 $localBinary = "./bin/".$db[$_SERVER['HTTP_X_ESP8266_STA_MAC']].".bin";
+error_log("$localBinary");
 
 // Check if version has been set and does not match, if not, check if
 // MD5 hash between local binary and ESP8266 binary do not match if not.
@@ -63,6 +69,6 @@ if((!check_header('HTTP_X_ESP8266_SDK_VERSION') && $db[$_SERVER['HTTP_X_ESP8266_
     header($_SERVER["SERVER_PROTOCOL"].' 304 Not Modified', true, 304);
 }
 
-header($_SERVER["SERVER_PROTOCOL"].' 500 no version for ESP MAC', true, 500);
+//header($_SERVER["SERVER_PROTOCOL"].' 500 no version for ESP MAC', true, 500);
 
 ?>
