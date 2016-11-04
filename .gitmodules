@@ -7,3 +7,6 @@
 [submodule "external/pubsubclient"]
 	path = external/pubsubclient
 	url = git@github.com:knolleary/pubsubclient.git
+[submodule "external/ESP8266_new_pwm"]
+	path = external/ESP8266_new_pwm
+	url = git@github.com:StefanBruens/ESP8266_new_pwm.git
