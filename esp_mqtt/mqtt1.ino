@@ -22,9 +22,6 @@
   - Select your ESP8266 in "Tools -> Board"
 
 */
-//extern "C" {
-//  #include "pwm.h"
-//}
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
@@ -32,6 +29,7 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 #include <stdlib.h>
+#include <new_pwm.h>
 
 #define FET_PIN	4
 // Update these with values suitable for your network.
@@ -119,9 +117,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   if ((char)payload[0] == 'A') {
 	  int val=strtol(((char*)payload)+1,0,10);
-	  analogWrite(FET_PIN,val);
-//	  pwm_set_duty(val, 0); // GPIO15: 100%
-//	  pwm_start();           // commit
+//	  analogWrite(FET_PIN,val);
+	  pwm_set_duty(val, 0); // GPIO15: 100%
+	  pwm_start();           // commit
 
       char msg[128];
       sprintf (msg, "analog: %d", val);
@@ -246,8 +244,9 @@ void setup() {
 
 //  timer1Start(10000,TIMER1_AUTO_LOAD,int_handler);
 
-//  pwm_init(period, pwm_duty_init, PWM_CHANNELS, io_info);
-//  pwm_start();
+  pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
+  pwm_init(period, pwm_duty_init, PWM_CHANNELS, io_info);
+  pwm_start();
 
 //  analogWrite(FET_PIN,16);
 }
