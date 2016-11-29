@@ -30,6 +30,8 @@
 #include <ESP8266httpUpdate.h>
 #include <stdlib.h>
 #include <new_pwm.h>
+#include <Wire.h>
+
 
 #define FET_PIN	4
 // Update these with values suitable for your network.
@@ -82,7 +84,7 @@ uint32 io_info[PWM_CHANNELS][3] = {
 };
 
 // initial duty: all off
-uint32 pwm_duty_init[PWM_CHANNELS] = {2500};
+uint32 pwm_duty_init[PWM_CHANNELS] = {1};
 
 
 
@@ -118,12 +120,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if ((char)payload[0] == 'A') {
 	  int val=strtol(((char*)payload)+1,0,10);
 //	  analogWrite(FET_PIN,val);
-	  pwm_set_duty(val, 0); // GPIO15: 100%
-	  pwm_start();           // commit
+//	  pwm_set_duty(val, 0); // GPIO15: 100%
+//	  pwm_start();           // commit
 
       char msg[128];
       sprintf (msg, "analog: %d", val);
       client.publish("outTopic", msg);
+
+      Wire.beginTransmission(0x33);
+      Wire.write(val);
+      Wire.endTransmission();
 
   }
   if ((char)payload[0] == '1') {
@@ -234,6 +240,7 @@ timer1Stop(void)
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
+	pinMode(A0, INPUT);
 	  pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
@@ -247,6 +254,9 @@ void setup() {
   pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   pwm_init(period, pwm_duty_init, PWM_CHANNELS, io_info);
   pwm_start();
+
+  Wire.pins(12,13);
+  Wire.begin();
 
 //  analogWrite(FET_PIN,16);
 }
@@ -263,13 +273,15 @@ void loop() {
   if (now - lastMsg > 2000) {
     lastMsg = now;
     ++value;
-    int hum=(dht.readHumidity()*100);
-    int temp=(dht.readTemperature()*100);
+    int hum=0;
+    int temp=0;
+//    hum=(dht.readHumidity()*100);
+//    temp=(dht.readTemperature()*100);
 //    hum=3;
-    if(digitalRead(16)>0)
-    	sprintf (msg, "XHEllo worlD+#%d %d: %d w%d", value, temp,hum,wheel);
-    else
-    	sprintf (msg, "Xhello worLd-#%d %d: %d w%d", value, temp,hum,wheel);
+    int lum= analogRead(A0);
+    analogRead(0);
+    int pir=digitalRead(16);
+	sprintf (msg, "readings #%d temp:%d hum:%d wh:%d lum:%d pir:%d", value, temp,hum,wheel,lum,pir);
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);

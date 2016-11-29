@@ -67,6 +67,11 @@
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266httpUpdate</location>
 		</link>
 		<link>
+			<name>libraries/Wire</name>
+			<type>2</type>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/Wire</location>
+		</link>
+		<link>
 			<name>libraries/pubsubclient</name>
 			<type>2</type>
 			<location>/home/kirk/Arduino/libraries/pubsubclient</location>

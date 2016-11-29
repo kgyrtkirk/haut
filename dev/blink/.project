@@ -34,22 +34,17 @@
 		<link>
 			<name>core/core</name>
 			<type>2</type>
-			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/cores/arduino</location>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/ATTinyCore/hardware/avr/1.1.2/cores/tiny</location>
 		</link>
 		<link>
 			<name>core/variant</name>
 			<type>2</type>
-			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/variants/eightanaloginputs</location>
-		</link>
-		<link>
-			<name>libraries/RF24</name>
-			<type>2</type>
-			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/libraries/RF24/1.1.6</location>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/ATTinyCore/hardware/avr/1.1.2/variants/tinyX5</location>
 		</link>
 		<link>
 			<name>libraries/SPI</name>
 			<type>2</type>
-			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/arduino/hardware/avr/1.6.10/libraries/SPI</location>
+			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/ATTinyCore/hardware/avr/1.1.2/libraries/SPI</location>
 		</link>
 	</linkedResources>
 </projectDescription>

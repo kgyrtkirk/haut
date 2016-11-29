@@ -22,8 +22,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/core/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/libraries/SPI}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/libraries/SPI/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/libraries/RF24}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.1496310347" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -32,8 +30,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/core/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/libraries/SPI}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/libraries/SPI/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/blink/libraries/RF24}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.196492719" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>
