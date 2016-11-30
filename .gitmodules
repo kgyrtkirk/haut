@@ -10,3 +10,9 @@
 [submodule "external/ESP8266_new_pwm"]
 	path = external/ESP8266_new_pwm
 	url = git@github.com:StefanBruens/ESP8266_new_pwm.git
+[submodule "external/IRremoteESP8266"]
+	path = external/IRremoteESP8266
+	url = git@github.com:markszabo/IRremoteESP8266.git
+[submodule "external/IRremoteESP8266_ff"]
+	path = external/IRremoteESP8266_ff
+	url = git@github.com:AndrewMohawk/IRremoteESP8266.git

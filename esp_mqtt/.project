@@ -57,14 +57,14 @@
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266WiFi</location>
 		</link>
 		<link>
-			<name>libraries/ESP8266_new_pwm</name>
-			<type>2</type>
-			<location>/home/kirk/Arduino/libraries/ESP8266_new_pwm</location>
-		</link>
-		<link>
 			<name>libraries/ESP8266httpUpdate</name>
 			<type>2</type>
 			<location>/home/kirk/sdk/eclipseArduino/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266httpUpdate</location>
+		</link>
+		<link>
+			<name>libraries/IRremoteESP8266</name>
+			<type>2</type>
+			<location>/home/kirk/Arduino/libraries/IRremoteESP8266</location>
 		</link>
 		<link>
 			<name>libraries/Wire</name>

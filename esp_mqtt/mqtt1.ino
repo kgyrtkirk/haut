@@ -29,8 +29,9 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 #include <stdlib.h>
-#include <new_pwm.h>
+//#include <new_pwm.h>
 #include <Wire.h>
+#include <IRremoteESP8266.h>
 
 
 #define FET_PIN	4
@@ -239,8 +240,13 @@ timer1Stop(void)
 // as the current DHT reading algorithm adjusts itself to work on faster procs.
 DHT dht(DHTPIN, DHTTYPE);
 
+#define IR_RECV_PIN 4
+
+IRrecv irrecv(IR_RECV_PIN);
+
 void setup() {
 	pinMode(A0, INPUT);
+
 	  pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
@@ -252,8 +258,11 @@ void setup() {
 //  timer1Start(10000,TIMER1_AUTO_LOAD,int_handler);
 
   pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-  pwm_init(period, pwm_duty_init, PWM_CHANNELS, io_info);
-  pwm_start();
+//  pwm_init(period, pwm_duty_init, PWM_CHANNELS, io_info);
+//  pwm_start();
+
+  pinMode(IR_RECV_PIN, INPUT);
+  irrecv.enableIRIn(); // Start the receiver
 
   Wire.pins(12,13);
   Wire.begin();
@@ -281,11 +290,23 @@ void loop() {
     int lum= analogRead(A0);
     analogRead(0);
     int pir=digitalRead(16);
-	sprintf (msg, "readings #%d temp:%d hum:%d wh:%d lum:%d pir:%d", value, temp,hum,wheel,lum,pir);
+
+	decode_results results;
+	int irv=0;
+	if (irrecv.decode(&results)) {
+    irv=(unsigned int)results.value;
+
+    irrecv.resume(); // Receive the next value
+	}
+
+
+
+	sprintf (msg, "readings #%d temp:%d hum:%d wh:%d lum:%d pir:%d irv:%d", value, temp,hum,wheel,lum,pir,irv);
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);
 //    delay(200);
+
   }
 }
 

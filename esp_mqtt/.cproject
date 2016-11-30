@@ -30,8 +30,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/pubsubclient}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/pubsubclient/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/DHT_sensor_library}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/ESP8266_new_pwm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/Wire}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/IRremoteESP8266}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.753102493" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -48,8 +48,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/pubsubclient}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/pubsubclient/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/DHT_sensor_library}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/ESP8266_new_pwm}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/Wire}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_mqtt/libraries/IRremoteESP8266}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1392262769" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>
