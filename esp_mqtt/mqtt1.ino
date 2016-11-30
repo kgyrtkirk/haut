@@ -29,7 +29,6 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 #include <stdlib.h>
-//#include <new_pwm.h>
 #include <Wire.h>
 #include <IRremoteESP8266.h>
 
@@ -167,61 +166,6 @@ void reconnect() {
   }
 }
 
-volatile int	wheel=0;
-static int* wheel1 = (int*)(0x60000300);
-
-extern "C"{
-void ICACHE_FLASH_ATTR int_handler(void)
-{
-
-	wheel+=1;
-//	(*wheel1)++;
-}
-}
-
-
-
-// definitions for RTC Timer1
-#define TIMER1_DIVIDE_BY_1              0x0000
-#define TIMER1_DIVIDE_BY_16             0x0004
-#define TIMER1_DIVIDE_BY_256            0x0008
-
-#define TIMER1_AUTO_LOAD                0x0040
-#define TIMER1_ENABLE_TIMER             0x0080
-#define TIMER1_FLAGS_MASK               0x00cc
-
-#define TIMER1_NMI                      0x8000
-
-#define TIMER1_COUNT_MASK               0x007fffff        // 23 bit timer
-
-void ICACHE_FLASH_ATTR
-timer1Start(uint32_t ticks, uint16_t flags, void (*handler)(void))
-{
-    RTC_REG_WRITE(FRC1_LOAD_ADDRESS, ticks & TIMER1_COUNT_MASK);
-    RTC_REG_WRITE(FRC1_CTRL_ADDRESS, (flags & TIMER1_FLAGS_MASK) | TIMER1_ENABLE_TIMER);
-    RTC_CLR_REG_MASK(FRC1_INT_ADDRESS, FRC1_INT_CLR_MASK);
-    if (handler != NULL)
-    {
-//        if (flags & TIMER1_NMI)
-//            ETS_FRC_TIMER1_NMI_INTR_ATTACH(handler);
-//        else
-            ETS_FRC_TIMER1_INTR_ATTACH((void (*)(void *))handler, NULL);
-        TM1_EDGE_INT_ENABLE();
-        ETS_FRC1_INTR_ENABLE();
-        RTC_REG_WRITE(FRC1_LOAD_ADDRESS, ticks & TIMER1_COUNT_MASK);
-    }
-}
-
-void ICACHE_FLASH_ATTR
-timer1Stop(void)
-{
-    ETS_FRC1_INTR_DISABLE();
-    TM1_EDGE_INT_DISABLE();
-    RTC_REG_WRITE(FRC1_CTRL_ADDRESS, 0);
-}
-
-
-
 #include "DHT.h"
 #define DHTPIN 5
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
@@ -255,11 +199,8 @@ void setup() {
   client.setCallback(callback);
   dht.begin();
 
-//  timer1Start(10000,TIMER1_AUTO_LOAD,int_handler);
 
   pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-//  pwm_init(period, pwm_duty_init, PWM_CHANNELS, io_info);
-//  pwm_start();
 
   pinMode(IR_RECV_PIN, INPUT);
   irrecv.enableIRIn(); // Start the receiver
@@ -274,7 +215,6 @@ void loop() {
 
   if (!client.connected()) {
     reconnect();
-//    timer1Start(0,0,int_handler);
   }
   client.loop();
 
@@ -301,7 +241,7 @@ void loop() {
 
 
 
-	sprintf (msg, "readings #%d temp:%d hum:%d wh:%d lum:%d pir:%d irv:%d", value, temp,hum,wheel,lum,pir,irv);
+	sprintf (msg, "readings #%d temp:%d hum:%d lum:%d pir:%d irv:%d", value, temp,hum,lum,pir,irv);
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);
