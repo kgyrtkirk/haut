@@ -87,6 +87,7 @@ uint32 io_info[PWM_CHANNELS][3] = {
 uint32 pwm_duty_init[PWM_CHANNELS] = {1};
 
 
+IRsend irsend(15);
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -130,6 +131,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
       Wire.beginTransmission(0x33);
       Wire.write(val);
       Wire.endTransmission();
+
+  }
+  if ((char)payload[0] == 'W') {
+	           irsend.sendNEC(0x20DFC03F,32);
+
+      char msg[128];
+      sprintf (msg, "irsend");
+      client.publish("outTopic", msg);
 
   }
   if ((char)payload[0] == '1') {
@@ -185,6 +194,7 @@ void reconnect() {
 DHT dht(DHTPIN, DHTTYPE);
 
 #define IR_RECV_PIN 4
+#define HALL_PIN 14
 
 IRrecv irrecv(IR_RECV_PIN);
 
@@ -201,16 +211,19 @@ void setup() {
 
 
   pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-
-  pinMode(IR_RECV_PIN, INPUT);
-  irrecv.enableIRIn(); // Start the receiver
+irsend.begin();
 
   Wire.pins(12,13);
   Wire.begin();
 
+  pinMode(HALL_PIN, INPUT);
+  pinMode(IR_RECV_PIN, INPUT);
+  irrecv.enableIRIn(); // Start the receiver
+
 //  analogWrite(FET_PIN,16);
 }
 
+decode_results results;
 void loop() {
 
   if (!client.connected()) {
@@ -230,8 +243,8 @@ void loop() {
     int lum= analogRead(A0);
     analogRead(0);
     int pir=digitalRead(16);
+    int hall=digitalRead(HALL_PIN);
 
-	decode_results results;
 	int irv=0;
 	if (irrecv.decode(&results)) {
     irv=(unsigned int)results.value;
@@ -241,7 +254,7 @@ void loop() {
 
 
 
-	sprintf (msg, "readings #%d temp:%d hum:%d lum:%d pir:%d irv:%d", value, temp,hum,lum,pir,irv);
+	sprintf (msg, "readings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d", value, temp,hum,lum,pir,irv,hall);
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);
