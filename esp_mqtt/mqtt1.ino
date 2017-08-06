@@ -1,4 +1,3 @@
-
 /*
  Basic ESP8266 MQTT example
 
@@ -33,12 +32,12 @@
 #include <Wire.h>
 #include <IRremoteESP8266.h>
 
+#include "k-settings.h"
 
 #define FET_PIN	4
 // Update these with values suitable for your network.
 
-const char* ssid = "kroute";
-fix_passwd
+//fix_passwd
 const char* password = "fixed_later";
 const char* mqtt_server = "192.168.128.33";
 
@@ -56,10 +55,8 @@ void setup_wifi() {
   Serial.println();
   Serial.println("Welcome to the disclaimer2! ");
   Serial.print("Connecting to ");
-  Serial.println(ssid);
-fix_passwd
-  WiFiMulti.addAP("kroute", "fkfkf");
-//  WiFi.begin(ssid, password);
+  Serial.println(WIFI_SSID);
+  WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 
   while (WiFiMulti.run() != WL_CONNECTED) {
     delay(500);
