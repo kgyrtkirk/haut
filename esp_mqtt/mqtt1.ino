@@ -49,7 +49,7 @@ void setup_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
-  Serial.println("Welcome to the disclaimerX88A! ");
+  Serial.println("Welcome to the disclaimerZ9A! ");
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
   WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
@@ -136,11 +136,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   }
   if ((char)payload[0] == '1') {
-    digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
+//    digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
     // but actually the LED is on; this is because
     // it is acive low on the ESP-01)
   } else {
-    digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
+//    digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
   }
 
 }
@@ -170,7 +170,8 @@ void reconnect() {
 }
 
 #include "DHT.h"
-#define DHTPIN 5
+#define DHTPIN 16
+//#define DHTPIN 5
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 //#define DHTTYPE DHT21   // DHT 21 (AM2301)
 
@@ -190,7 +191,7 @@ DHT dht(DHTPIN, DHTTYPE);
 #define IR_RECV_PIN 4
 #define HALL_PIN 14
 
-IRrecv irrecv(IR_RECV_PIN);
+//IRrecv irrecv(IR_RECV_PIN);
 
 void setup() {
 	pinMode(A0, INPUT);
@@ -212,7 +213,7 @@ irsend.begin();
 
   pinMode(HALL_PIN, INPUT);
   pinMode(IR_RECV_PIN, INPUT);
-  irrecv.enableIRIn(); // Start the receiver
+//  irrecv.enableIRIn(); // Start the receiver
 
 //  analogWrite(FET_PIN,16);
 }
@@ -235,16 +236,17 @@ void loop() {
     temp=(dht.readTemperature()*100);
 //    hum=3;
     int lum= analogRead(A0);
-    analogRead(0);
-    int pir=digitalRead(16);
+//    analogRead(0);
+    int pir=digitalRead(5);
     int hall=digitalRead(HALL_PIN);
+//    int lum=1;int pir=3;int hall=2;
 
 	int irv=0;
-	if (irrecv.decode(&results)) {
-    irv=(unsigned int)results.value;
+//	if (irrecv.decode(&results)) {
+//    irv=(unsigned int)results.value;
 
-    irrecv.resume(); // Receive the next value
-	}
+//    irrecv.resume(); // Receive the next value
+//	}
 
 
 
