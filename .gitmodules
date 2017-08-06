@@ -16,3 +16,6 @@
 [submodule "external/IRremoteESP8266_ff"]
 	path = external/IRremoteESP8266_ff
 	url = git@github.com:AndrewMohawk/IRremoteESP8266.git
+[submodule "external/DHT-sensor-library"]
+	path = external/DHT-sensor-library
+	url = https://github.com/adafruit/DHT-sensor-library
