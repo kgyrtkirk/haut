@@ -191,12 +191,13 @@ DHT dht(DHTPIN, DHTTYPE);
 #define IR_RECV_PIN 4
 #define HALL_PIN 14
 
-//IRrecv irrecv(IR_RECV_PIN);
+IRrecv irrecv(IR_RECV_PIN);
 
 void setup() {
 	pinMode(A0, INPUT);
 
 	  pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
+
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
@@ -213,7 +214,7 @@ irsend.begin();
 
   pinMode(HALL_PIN, INPUT);
   pinMode(IR_RECV_PIN, INPUT);
-//  irrecv.enableIRIn(); // Start the receiver
+  irrecv.enableIRIn(); // Start the receiver
 
 //  analogWrite(FET_PIN,16);
 }
@@ -242,11 +243,11 @@ void loop() {
 //    int lum=1;int pir=3;int hall=2;
 
 	int irv=0;
-//	if (irrecv.decode(&results)) {
-//    irv=(unsigned int)results.value;
+	if (irrecv.decode(&results)) {
+    irv=(unsigned int)results.value;
 
-//    irrecv.resume(); // Receive the next value
-//	}
+    irrecv.resume(); // Receive the next value
+	}
 
 
 
