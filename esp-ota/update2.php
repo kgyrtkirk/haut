@@ -1,11 +1,13 @@
 <?PHP
 
-if (!isset ( $_ENV ["WORKSPACE"] )) {
+if ( getenv('WORKSPACE') == null ) {
 	header($_SERVER["SERVER_PROTOCOL"].' 500 bajvan', true, 500);
 	error_log("WORKSPACE unset");
 	exit(1);
 }
-$workspace = $_ENV ["WORKSPACE"];
+
+$workspace = getenv('WORKSPACE');
+error_log("workspace: ".$workspace );
 
 
 header('Content-type: text/plain; charset=utf8', true);
@@ -70,7 +72,8 @@ exit();
 
 $fwName = $db[$_SERVER['HTTP_X_ESP8266_STA_MAC']];
 
-$localBinary = sprintf("./%s/Release/%s.bin",$workspace,$fwName,$fwName);
+$localBinary = sprintf("%s/%s/Release/%s.bin",$workspace,$fwName,$fwName);
+error_log("serving binary from path:");
 error_log("$localBinary");
 
 // Check if version has been set and does not match, if not, check if

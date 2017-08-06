@@ -49,7 +49,7 @@ void setup_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
-  Serial.println("Welcome to the disclaimer88A! ");
+  Serial.println("Welcome to the disclaimerX88A! ");
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
   WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
