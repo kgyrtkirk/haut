@@ -40,4 +40,7 @@ it might come handy :)
 * make sure that ota computes hash-es
   https://github.com/esp8266/Arduino/pull/2236/files#diff-7f9574f87fdcc5b8fce32df1decf313eR178
   (will be in 2.4.0, but 2.3.0 can be patched)
+* startup ota server:
+  docker build -t esp-ota .
+  docker run -p8181:8181 -it -v $HOME/Documents/sloeber-workspace:/ws/ --rm esp-ota
 
