@@ -37,10 +37,6 @@
 #define FET_PIN	4
 // Update these with values suitable for your network.
 
-//fix_passwd
-const char* password = "fixed_later";
-const char* mqtt_server = "192.168.128.33";
-
 ESP8266WiFiMulti WiFiMulti;
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -203,7 +199,7 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  client.setServer(MQTT_SERVER, 1883);
   client.setCallback(callback);
   dht.begin();
 
