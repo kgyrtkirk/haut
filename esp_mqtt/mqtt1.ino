@@ -49,7 +49,7 @@ void setup_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();
-  Serial.println("Welcome to the disclaimer3! ");
+  Serial.println("Welcome to the disclaimer88A! ");
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
   WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
@@ -231,8 +231,8 @@ void loop() {
     ++value;
     int hum=0;
     int temp=0;
-//    hum=(dht.readHumidity()*100);
-//    temp=(dht.readTemperature()*100);
+    hum=(dht.readHumidity()*100);
+    temp=(dht.readTemperature()*100);
 //    hum=3;
     int lum= analogRead(A0);
     analogRead(0);

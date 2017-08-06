@@ -37,4 +37,7 @@ it might come handy :)
 * run mosquito mqtt https://github.com/toke/docker-mosquitto
 * apt-get install mosquitto-clients
 * mosquitto_sub -h demeter -v -t '#'
+* make sure that ota computes hash-es
+  https://github.com/esp8266/Arduino/pull/2236/files#diff-7f9574f87fdcc5b8fce32df1decf313eR178
+  (will be in 2.4.0, but 2.3.0 can be patched)
 
