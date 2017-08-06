@@ -1,13 +1,23 @@
 <?PHP
 
+if (!isset ( $_ENV ["WORKSPACE"] )) {
+	header($_SERVER["SERVER_PROTOCOL"].' 500 bajvan', true, 500);
+	error_log("WORKSPACE unset");
+	exit(1);
+}
+$workspace = $_ENV ["WORKSPACE"];
+
+
 header('Content-type: text/plain; charset=utf8', true);
 
 function check_header($name, $value = false) {
     if(!isset($_SERVER[$name])) {
-        return false;
+    	error_log("header problems: ".$name);
+    	return false;
     }
     if($value && $_SERVER[$name] != $value) {
-        return false;
+    	error_log("header value problems: ".$name);
+    	return false;
     }
     return true;
 }
@@ -46,12 +56,10 @@ if(
 }
 error_log("onlyaa");
 
-$db = array(
-    "18:FE:AA:AA:AA:AA" => "DOOR-7-g14f53a19",
-    "18:FE:AA:AA:AA:BB" => "TEMP-1.0.0",
-	"60:01:94:0F:8A:5E" => "fx1",
-"60:01:94:0F:A8:5E" => "fx1",
-"60:01:94:10:16:AE" => "fx1"
+$db = array (
+		"60:01:94:0F:8A:5E" => "fx1",
+		"60:01:94:0F:A8:5E" => "fx1",
+		"60:01:94:10:16:AE" => "esp_mqtt",	#	assembled pcb.1
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
@@ -60,7 +68,9 @@ if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
 exit();
 }
 
-$localBinary = "./bin/".$db[$_SERVER['HTTP_X_ESP8266_STA_MAC']].".bin";
+$fwName = $db[$_SERVER['HTTP_X_ESP8266_STA_MAC']];
+
+$localBinary = sprintf("./%s/Release/%s.bin",$workspace,$fwName,$fwName);
 error_log("$localBinary");
 
 // Check if version has been set and does not match, if not, check if
