@@ -228,7 +228,7 @@ void loop() {
   client.loop();
 
   long now = millis();
-  if (now - lastMsg > 2000) {
+  if (now - lastMsg > 1000) {
     lastMsg = now;
     ++value;
     int hum=0;
@@ -255,6 +255,8 @@ void loop() {
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);
+	sprintf (msg, "%d", pir);
+    client.publish("pir", msg);
   }
   delay(10);
 }

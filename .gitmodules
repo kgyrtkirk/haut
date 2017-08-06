@@ -19,3 +19,6 @@
 [submodule "external/DHT-sensor-library"]
 	path = external/DHT-sensor-library
 	url = https://github.com/adafruit/DHT-sensor-library
+[submodule "external/TinyWire"]
+	path = external/TinyWire
+	url = https://github.com/rambo/TinyWire/

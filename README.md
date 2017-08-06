@@ -24,7 +24,9 @@ it might come handy :)
 
 * fetch all the submodules
 * install arduino eclipse
-* install esp8266
+* add platforms
+  http://arduino.esp8266.com/stable/package_esp8266com_index.json
+  http://drazzy.com/package_drazzy.com_index.json
 * set this projects libraries to a library path of arduino eclipse
 * create a project in sloeber...
 * remove the Blink files; and hard link an ino from the project to it
@@ -33,6 +35,7 @@ it might come handy :)
 
 
 ### setup
+
 
 * run mosquito mqtt https://github.com/toke/docker-mosquitto
 * apt-get install mosquitto-clients
@@ -45,3 +48,10 @@ it might come handy :)
   docker run -p8181:8181 -it -v $HOME/Documents/sloeber-workspace:/ws/ --rm esp-ota
 * and the story of GPIO16 and the removal of _PULLUP because it doesnt work with it :D
   change INPUT_PULLUP to PULLUP in DHT.cpp if GPIO16 (esp-gen1)
+
+### compile attiny slave firmware
+
+* create project as earlier...set attiny85...other options should be configured with sanity :D
+* possibly add http://playground.arduino.cc/Linux/Udev
+* possibly need standard arduino ide for bootloader burning
+
