@@ -83,6 +83,9 @@ uint32 pwm_duty_init[PWM_CHANNELS] = {1};
 
 IRsend irsend(15);
 
+uint64_t	manualUntil=0;
+#define	MANUAL_TIME_S	600
+
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
@@ -113,6 +116,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
       }
   }
   if ((char)payload[0] == 'A') {
+	  manualUntil=millis()+MANUAL_TIME_S*1000;
 	  int val=strtol(((char*)payload)+1,0,10);
 //	  analogWrite(FET_PIN,val);
 //	  pwm_set_duty(val, 0); // GPIO15: 100%
@@ -191,9 +195,13 @@ DHT dht(DHTPIN, DHTTYPE);
 #define IR_RECV_PIN 4
 #define HALL_PIN 14
 
+#include "DelayControlValue.h"
 IRrecv irrecv(IR_RECV_PIN);
+DelayControlValue<uint8_t,4>	lampCtrl;
+
 
 void setup() {
+	lampCtrl.command(0, 0, 0);
 	pinMode(A0, INPUT);
 
 	  pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
@@ -220,6 +228,22 @@ irsend.begin();
 }
 
 decode_results results;
+
+
+
+#define	LAMP_ON_TIME_MS	30*1000
+
+
+int	last_lamp_val=-1;
+void setLamp(int val){
+	if(last_lamp_val==val)
+		return;
+	last_lamp_val=val;
+    Wire.beginTransmission(0x33);
+    Wire.write(val);
+    Wire.endTransmission();
+}
+
 void loop() {
 
   if (!client.connected()) {
@@ -259,6 +283,15 @@ void loop() {
     client.publish("pir", msg);
   }
   delay(10);
+  {
+	  if(now>manualUntil){
+	    int pir=digitalRead(5);
+	    if(pir) {
+	    	lampCtrl.command(1, now+LAMP_ON_TIME_MS, 255);
+	    }
+	    setLamp(lampCtrl.getActiveValue());
+	  }
+  }
 }
 
 
