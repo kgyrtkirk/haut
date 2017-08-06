@@ -95,7 +95,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   // Switch on the LED if an 1 was received as first character
   if ((char)payload[0] == 'U') {
       Serial.println("attempting upgrade");
-      t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.128.60:8181/update2.php","wow");
+      t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.128.70:8181/update2.php","wow");
       //t_httpUpdate_return  ret = ESPhttpUpdate.update("https://server/file.bin");
 
       switch(ret) {

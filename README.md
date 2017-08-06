@@ -31,3 +31,10 @@ it might come handy :)
 * copy libraries/k-settings.sample.h and adjust settings
 * add libraries; possibly install some via sloeber as well; if I'm lazy to add them as submodules
 
+
+### setup
+
+* run mosquito mqtt https://github.com/toke/docker-mosquitto
+* apt-get install mosquitto-clients
+* mosquitto_sub -h demeter -v -t '#'
+
