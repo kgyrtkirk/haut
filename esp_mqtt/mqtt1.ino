@@ -255,9 +255,8 @@ void loop() {
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);
-//    delay(200);
-
   }
+  delay(10);
 }
 
 
