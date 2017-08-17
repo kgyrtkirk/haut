@@ -231,7 +231,8 @@ decode_results results;
 
 
 
-#define	LAMP_ON_TIME_MS	30*1000
+#define	LAMP_ON_TIME_MS			30*1000
+#define	LAMP_TINKER_TIME_MS		300*1000
 
 
 int	last_lamp_val=-1;
@@ -274,20 +275,32 @@ void loop() {
 	}
 
 
+	sprintf(msg, "%ld", now);
+	client.publish("bathroom/uptime", msg);
 
-	sprintf (msg, "readings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d", value, temp,hum,lum,pir,irv,hall);
+	sprintf(msg, "%d.%d", hum/100,hum%100);
+	client.publish("bathroom/humidity", msg);
+
+	sprintf(msg, "%d.%d", temp/100,temp%100);
+	client.publish("bathroom/temperature", msg);
+
+	sprintf(msg, "%d", lum);
+	client.publish("bathroom/lum", msg);
+
+	sprintf (msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d", value, temp,hum,lum,pir,irv,hall);
     Serial.print("Publish message: ");
     Serial.println(msg);
     client.publish("outTopic", msg);
 	sprintf (msg, "%d", pir);
-    client.publish("pir", msg);
+    client.publish("bathroom/pir", msg);
   }
   delay(10);
   {
 	  if(now>manualUntil){
 	    int pir=digitalRead(5);
 	    if(pir) {
-	    	lampCtrl.command(1, now+LAMP_ON_TIME_MS, 255);
+	    	lampCtrl.command(2, now+LAMP_ON_TIME_MS, 255);
+	    	lampCtrl.command(1, now+LAMP_TINKER_TIME_MS, 1);
 	    }
 	    setLamp(lampCtrl.getActiveValue());
 	  }
