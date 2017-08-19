@@ -187,7 +187,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 #include "DelayControlValue.h"
 IRrecv irrecv(IR_RECV_PIN);
-DelayControlValue<uint8_t,4>	lampCtrl;
+DelayControlValue<uint8_t,8>	lampCtrl;
 
 
 void setup() {
@@ -220,8 +220,9 @@ decode_results results;
 
 
 
-#define	LAMP_ON_TIME_MS			30*1000
-#define	LAMP_TINKER_TIME_MS		300*1000
+#define	LAMP_ON_1_TIME_MS		90*1000
+#define	LAMP_ON_2_TIME_MS		180*1000
+#define	LAMP_ON_3_TIME_MS		300*1000
 
 
 int	last_lamp_val=-1;
@@ -295,8 +296,9 @@ void loop() {
 	  if(now>manualUntil){
 	    int pir=digitalRead(5);
 	    if(pir) {
-	    	lampCtrl.command(2, now+LAMP_ON_TIME_MS, 255);
-	    	lampCtrl.command(1, now+LAMP_TINKER_TIME_MS, 1);
+	    	lampCtrl.command(3, now+LAMP_ON_1_TIME_MS, 255);
+	    	lampCtrl.command(2, now+LAMP_ON_2_TIME_MS, 192);
+	    	lampCtrl.command(1, now+LAMP_ON_3_TIME_MS, 1);
 	    }
 	    setLamp(lampCtrl.getActiveValue());
 	  }
