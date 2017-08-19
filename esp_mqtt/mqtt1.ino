@@ -34,9 +34,6 @@
 
 #include "k-settings.h"
 
-#define FET_PIN	4
-// Update these with values suitable for your network.
-
 ESP8266WiFiMulti WiFiMulti;
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -95,7 +92,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println();
 
-  // Switch on the LED if an 1 was received as first character
   if ((char)payload[0] == 'U') {
       Serial.println("attempting upgrade");
       t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.128.70:8181/update2.php","wow");
@@ -118,9 +114,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if ((char)payload[0] == 'A') {
 	  manualUntil=millis()+MANUAL_TIME_S*1000;
 	  int val=strtol(((char*)payload)+1,0,10);
-//	  analogWrite(FET_PIN,val);
-//	  pwm_set_duty(val, 0); // GPIO15: 100%
-//	  pwm_start();           // commit
 
       char msg[128];
       sprintf (msg, "analog: %d", val);
@@ -139,14 +132,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
       client.publish("outTopic", msg);
 
   }
-  if ((char)payload[0] == '1') {
-//    digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
-    // but actually the LED is on; this is because
-    // it is acive low on the ESP-01)
-  } else {
-//    digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
-  }
-
 }
 
 void reconnect() {
