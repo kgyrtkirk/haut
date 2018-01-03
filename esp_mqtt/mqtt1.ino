@@ -92,6 +92,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println();
 
+  if ((char)payload[0] == 'R') {
+	  ESP.restart();
+  }
   if ((char)payload[0] == 'U') {
       Serial.println("attempting upgrade");
       t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.128.70:8181/update2.php","wow");
