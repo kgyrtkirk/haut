@@ -22,3 +22,13 @@
 [submodule "external/TinyWire"]
 	path = external/TinyWire
 	url = https://github.com/rambo/TinyWire/
+[submodule "external/RFremote"]
+	path = external/RFremote
+	url = https://github.com/renatoaloi/RFremote
+[submodule "external/rc-switch-sui77"]
+	path = external/rc-switch-sui77
+	url = https://github.com/sui77/rc-switch
+[submodule "external/rc-switch-ml-protocoldet"]
+	path = external/rc-switch-ml-protocoldet
+	url = https://github.com/Martin-Laclaustra/rc-switch
+	branch = protocollessreceiver
