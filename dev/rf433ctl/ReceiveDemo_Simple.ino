@@ -15,6 +15,7 @@ void sendDown() {
 
 void sendUp() {
 	rfctl.cmd(0, 1);
+	rfctl.cmd(1, 1);
 }
 
 void sendStop(){
@@ -32,14 +33,12 @@ void setup() {
   Serial.println("x");
   delay(1000);
   sendDown();
-  delay(2000);
+  delay(5000);
   sendStop();
   delay(2000);
   sendUp();
-  sendUp();
-  sendUp();
-  delay(2000);
-  sendStop();
+  delay(3000);
+//  sendStop();
 
 
   // 16 down

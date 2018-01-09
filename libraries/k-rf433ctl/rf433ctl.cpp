@@ -16,8 +16,10 @@ void RF433Ctl::cmd(uint8_t id,int8_t direction){
 		default:
 			return;
 	}
-	Serial.print("dir:");
-	Serial.println(direction);
+	//Serial.print("dir:");
+//	Serial.println(direction);
+	transmit(msg);
+	transmit(msg);
 	transmit(msg);
 }
 
@@ -48,8 +50,13 @@ void RF433Ctl::transmit(uint64_t msg) {
 void	RF433Ctl::transmit_signal(uint16_t t_one_ms,uint16_t t_zero_ms) {
 //	Serial.print(t_one_ms);Serial.print(",");
 //			Serial.print(t_zero_ms);Serial.print(",");
+	unsigned long t0=micros();
 	digitalWrite(txPin,1);
-	delayMicroseconds(t_one_ms);
+	unsigned long t1=t0+t_one_ms;
+	unsigned long t2=t1+t_zero_ms;
+	while(micros() < t1);
+//	delayMicroseconds(t_one_ms);
 	digitalWrite(txPin,0);
-	delayMicroseconds(t_zero_ms);
+	while(micros() < t2);
+//	delayMicroseconds(t_zero_ms);
 }
