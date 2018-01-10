@@ -21,6 +21,8 @@ void RF433Ctl::cmd(uint8_t id,int8_t direction){
 	transmit(msg);
 	transmit(msg);
 	transmit(msg);
+	transmit(msg);
+	transmit(msg);
 }
 
 void RF433Ctl::transmit(uint64_t msg) {

@@ -8,20 +8,24 @@
 RF433Ctl rfctl(OUT);
 
 void sendDown() {
-	  Serial.println("D");
-		rfctl.cmd(0, -1);
-		rfctl.cmd(1, -1);
+	Serial.println("D");
+	for(int i =0 ;i<4;i++){
+		rfctl.cmd(i, -1);
+	}
 }
 
 void sendUp() {
-	rfctl.cmd(0, 1);
-	rfctl.cmd(1, 1);
+	Serial.println("U");
+	for(int i =0 ;i<4;i++){
+		rfctl.cmd(i, 1);
+	}
 }
 
 void sendStop(){
-	  Serial.println("S");
-	rfctl.cmd(0, 0);
-	rfctl.cmd(1, 0);
+  Serial.println("S");
+	for(int i =0 ;i<4;i++){
+		rfctl.cmd(i, 0);
+	}
 }
 
 void setup() {
@@ -33,12 +37,12 @@ void setup() {
   Serial.println("x");
   delay(1000);
   sendDown();
-  delay(5000);
+  delay(20000);
   sendStop();
   delay(2000);
   sendUp();
   delay(3000);
-//  sendStop();
+  sendStop();
 
 
   // 16 down
