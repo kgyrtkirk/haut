@@ -7,23 +7,25 @@
 
 RF433Ctl rfctl(OUT);
 
+#define K	2
+
 void sendDown() {
 	Serial.println("D");
-	for(int i =0 ;i<4;i++){
+	for(int i =0 ;i<K;i++){
 		rfctl.cmd(i, -1);
 	}
 }
 
 void sendUp() {
 	Serial.println("U");
-	for(int i =0 ;i<4;i++){
+	for(int i =0 ;i<K;i++){
 		rfctl.cmd(i, 1);
 	}
 }
 
 void sendStop(){
   Serial.println("S");
-	for(int i =0 ;i<4;i++){
+	for(int i =0 ;i<K;i++){
 		rfctl.cmd(i, 0);
 	}
 }

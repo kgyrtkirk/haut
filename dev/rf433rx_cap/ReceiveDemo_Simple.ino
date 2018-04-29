@@ -23,7 +23,7 @@ void setup()
 
   Serial.begin(115200);
   delay(500);
-  Serial.println("INICIADOx!");
+  Serial.println("INICIADOx1!");
 
 
   pinMode(PORTA_RF, INPUT);
@@ -60,7 +60,7 @@ void loop()
 
   if (eof)
   {
-	  if(false){
+	  if(true){
     // Imprime resultado
     Serial.println("buff:");
     for (int i = 0; i < BUFF_SIZE / 3; i++)

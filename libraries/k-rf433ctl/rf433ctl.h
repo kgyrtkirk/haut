@@ -9,7 +9,7 @@
 #define	SHUTTER_CMD_DOWN	0b001000
 
 class RF433Ctl {
-	void transmit(uint64_t cmd);
+	void transmitX(uint64_t cmd);
 	void transmit_signal(uint16_t t_one_ms, uint16_t t_zero_ms);
 	const int txPin;
 public:

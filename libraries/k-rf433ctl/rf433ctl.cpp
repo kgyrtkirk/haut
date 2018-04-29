@@ -18,14 +18,14 @@ void RF433Ctl::cmd(uint8_t id,int8_t direction){
 	}
 	//Serial.print("dir:");
 //	Serial.println(direction);
-	transmit(msg);
-	transmit(msg);
-	transmit(msg);
-	transmit(msg);
-	transmit(msg);
+	transmitX(msg);
+	transmitX(msg);
+	transmitX(msg);
+	transmitX(msg);
+	transmitX(msg);
 }
 
-void RF433Ctl::transmit(uint64_t msg) {
+void RF433Ctl::transmitX(uint64_t msg) {
 	// 688,10143
 	transmit_signal(688, 10143);
 	transmit_signal(4769, 1538);
