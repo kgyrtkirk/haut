@@ -32,3 +32,9 @@
 	path = external/rc-switch-ml-protocoldet
 	url = https://github.com/Martin-Laclaustra/rc-switch
 	branch = protocollessreceiver
+[submodule "external/Adalight-FastLED"]
+	path = external/Adalight-FastLED
+	url = https://github.com/dmadison/Adalight-FastLED/
+[submodule "external/FastLED"]
+	path = external/FastLED
+	url = https://github.com/FastLED/FastLED
