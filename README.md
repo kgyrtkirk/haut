@@ -58,3 +58,4 @@ it might come handy :)
 * possibly add http://playground.arduino.cc/Linux/Udev
 * possibly need standard arduino ide for bootloader burning
 
+

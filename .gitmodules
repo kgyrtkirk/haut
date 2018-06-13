@@ -38,3 +38,6 @@
 [submodule "external/FastLED"]
 	path = external/FastLED
 	url = https://github.com/FastLED/FastLED
+[submodule "external/Adalight"]
+	path = external/Adalight
+	url = https://github.com/adafruit/Adalight/
