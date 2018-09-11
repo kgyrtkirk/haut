@@ -1,9 +1,9 @@
 #Pesistent settings file for HyperCon
-#Tue Jul 03 22:32:18 CEST 2018
+#Mon Jul 30 20:57:54 CEST 2018
 ColorConfig.mTransforms[0].mBlueChannelRedSpinner=0
 ColorConfig.mTransforms[0].mRedChannelRedSpinner=255
 ColorConfig.mSmoothingUpdateFrequency_Hz=20.0
-MiscConfig.mScreensaverOn=true
+MiscConfig.mScreensaverOn=false
 Grabberv4l2Config.mMode=TwoD
 MiscConfig.mFrameGrabberWidth=64
 SshAndColorPickerConfig.FileName=hyperion.config.json
@@ -25,12 +25,12 @@ ColorConfig.mTransforms[0].mluminanceMinimumSpinner=0.0
 Grabberv4l2Config.mDevice=/dev/video0
 DeviceConfig.mColorByteOrder=RGB
 ColorConfig.mTransforms[0].mBlueThreshold=0.0
-DeviceConfig.mDeviceProperties={output\=/dev/ttyS0, rate\=115200, delayAfterConnect\=0}
+DeviceConfig.mDeviceProperties={output\=/dev/ttyAMA0, rate\=115200, delayAfterConnect\=0}
 LedFrameConstruction.bottomleftCorner=false
 LedFrameConstruction.rightLedCnt=11
-MiscConfig.mAudioOn=true
+MiscConfig.mAudioOn=false
 ColorConfig.mSmoothingType=linear
-Grabberv4l2Config.mGrabberv4l2Enabled=true
+Grabberv4l2Config.mGrabberv4l2Enabled=false
 MiscConfig.mEffectsetCombo=rainbowswirlfast
 SshAndColorPickerConfig.colorPickerShowColorWheel=true
 MiscConfig.mFrameGrabberHeight=64
@@ -82,7 +82,7 @@ DeviceConfig.mType=adalight
 MiscConfig.mBlackBordermInconsistentCnt=10
 ColorConfig.mTransforms[0].mBlueChannelGreenSpinner=0
 Grabberv4l2Config.mHeight=-1
-MiscConfig.m3DCheckingEnabled=true
+MiscConfig.m3DCheckingEnabled=false
 SshAndColorPickerConfig.port=22
 LedFrameConstruction.toprightCorner=false
 ColorConfig.mTransforms[0].mId=default
@@ -102,7 +102,7 @@ MiscConfig.mBlackBorderEnabled=true
 LedFrameConstruction.bottomGapCnt=0
 MiscConfig.mJsonPort=19444
 ImageProcessConfig.mHorizontalDepth=0.08
-MiscConfig.mPauseOn=true
+MiscConfig.mPauseOn=false
 MiscConfig.mJsonfield="127.0.0.1\:19446"
 MiscConfig.mBoblightPriority=900
 DeviceConfig.mNameField=MyHyperionConfig
@@ -111,7 +111,7 @@ Grabberv4l2Config.mRedSignalThreshold=0.0
 ImageProcessConfig.mVerticalGap=0.0
 MiscConfig.mPathGENN=/usr/share/hyperion/effects
 MiscConfig.mXbmcCheckerEnabled=true
-MiscConfig.mFrameGrabberEnabled=false
+MiscConfig.mFrameGrabberEnabled=true
 SshAndColorPickerConfig.colorPickerInExpertmode=false
 Grabberv4l2Config.mCropTop=0
 MiscConfig.mBoblightInterfaceEnabled=false

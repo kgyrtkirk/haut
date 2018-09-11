@@ -88,6 +88,15 @@
 	},
 
 	// NO V4L2 GRABBER CONFIG
+	// FRAME GRABBER CONFIG
+	"framegrabber" : 
+	{
+		"width" : 64,
+		"height" : 64,
+		"frequency_Hz" : 10.0,
+		"priority" : 890
+	},
+
 	// BLACKBORDER CONFIG
 	"blackborderdetector" : 
 	{
@@ -107,11 +116,11 @@
 		"xbmcTcpPort" : 9090,
 		"grabVideo" : true,
 		"grabPictures" : true,
-		"grabAudio" : true,
+		"grabAudio" : false,
 		"grabMenu" : false,
-		"grabPause" : true,
-		"grabScreensaver" : true,
-		"enable3DDetection" : true
+		"grabPause" : false,
+		"grabScreensaver" : false,
+		"enable3DDetection" : false
 	},
 
 	// JSON SERVER CONFIG
@@ -136,7 +145,6 @@
 		]
 	},
 
-	// NO FRAME GRABBER CONFIG
 	// NO BOOTEFFECT CONFIG
 	// NO BOBLIGHT SERVER CONFIG
 	// NO JSON/PROTO FORWARD CONFIG
