@@ -41,3 +41,6 @@
 [submodule "external/Adalight"]
 	path = external/Adalight
 	url = https://github.com/adafruit/Adalight/
+[submodule "external/AFMotor"]
+	path = external/AFMotor
+	url = https://github.com/adafruit/Adafruit-Motor-Shield-library
