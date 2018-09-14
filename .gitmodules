@@ -44,3 +44,6 @@
 [submodule "external/AFMotor"]
 	path = external/AFMotor
 	url = https://github.com/adafruit/Adafruit-Motor-Shield-library
+[submodule "external/vl53l0x-arduino"]
+	path = external/vl53l0x-arduino
+	url = https://github.com/pololu/vl53l0x-arduino

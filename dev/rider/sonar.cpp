@@ -1,5 +1,6 @@
 #include "sonar.h"
 #include "Arduino.h"
+#include "Adafruit_VL53L0X.h"
 
 /*
  HC-SR04 Ping distance sensor]
@@ -16,9 +17,9 @@
 #define trigPin 52
 #define echoPin 53
 
-Sonar::Sonar(int a) {
+UHSonar::UHSonar(int a) {
 }
-void Sonar::init() {
+void UHSonar::init() {
 	pinMode(trigPin, OUTPUT);
 	pinMode(echoPin, INPUT);
 }
@@ -28,7 +29,7 @@ void Sonar::init() {
 /**
  * measure/return distance in 'cm'
  */
-long Sonar::measure() {
+long UHSonar::measure() {
 
 	long duration, distance;
 	digitalWrite(trigPin, LOW);  // Added this line
@@ -43,5 +44,28 @@ long Sonar::measure() {
 	distance = (duration / 2) / 29.1;
 
 	return distance;
+}
+
+Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+
+LoxSonar::LoxSonar(int a) {
+}
+void LoxSonar::init() {
+	if (!lox.begin()) {
+		Serial.println(F("Failed to boot VL53L0X"));
+		while (1)
+			;
+	}
+
+}
+long LoxSonar::measure() {
+	VL53L0X_RangingMeasurementData_t measure;
+	lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
+
+	if (measure.RangeStatus != 4) {  // phase failures have incorrect data
+		return measure.RangeMilliMeter/10;
+	} else {
+		return measure.RangeDMaxMilliMeter/10;
+	}
 }
 

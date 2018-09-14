@@ -8,12 +8,28 @@
 #define HCSR04_H_
 
 
+
+
 class	Sonar{
 public:
-
-	Sonar(int a);
-	void	init();
-		long measure();
+	virtual void init() = 0 ;
+	virtual long measure()= 0;
 };
+
+class	UHSonar : public Sonar{
+public:
+	UHSonar(int a);
+	void	init();
+	long measure();
+};
+
+class	LoxSonar : public Sonar{
+public:
+	LoxSonar(int a);
+	void	init();
+	long measure();
+};
+
+
 
 #endif

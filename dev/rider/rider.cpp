@@ -12,14 +12,14 @@
 
 
 Pilot	pilot;
-Sonar	sonar(1);
+//UHSonar	sonar(1);
+LoxSonar	sonar(1);
 Radar	radar(sonar);
 
 void	scan();
 
 void setup()
 {
-//	Serial.begin(9600);
 	uart_init();
 
 	sonar.init();
@@ -33,46 +33,52 @@ void setup()
 }
 
 // The loop function is called in an endless loop
-int	idx=0;
 int	run=0;
 int	distance;
 int	th=0;
-#define	T_START	5
-#define	T_END	65
+#define	T_START	5000
+#define	T_END	65000
 
-void loop2()
+void loop1()
 {
-	radar.sweep();
+//	radar.sweep();
 	delay(100);
 //    Serial.println("hello");
 	radar.debug();
-	pilot.drive(0,255);
+	pilot.drive(0,0);
 
 
 }
 
+long	radarTime=0;
 void loop()
 {
-	idx++;
+	long now=millis();
 	int t;
-	t = idx / 100;
 
-	run= T_START<t && t<T_END;
+	run= T_START<now && now<T_END;
 	if(!run)
 	{
-		printf(" stopped	%d\r\n",idx);
+		printf(" stopped	%ld\r\n",now);
 	    pilot.drive(0,0);
 	    return;
 	}
 
-	if(idx%15 == 0)
+	bool radarStep=radarTime<now;
+
+	if(radarStep) {
+		radarTime=now+180;
 		radar.sweep();
+	}
 
 	bool	nearL=radar.range(LEFT)<30;
 	bool	nearR=radar.range(RIGHT)<30;
 	bool	nearH=radar.range(HEAD)<30;
 
-	printf(" run	%d	R:%d,%d,%d\r\n",idx,radar.range(LEFT),radar.range(HEAD),radar.range(RIGHT));
+
+	;
+	if(radarStep)
+		printf(" run	%ld	R:%d,%d,%d\r\n",now,radar.range(LEFT),radar.range(HEAD),radar.range(RIGHT));
 	if(nearL && nearR)
 		pilot.drive(-255,255);
 	else
@@ -96,18 +102,18 @@ void loop()
 		}
 	}
 
-	delay(10);
+	delay(5);
 
 
 }
 
-void	scan(){
-	idx++;
-	digitalWrite(13,idx%2);
-	if(idx>10*10)
-		run = 1;
-	if(idx>20*10)
-		run = 0;
-
-	distance=sonar.measure();
-}
+//void	scan(){
+//	idx++;
+//	digitalWrite(13,idx%2);
+//	if(idx>10*10)
+//		run = 1;
+//	if(idx>20*10)
+//		run = 0;
+//
+//	distance=sonar.measure();
+//}

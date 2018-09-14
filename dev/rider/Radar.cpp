@@ -4,14 +4,14 @@
 
 const	uint8_t radar_servo_offset[RADAR_DIR_MAX]={120,90,60};
 
-Radar::Radar(Sonar _sonar) : sonar(_sonar){
+Radar::Radar(Sonar&_sonar) : sonar(_sonar){
 }
 
 void	Radar::attach(int pin){
 	servo.attach(pin);
 }
 
-#define	K	5
+#define	K	1
 void	Radar::sweep(){
 	int	dir=getDirection();
 	int	m[K];

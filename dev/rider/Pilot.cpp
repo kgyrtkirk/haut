@@ -23,10 +23,10 @@ public:
 	}
 };
 
-	AF_DCMotor fl(2);
-	AF_DCMotor fr(1);
-//	AF_DCMotor br(3);
-//	AF_DCMotorInv bl(4);
+	AF_DCMotor fl(1);
+	AF_DCMotorInv fr(2);
+	AF_DCMotorInv  bl(3);
+	AF_DCMotor br(4);
 
 Pilot::Pilot() {
 	direction(RELEASE,RELEASE);
@@ -61,15 +61,15 @@ void	Pilot::drive(int dl,int dr){
 void	Pilot::direction(int dl,int dr){
 	fl.run(dl);
 	fr.run(dr);
-//	bl.run(dl);
-//	br.run(dr);
+	bl.run(dl);
+	br.run(dr);
 }
 
 void	Pilot::throttle(int tl,int tr){
 	fl.setSpeed(tl);
 	fr.setSpeed(tr);
-//	bl.setSpeed(tl);
-//	br.setSpeed(tr);
+	bl.setSpeed(tl);
+	br.setSpeed(tr);
 }
 
 Pilot::~Pilot() {

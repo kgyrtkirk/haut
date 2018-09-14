@@ -11,7 +11,8 @@
 
 
 void uart_init() {
-	Serial.begin(9600);
+//	Serial.begin(9600);
+	Serial.begin(115200);
 
 	// fill in the UART file descriptor with pointer to writer.
 	fdev_setup_stream(&uartout, uart_putchar, NULL, _FDEV_SETUP_WRITE);
