@@ -24,7 +24,7 @@ public:
 };
 
 	AF_DCMotor fl(1);
-	AF_DCMotorInv fr(2);
+	AF_DCMotor fr(2);
 	AF_DCMotorInv  bl(3);
 	AF_DCMotor br(4);
 

@@ -11,7 +11,7 @@ void	Radar::attach(int pin){
 	servo.attach(pin);
 }
 
-#define	K	1
+#define	K	3
 void	Radar::sweep(){
 	int	dir=getDirection();
 	int	m[K];

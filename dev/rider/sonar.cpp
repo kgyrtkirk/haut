@@ -62,10 +62,12 @@ long LoxSonar::measure() {
 	VL53L0X_RangingMeasurementData_t measure;
 	lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
 
-	if (measure.RangeStatus != 4) {  // phase failures have incorrect data
+	if (measure.RangeMilliMeter > 0 && measure.RangeStatus != 4) {  // phase failures have incorrect data
 		return measure.RangeMilliMeter/10;
 	} else {
-		return measure.RangeDMaxMilliMeter/10;
+//		return measure.RangeDMaxMilliMeter/10;
+		return MAX_DIST
+				;
 	}
 }
 

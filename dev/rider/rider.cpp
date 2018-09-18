@@ -57,7 +57,7 @@ void loop()
 	int t;
 
 	run= T_START<now && now<T_END;
-	if(!run)
+	if(!run && now>T_END)
 	{
 		printf(" stopped	%ld\r\n",now);
 	    pilot.drive(0,0);
@@ -67,14 +67,18 @@ void loop()
 	bool radarStep=radarTime<now;
 
 	if(radarStep) {
-		radarTime=now+180;
+		radarTime=now+280;
 		radar.sweep();
 	}
 
-	bool	nearL=radar.range(LEFT)<30;
-	bool	nearR=radar.range(RIGHT)<30;
-	bool	nearH=radar.range(HEAD)<30;
+	bool	nearL=radar.range(LEFT)<20;
+	bool	nearR=radar.range(RIGHT)<20;
+	bool	nearH=radar.range(HEAD)<20;
 
+	if(!run){
+	    pilot.drive(0,0);
+	    return;
+	}
 
 	;
 	if(radarStep)
