@@ -57,5 +57,10 @@ it might come handy :)
 * create project as earlier...set attiny85...other options should be configured with sanity :D
 * possibly add http://playground.arduino.cc/Linux/Udev
 * possibly need standard arduino ide for bootloader burning
+* flash 8Mhz fuses:
+  avrdude -C/home/kirk/sdk/sloeber//arduinoPlugin/packages/ATTinyCore/hardware/avr/1.1.4/avrdude.conf  \
+   -pattiny85 -carduino -P/dev/ttyACM0 -b19200 \
+    -Uflash:w:/home/kirk/Documents/sloeber-workspace/pwm_slave/Release/pwm_slave.hex:i  \
+    -U lfuse:w:0xE2:m	-U hfuse:w:0xDF:m
 
 
