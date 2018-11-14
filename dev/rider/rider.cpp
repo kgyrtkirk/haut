@@ -50,6 +50,7 @@ void loop1()
 
 }
 
+#define D_MIN 30
 long	radarTime=0;
 void loop()
 {
@@ -67,22 +68,22 @@ void loop()
 	bool radarStep=radarTime<now;
 
 	if(radarStep) {
-		radarTime=now+280;
+		radarTime=now+80;
 		radar.sweep();
 	}
 
-	bool	nearL=radar.range(LEFT)<20;
-	bool	nearR=radar.range(RIGHT)<20;
-	bool	nearH=radar.range(HEAD)<20;
+	bool	nearL=radar.range(LEFT)<D_MIN;
+	bool	nearR=radar.range(RIGHT)<D_MIN;
+	bool	nearH=radar.range(HEAD)<D_MIN;
+
+	if(radarStep)
+		printf(" run	%ld	R:%d,%d,%d\r\n",now,radar.range(LEFT),radar.range(HEAD),radar.range(RIGHT));
 
 	if(!run){
 	    pilot.drive(0,0);
 	    return;
 	}
 
-	;
-	if(radarStep)
-		printf(" run	%ld	R:%d,%d,%d\r\n",now,radar.range(LEFT),radar.range(HEAD),radar.range(RIGHT));
 	if(nearL && nearR)
 		pilot.drive(-255,255);
 	else

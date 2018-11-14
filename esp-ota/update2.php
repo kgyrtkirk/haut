@@ -62,10 +62,11 @@ $db = array (
 		"60:01:94:0F:8A:5E" => "fx1",
 		"60:01:94:0F:A8:5E" => "fx1",
 		"60:01:94:10:16:AE" => "esp_mqtt",	#	assembled pcb.1
+		"60:01:94:0F:CE:44" => "esp_mqtt",	#	assembled pcb.2
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
-    error_log("unknown mac?");
+    error_log("unknown mac:" . $_SERVER['HTTP_X_ESP8266_STA_MAC']);
     header($_SERVER["SERVER_PROTOCOL"].' 500 ESP MAC not configured for updates', true, 500);
 exit();
 }
