@@ -8,6 +8,7 @@ struct	FaderTargetValue {
 };
 
 
+#ifndef ESP8266
 template<size_t K>
 class Fader {
 	uint8_t	value;
@@ -48,4 +49,4 @@ public:
 		analogWrite(ledPin, value);
 	}
 };
-
+#endif

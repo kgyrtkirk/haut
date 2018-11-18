@@ -122,9 +122,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
       sprintf (msg, "analog: %d", val);
       client.publish("outTopic", msg);
 
-      Wire.beginTransmission(0x33);
-      Wire.write(val);
-      Wire.endTransmission();
+      setLamp(val);
 
   }
   if ((char)payload[0] == 'W') {
@@ -222,11 +220,15 @@ irsend.begin();
 decode_results results;
 
 
-
-#define	LAMP_ON_1_TIME_MS		90*1000
-#define	LAMP_ON_2_TIME_MS		180*1000
+#ifdef LIGHT_DEBUG
+#define	LAMP_ON_1_TIME_MS		3*1000
+#define	LAMP_ON_2_TIME_MS		6*1000
+#define	LAMP_ON_3_TIME_MS		20*1000
+#else
+#define	LAMP_ON_1_TIME_MS		60*1000
+#define	LAMP_ON_2_TIME_MS		90*1000
 #define	LAMP_ON_3_TIME_MS		300*1000
-
+#endif
 
 int	last_lamp_val=-1;
 void setLamp(int val){
@@ -235,6 +237,8 @@ void setLamp(int val){
 	last_lamp_val=val;
     Wire.beginTransmission(0x33);
     Wire.write(val);
+    Wire.write(16);
+    Wire.write(128);
     Wire.endTransmission();
 }
 
