@@ -50,3 +50,6 @@
 [submodule "external/wiringPi"]
 	path = external/wiringPi
 	url = git://git.drogon.net/wiringPi
+[submodule "external/paho.mqtt"]
+	path = external/paho.mqtt
+	url = https://github.com/eclipse/paho.mqtt.c.git
