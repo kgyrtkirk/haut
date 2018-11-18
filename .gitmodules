@@ -47,3 +47,6 @@
 [submodule "external/vl53l0x-arduino"]
 	path = external/vl53l0x-arduino
 	url = https://github.com/pololu/vl53l0x-arduino
+[submodule "external/wiringPi"]
+	path = external/wiringPi
+	url = git://git.drogon.net/wiringPi

@@ -1,3 +1,4 @@
+#include <wiringPi.h>
 #include "rf433ctl.h"
 
 uint64_t shutter_ids[]={ SHUTTER_IDS };

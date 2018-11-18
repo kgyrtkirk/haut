@@ -1,0 +1,1 @@
+../../libraries/k-settings/k-settings.h

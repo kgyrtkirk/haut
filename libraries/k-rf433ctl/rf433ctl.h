@@ -1,6 +1,11 @@
 #pragma once
 
+#ifdef ARDUINO
 #include "Arduino.h"
+#else
+#include <wiringPi.h>
+#include <stdint.h>
+#endif
 #include "k-settings.h"
 
 #define	SHUTTER_CMD_MASK	((1<<6)-1)

@@ -50,6 +50,7 @@ it might come handy :)
   change INPUT_PULLUP to PULLUP in DHT.cpp if GPIO16 (esp-gen1)
 * initiate ota upgrade
   mosquitto_pub -h demeter -t inTopic -m U
+* wiringPi: install by using checkinstall; only main lib
 
 
 ### compile attiny slave firmware
