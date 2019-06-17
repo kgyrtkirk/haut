@@ -61,7 +61,7 @@ error_log("onlyaa");
 $db = array (
 		"60:01:94:0F:8A:5E" => "fx1",
 		"60:01:94:0F:A8:5E" => "fx1",
-		"60:01:94:10:16:AE" => "esp_mqtt",	#	assembled pcb.1
+		"X60:01:94:10:16:AE" => "esp_mqtt",	#	assembled pcb.1
 		"60:01:94:0F:CE:44" => "esp_mqtt",	#	assembled pcb.2
 );
 

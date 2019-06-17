@@ -135,6 +135,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+
 void reconnectTry() {
   // Loop until we're reconnected
 	Serial.print("Attempting MQTT connection...");
@@ -187,7 +188,9 @@ DHT dht(DHTPIN, DHTTYPE);
 #define HALL_PIN 14
 
 #include "DelayControlValue.h"
+#ifdef IRR
 IRrecv irrecv(IR_RECV_PIN);
+#endif
 DelayControlValue<uint8_t,8>	lampCtrl;
 
 
@@ -213,7 +216,9 @@ irsend.begin();
 
   pinMode(HALL_PIN, INPUT);
   pinMode(IR_RECV_PIN, INPUT);
+#ifdef IRR
   irrecv.enableIRIn(); // Start the receiver
+#endif
 
 }
 
@@ -238,7 +243,7 @@ void setLamp(int val){
     Wire.beginTransmission(0x33);
     Wire.write(val);
     Wire.write(16);
-    Wire.write(128);
+    Wire.write(16);
     Wire.endTransmission();
 }
 
@@ -272,11 +277,13 @@ void loop() {
 //    int lum=1;int pir=3;int hall=2;
 
 	int irv=0;
+#ifdef IRR
 	if (irrecv.decode(&results)) {
     irv=(unsigned int)results.value;
 
     irrecv.resume(); // Receive the next value
 	}
+#endif
 
 
 	sprintf(msg, "%ld", now);
