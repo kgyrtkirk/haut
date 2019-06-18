@@ -307,6 +307,7 @@ void loop() {
   }
   delay(10);
   {
+
 	  if(now>manualUntil){
 	    int pir=digitalRead(5);
 	    if(pir) {

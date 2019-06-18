@@ -63,6 +63,8 @@ $db = array (
 		"60:01:94:0F:A8:5E" => "fx1",
 		"X60:01:94:10:16:AE" => "esp_mqtt",	#	assembled pcb.1
 		"60:01:94:0F:CE:44" => "esp_mqtt",	#	assembled pcb.2
+        "DC:4F:22:37:7B:9F" => "sonoff_basic", # sonoff.basic #1
+        "BC:DD:C2:0E:04:C1" => "sonoff_basic", # sonoff.basic #2
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
@@ -73,9 +75,17 @@ exit();
 
 $fwName = $db[$_SERVER['HTTP_X_ESP8266_STA_MAC']];
 
-$localBinary = sprintf("%s/%s/Release/%s.bin",$workspace,$fwName,$fwName);
+//$localBinary = sprintf("%s/%s/Release/%s.bin",$workspace,$fwName,$fwName);
+$localBinary = sprintf("%s/prod/%s/Release/%s.bin",$workspace,$fwName,$fwName);
 error_log("serving binary from path:");
 error_log("$localBinary");
+
+if(!file_exists ( $localBinary)){
+
+    error_log("not found: $localBinary");
+    header($_SERVER["SERVER_PROTOCOL"].'404 Firmware Not Found', true, 404);
+    return;
+}
 
 // Check if version has been set and does not match, if not, check if
 // MD5 hash between local binary and ESP8266 binary do not match if not.
