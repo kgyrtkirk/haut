@@ -296,7 +296,8 @@ void loop() {
     Serial.println(msg);
     client.publish("outTopic", msg);
 	sprintf (msg, "%d", pir);
-    client.publish("bathroom/pir", msg);
+	sprintf(channel, "%s/pir", devicePrefix);
+    client.publish(channel, msg);
   }
   delay(10);
   {

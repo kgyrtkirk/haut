@@ -9,6 +9,12 @@
 
 #include "k-settings.h"
 
+
+#define LED_SONOFF	13
+#define RELAY		12
+#define BUTTON		0
+
+
 ESP8266WiFiMulti WiFiMulti;
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -97,6 +103,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
 		client.publish("outTopic", msg);
 
 	}
+	if ((char) payload[0] == 'X') {
+		digitalWrite(RELAY, HIGH);
+	}
+	if ((char) payload[0] == 'Y') {
+		digitalWrite(RELAY, LOW);
+	}
+
 }
 
 void reconnectTry() {
@@ -124,14 +137,14 @@ void reconnect() {
 	}
 }
 
-#define LED_SONOFF 13
-
 void setup() {
 	pinMode(LED_SONOFF, OUTPUT); // Initialize the BUILTIN_LED pin as an output
+	pinMode(RELAY, OUTPUT);
 	Serial.begin(115200);
 	setup_wifi();
 	client.setServer(MQTT_SERVER, 1883);
 	client.setCallback(callback);
+	digitalWrite(RELAY, LOW);
 }
 
 void b(int BLINK_DURATION) {
