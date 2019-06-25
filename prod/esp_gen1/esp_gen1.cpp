@@ -1,5 +1,4 @@
 
-
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <ESP8266WiFiMulti.h>
@@ -18,115 +17,95 @@ long lastMsg = 0;
 char msg[128];
 char channel[128];
 int value = 0;
-const char*devicePrefix="unknown";
+const char*devicePrefix = "unknown";
 
 #define MAC_BATHROOM	"60:01:94:10:16:AE"
 #define MAC_KITCHEN		"60:01:94:0F:CE:44"
 void setup_wifi() {
-	if( WiFi.macAddress() == MAC_BATHROOM ) {
-		devicePrefix="bathroom";
+	if (WiFi.macAddress() == MAC_BATHROOM) {
+		devicePrefix = "bathroom";
 	}
-	if( WiFi.macAddress() == MAC_KITCHEN ) {
-		devicePrefix="kitchen";
+	if (WiFi.macAddress() == MAC_KITCHEN) {
+		devicePrefix = "kitchen";
 	}
 
-  delay(10);
-  // We start by connecting to a WiFi network
-  Serial.println();
-  Serial.println("Welcome to the disclaimerZ9A! ");
-  Serial.print("Connecting to ");
-  Serial.println(WIFI_SSID);
-  WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
+	delay(10);
+	Serial.println();
+	Serial.println("Startup...");
+	Serial.print("connecting to ");
+	Serial.println(WIFI_SSID);
+	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 
-  while (WiFiMulti.run() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+	while (WiFiMulti.run() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".");
+	}
 
-  randomSeed(micros());
+	randomSeed(micros());
 
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+	Serial.println("");
+	Serial.println("WiFi connected");
+	Serial.println("IP address: ");
+	Serial.println(WiFi.localIP());
 }
-
 
 #define PWM_CHANNELS 1
 const uint32_t period = 5000; // * 200ns ^= 1 kHz
 
-// PWM setup
-uint32 io_info[PWM_CHANNELS][3] = {
-    // MUX, FUNC, PIN
-    {PERIPHS_IO_MUX_GPIO4_U, FUNC_GPIO4 ,  4},
-};
-
-// initial duty: all off
-uint32 pwm_duty_init[PWM_CHANNELS] = {1};
-
-
-IRsend irsend(15);
-
-uint64_t	manualUntil=0;
+uint64_t manualUntil = 0;
 #define	MANUAL_TIME_S	600
 
 void setLamp(int val);
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
+	Serial.print("Message arrived [");
+	Serial.print(topic);
+	Serial.print("] ");
+	for (int i = 0; i < length; i++) {
+		Serial.print((char) payload[i]);
+	}
+	Serial.println();
 
-  if ((char)payload[0] == 'R') {
-	  ESP.restart();
-  }
-  if ((char)payload[0] == 'U') {
-      Serial.println("attempting upgrade");
-      t_httpUpdate_return ret = ESPhttpUpdate.update("http://192.168.128.70:8181/update2.php","wow");
-      //t_httpUpdate_return  ret = ESPhttpUpdate.update("https://server/file.bin");
+	if ((char) payload[0] == 'R') {
+		ESP.restart();
+	}
+	if ((char) payload[0] == 'U') {
+		Serial.println("attempting upgrade");
+		t_httpUpdate_return ret = ESPhttpUpdate.update(
+				"http://192.168.128.70:8181/update2.php", "wow");
+		//t_httpUpdate_return  ret = ESPhttpUpdate.update("https://server/file.bin");
 
-      switch(ret) {
-          case HTTP_UPDATE_FAILED:
-              Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-              break;
+		switch (ret) {
+		case HTTP_UPDATE_FAILED:
+			Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n",
+					ESPhttpUpdate.getLastError(),
+					ESPhttpUpdate.getLastErrorString().c_str());
+			break;
 
-          case HTTP_UPDATE_NO_UPDATES:
-        	  Serial.println("HTTP_UPDATE_NO_UPDATES");
-              break;
+		case HTTP_UPDATE_NO_UPDATES:
+			Serial.println("HTTP_UPDATE_NO_UPDATES");
+			break;
 
-          case HTTP_UPDATE_OK:
-        	  Serial.println("HTTP_UPDATE_OK");
-              break;
-      }
-  }
-  if ((char)payload[0] == 'A') {
-	  manualUntil=millis()+MANUAL_TIME_S*1000;
-	  int val=strtol(((char*)payload)+1,0,10);
+		case HTTP_UPDATE_OK:
+			Serial.println("HTTP_UPDATE_OK");
+			break;
+		}
+	}
+	if ((char) payload[0] == 'A') {
+		manualUntil = millis() + MANUAL_TIME_S * 1000;
+		int val = strtol(((char*) payload) + 1, 0, 10);
 
-      char msg[128];
-      sprintf (msg, "analog: %d", val);
-      client.publish("outTopic", msg);
+		char msg[128];
+		sprintf(msg, "analog: %d", val);
+		client.publish("outTopic", msg);
 
-      setLamp(val);
+		setLamp(val);
 
-  }
-  if ((char)payload[0] == 'W') {
-	           irsend.sendNEC(0x20DFC03F,32);
-
-      char msg[128];
-      sprintf (msg, "irsend");
-      client.publish("outTopic", msg);
-
-  }
+	}
 }
 
-
 void reconnectTry() {
-  // Loop until we're reconnected
+	// Loop until we're reconnected
 	Serial.print("Attempting MQTT connection...");
 // Create a random client ID
 	String clientId = "ESP8266Client-";
@@ -147,12 +126,11 @@ void reconnectTry() {
 }
 
 void reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
-	  reconnectTry();
-  }
+	// Loop until we're reconnected
+	while (!client.connected()) {
+		reconnectTry();
+	}
 }
-
 
 #include "DHT.h"
 #define DHTPIN 16
@@ -180,39 +158,35 @@ DHT dht(DHTPIN, DHTTYPE);
 #ifdef IRR
 IRrecv irrecv(IR_RECV_PIN);
 #endif
-DelayControlValue<uint8_t,8>	lampCtrl;
-
+DelayControlValue<uint8_t, 8> lampCtrl;
 
 void setup() {
 	lampCtrl.command(0, 0, 0);
 	pinMode(A0, INPUT);
 
-	  pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
+	pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
 
-  pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-  Serial.begin(115200);
-  setup_wifi();
-  client.setServer(MQTT_SERVER, 1883);
-  client.setCallback(callback);
-  dht.begin();
+	pinMode(BUILTIN_LED, OUTPUT); // Initialize the BUILTIN_LED pin as an output
+	Serial.begin(115200);
+	setup_wifi();
+	client.setServer(MQTT_SERVER, 1883);
+	client.setCallback(callback);
+	dht.begin();
 
+	pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
 
-  pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-irsend.begin();
+	Wire.pins(12, 13);
+	Wire.begin();
 
-  Wire.pins(12,13);
-  Wire.begin();
-
-  pinMode(HALL_PIN, INPUT);
-  pinMode(IR_RECV_PIN, INPUT);
+	pinMode(HALL_PIN, INPUT);
+	pinMode(IR_RECV_PIN, INPUT);
 #ifdef IRR
-  irrecv.enableIRIn(); // Start the receiver
+	irrecv.enableIRIn(); // Start the receiver
 #endif
 
 }
 
 decode_results results;
-
 
 #ifdef LIGHT_DEBUG
 #define	LAMP_ON_1_TIME_MS		3*1000
@@ -224,16 +198,16 @@ decode_results results;
 #define	LAMP_ON_3_TIME_MS		300*1000
 #endif
 
-int	last_lamp_val=-1;
-void setLamp(int val){
-	if(last_lamp_val==val)
+int last_lamp_val = -1;
+void setLamp(int val) {
+	if (last_lamp_val == val)
 		return;
-	last_lamp_val=val;
-    Wire.beginTransmission(0x33);
-    Wire.write(val);
-    Wire.write(16);
-    Wire.write(16);
-    Wire.endTransmission();
+	last_lamp_val = val;
+	Wire.beginTransmission(0x33);
+	Wire.write(val);
+	Wire.write(16);
+	Wire.write(16);
+	Wire.endTransmission();
 }
 
 void loop() {
@@ -244,74 +218,73 @@ void loop() {
 //
 //		  }
 //	}
-  if (!client.connected()) {
-	reconnect();
-  }
+	if (!client.connected()) {
+		reconnect();
+	}
 
-  client.loop();
+	client.loop();
 
-  long now = millis();
-  if (now - lastMsg > 1000) {
-    lastMsg = now;
-    ++value;
-    int hum=0;
-    int temp=0;
-    hum=(dht.readHumidity()*100);
-    temp=(dht.readTemperature()*100);
+	long now = millis();
+	if (now - lastMsg > 1000) {
+		lastMsg = now;
+		++value;
+		int hum = 0;
+		int temp = 0;
+		hum = (dht.readHumidity() * 100);
+		temp = (dht.readTemperature() * 100);
 //    hum=3;
-    int lum= analogRead(A0);
+		int lum = analogRead(A0);
 //    analogRead(0);
-    int pir=digitalRead(5);
-    int hall=digitalRead(HALL_PIN);
+		int pir = digitalRead(5);
+		int hall = digitalRead(HALL_PIN);
 //    int lum=1;int pir=3;int hall=2;
 
-	int irv=0;
+		int irv = 0;
 #ifdef IRR
-	if (irrecv.decode(&results)) {
-    irv=(unsigned int)results.value;
+		if (irrecv.decode(&results)) {
+			irv=(unsigned int)results.value;
 
-    irrecv.resume(); // Receive the next value
-	}
+			irrecv.resume(); // Receive the next value
+		}
 #endif
 
+		sprintf(msg, "%ld", now);
+		sprintf(channel, "%s/uptime", devicePrefix);
+		client.publish(channel, msg);
 
-	sprintf(msg, "%ld", now);
-	sprintf(channel, "%s/uptime", devicePrefix);
-	client.publish(channel, msg);
+		sprintf(msg, "%d.%d", hum / 100, hum % 100);
+		sprintf(channel, "%s/humidity", devicePrefix);
+		client.publish(channel, msg);
 
-	sprintf(msg, "%d.%d", hum/100,hum%100);
-	sprintf(channel, "%s/humidity", devicePrefix);
-	client.publish(channel, msg);
+		sprintf(msg, "%d.%d", temp / 100, temp % 100);
+		sprintf(channel, "%s/temperature", devicePrefix);
+		client.publish(channel, msg);
 
-	sprintf(msg, "%d.%d", temp/100,temp%100);
-	sprintf(channel, "%s/temperature", devicePrefix);
-	client.publish(channel, msg);
+		sprintf(msg, "%d", lum);
+		sprintf(channel, "%s/lum", devicePrefix);
+		client.publish(channel, msg);
 
-	sprintf(msg, "%d", lum);
-	sprintf(channel, "%s/lum", devicePrefix);
-	client.publish(channel, msg);
+		sprintf(msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d",
+				value, temp, hum, lum, pir, irv, hall);
+		Serial.print("Publish message: ");
+		Serial.println(msg);
+		client.publish("outTopic", msg);
+		sprintf(msg, "%d", pir);
+		sprintf(channel, "%s/pir", devicePrefix);
+		client.publish(channel, msg);
+	}
+	delay(10);
+	{
 
-	sprintf (msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d", value, temp,hum,lum,pir,irv,hall);
-    Serial.print("Publish message: ");
-    Serial.println(msg);
-    client.publish("outTopic", msg);
-	sprintf (msg, "%d", pir);
-	sprintf(channel, "%s/pir", devicePrefix);
-    client.publish(channel, msg);
-  }
-  delay(10);
-  {
-
-	  if(now>manualUntil){
-	    int pir=digitalRead(5);
-	    if(pir) {
-	    	lampCtrl.command(3, now+LAMP_ON_1_TIME_MS, 255);
-	    	lampCtrl.command(2, now+LAMP_ON_2_TIME_MS, 192);
-	    	lampCtrl.command(1, now+LAMP_ON_3_TIME_MS, 1);
-	    }
-	    setLamp(lampCtrl.getActiveValue());
-	  }
-  }
+		if (now > manualUntil) {
+			int pir = digitalRead(5);
+			if (pir) {
+				lampCtrl.command(3, now + LAMP_ON_1_TIME_MS, 255);
+				lampCtrl.command(2, now + LAMP_ON_2_TIME_MS, 192);
+				lampCtrl.command(1, now + LAMP_ON_3_TIME_MS, 1);
+			}
+			setLamp(lampCtrl.getActiveValue());
+		}
+	}
 }
-
 
