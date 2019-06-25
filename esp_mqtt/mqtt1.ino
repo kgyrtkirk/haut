@@ -39,9 +39,19 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 long lastMsg = 0;
 char msg[128];
+char channel[128];
 int value = 0;
+const char*devicePrefix="unknown";
 
+#define MAC_BATHROOM	"60:01:94:10:16:AE"
+#define MAC_KITCHEN		"60:01:94:0F:CE:44"
 void setup_wifi() {
+	if( WiFi.macAddress() == MAC_BATHROOM ) {
+		devicePrefix="bathroom";
+	}
+	if( WiFi.macAddress() == MAC_KITCHEN ) {
+		devicePrefix="kitchen";
+	}
 
   delay(10);
   // We start by connecting to a WiFi network
@@ -287,16 +297,20 @@ void loop() {
 
 
 	sprintf(msg, "%ld", now);
-	client.publish("bathroom/uptime", msg);
+	sprintf(channel, "%s/uptime", devicePrefix);
+	client.publish(channel, msg);
 
 	sprintf(msg, "%d.%d", hum/100,hum%100);
-	client.publish("bathroom/humidity", msg);
+	sprintf(channel, "%s/humidity", devicePrefix);
+	client.publish(channel, msg);
 
 	sprintf(msg, "%d.%d", temp/100,temp%100);
-	client.publish("bathroom/temperature", msg);
+	sprintf(channel, "%s/temperature", devicePrefix);
+	client.publish(channel, msg);
 
 	sprintf(msg, "%d", lum);
-	client.publish("bathroom/lum", msg);
+	sprintf(channel, "%s/lum", devicePrefix);
+	client.publish(channel, msg);
 
 	sprintf (msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d", value, temp,hum,lum,pir,irv,hall);
     Serial.print("Publish message: ");
