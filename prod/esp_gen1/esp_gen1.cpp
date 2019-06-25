@@ -6,7 +6,6 @@
 #include <ESP8266httpUpdate.h>
 #include <stdlib.h>
 #include <Wire.h>
-#include <IRremoteESP8266.h>
 
 #include "k-settings.h"
 
@@ -155,9 +154,6 @@ DHT dht(DHTPIN, DHTTYPE);
 #define HALL_PIN 14
 
 #include "DelayControlValue.h"
-#ifdef IRR
-IRrecv irrecv(IR_RECV_PIN);
-#endif
 DelayControlValue<uint8_t, 8> lampCtrl;
 
 void setup() {
@@ -180,9 +176,6 @@ void setup() {
 
 	pinMode(HALL_PIN, INPUT);
 	pinMode(IR_RECV_PIN, INPUT);
-#ifdef IRR
-	irrecv.enableIRIn(); // Start the receiver
-#endif
 
 }
 
@@ -240,13 +233,6 @@ void loop() {
 //    int lum=1;int pir=3;int hall=2;
 
 		int irv = 0;
-#ifdef IRR
-		if (irrecv.decode(&results)) {
-			irv=(unsigned int)results.value;
-
-			irrecv.resume(); // Receive the next value
-		}
-#endif
 
 		sprintf(msg, "%ld", now);
 		sprintf(channel, "%s/uptime", devicePrefix);
