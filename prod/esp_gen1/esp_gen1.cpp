@@ -47,11 +47,20 @@ void setup_wifi() {
 	Serial.println(WiFi.localIP());
 }
 
-
 uint64_t manualUntil = 0;
 #define	MANUAL_TIME_S	600
 
-void setLamp(int val);
+int last_lamp_val = -1;
+void setLamp(int val, bool force) {
+	if (last_lamp_val == val && !force)
+		return;
+	last_lamp_val = val;
+	Wire.beginTransmission(0x33);
+	Wire.write(val);
+	Wire.write(16);
+	Wire.write(16);
+	Wire.endTransmission();
+}
 
 void callback(char* topic, byte* payload, unsigned int length) {
 	Serial.print("Message arrived [");
@@ -95,7 +104,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 		sprintf(msg, "analog: %d", val);
 		client.publish("outTopic", msg);
 
-		setLamp(val);
+		setLamp(val, true);
 
 	}
 }
@@ -186,18 +195,6 @@ void setup() {
 #define	LAMP_ON_3_TIME_MS		300*1000
 #endif
 
-int last_lamp_val = -1;
-void setLamp(int val) {
-	if (last_lamp_val == val)
-		return;
-	last_lamp_val = val;
-	Wire.beginTransmission(0x33);
-	Wire.write(val);
-	Wire.write(16);
-	Wire.write(16);
-	Wire.endTransmission();
-}
-
 void loop() {
 //	if(WiFiMulti.run() == WL_CONNECTED) {
 //		  if (!client.connected()) {
@@ -213,7 +210,8 @@ void loop() {
 	client.loop();
 
 	long now = millis();
-	if (now - lastMsg > 1000) {
+	bool secPassed = now - lastMsg > 1000;
+	if (secPassed) {
 		lastMsg = now;
 		++value;
 		int hum = 0;
@@ -264,7 +262,7 @@ void loop() {
 				lampCtrl.command(2, now + LAMP_ON_2_TIME_MS, 192);
 				lampCtrl.command(1, now + LAMP_ON_3_TIME_MS, 1);
 			}
-			setLamp(lampCtrl.getActiveValue());
+			setLamp(lampCtrl.getActiveValue(), secPassed);
 		}
 	}
 }
