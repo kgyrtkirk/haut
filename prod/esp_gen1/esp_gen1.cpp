@@ -1,4 +1,3 @@
-
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <ESP8266WiFiMulti.h>
@@ -48,8 +47,6 @@ void setup_wifi() {
 	Serial.println(WiFi.localIP());
 }
 
-#define PWM_CHANNELS 1
-const uint32_t period = 5000; // * 200ns ^= 1 kHz
 
 uint64_t manualUntil = 0;
 #define	MANUAL_TIME_S	600
@@ -178,8 +175,6 @@ void setup() {
 	pinMode(IR_RECV_PIN, INPUT);
 
 }
-
-decode_results results;
 
 #ifdef LIGHT_DEBUG
 #define	LAMP_ON_1_TIME_MS		3*1000
