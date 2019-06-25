@@ -32,7 +32,9 @@ void setup_wifi() {
 	Serial.println("Startup...");
 	Serial.print("connecting to ");
 	Serial.println(WIFI_SSID);
+	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
+
 
 	while (WiFiMulti.run() != WL_CONNECTED) {
 		delay(500);
