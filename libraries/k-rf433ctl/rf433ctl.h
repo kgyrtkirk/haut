@@ -20,6 +20,8 @@ class RF433Ctl {
 public:
 	RF433Ctl(int _txPin) :
 			txPin(_txPin) {
+	}
+	void init(){
 		pinMode(txPin, OUTPUT);
 		digitalWrite(txPin, 0);
 	}
