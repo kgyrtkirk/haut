@@ -1,4 +1,9 @@
 #pragma once
 
-class X111 {
+class KMqttClient{
+
+public:
+	void	init();
+	void	loop();
+
 };
