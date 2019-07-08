@@ -61,10 +61,11 @@ error_log("onlyaa");
 $db = array (
 		"60:01:94:0F:8A:5E" => "fx1",
 		"60:01:94:0F:A8:5E" => "fx1",
-		"60:01:94:10:16:AE" => "esp_gen1",	#	assembled pcb.1
-		"60:01:94:0F:CE:44" => "esp_gen1",	#	assembled pcb.2
-        "DC:4F:22:37:7B:9F" => "sonoff_basic", # sonoff.basic #1
-        "BC:DD:C2:0E:04:C1" => "sonoff_basic", # sonoff.basic #2
+		"60:01:94:10:16:AE" => "esp_gen1",	        # assembled pcb.1
+		"60:01:94:0F:CE:44" => "esp_gen1",	        # assembled pcb.2
+        "DC:4F:22:37:7B:9F" => "sonoff_basic",      # sonoff.basic #1
+        "BC:DD:C2:0E:04:C1" => "sonoff_basic",      # sonoff.basic #2
+        "84:0D:8E:A5:7F:AA" => "esp_shutterctl",    # breadboard esp8266 module
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
