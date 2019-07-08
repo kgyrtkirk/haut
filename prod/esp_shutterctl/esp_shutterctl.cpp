@@ -6,7 +6,7 @@
 int LED_SONOFF = 2;
 int LED_SONOFF2 = 16;
 
-RF433Ctl rfctl(1);
+RF433Ctl rfctl(3);
 
 void setup() {
 	// initialise digital pin LED_SONOFF as an output.
@@ -25,6 +25,8 @@ void b(int BLINK_DURATION) {
 }
 
 void loop() {
+	rfctl.cmd(0, -1);
+	rfctl.cmd(1, -1);
 	rfctl.cmd(2, -1);
 	b(100);
 	b(100);
