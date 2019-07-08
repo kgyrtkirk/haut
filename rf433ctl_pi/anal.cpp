@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include <bits/stdc++.h> 
 
 using namespace std;
 
@@ -33,6 +34,15 @@ struct  Delta {
     long     dt;
     int     error;
 };
+struct  DT {
+    int    t;
+    int    l;
+    int    c;
+    DT(int _t,int _l) :  t(_t),l(_l) {
+        c=t/l;
+    }
+};
+
 struct  Signal {
     int     tOn;
     int     tOff;
@@ -95,14 +105,32 @@ vector<Signal>    calcSignals(vector<Capture>   cap){
     return ret;
 }
 
+void anal(vector<DT> v0s){
+    vector<int> x;
+    long    sum=0;
+    for(auto it=v0s.begin();it!=v0s.end();++it) {
+        auto &s=*it;
+        x.push_back(s.c);
+        sum+=s.c;
+    }
+    sort(    x.begin(),x.end());
+
+    int n=v0s.size();
+    int n2=n/2;
+    printf("med: %d\n",x[n2]);
+    printf("avg: %d\n",sum/n);
+
+}
 void anal(vector<Signal> v0s){
-    vector<int> on;
+    vector<int> on,v0,v1;
     Signal agg;
     agg.tOn=agg.tOff=0;
     for(auto it=v0s.begin();it!=v0s.end();++it) {
         Signal   s=(*it);
         agg.tOn+=s.tOn;
         agg.tOff+=s.tOff;
+        v0.push_back(s.tOn);
+        v1.push_back(s.tOff);
     }
 
     sort(    v0.begin(),v0.end());
@@ -112,8 +140,7 @@ void anal(vector<Signal> v0s){
     printf("med: %d/%d  l=%d\n",v0[n2],v1[n2],v0[n2]+v1[n2]);
 
 
-int n=v0s.size();
-    printf("avg: %d/%d\n",agg.tOn/n,agg.tOff/n);
+    printf("avg: %d/%d  l=%d\n",agg.tOn/n,agg.tOff/n,agg.tOn/n+agg.tOff/n);
 
 }
 int main(int argc,char**argv) {
@@ -150,8 +177,10 @@ int main(int argc,char**argv) {
     }
 
     int write=0;
+    long dt;
     vector<Signal> v0s,v1s,head1,head2;
     vector<char> tokens;
+    vector<DT> dtS;
     for(auto it=signals.begin();it!=signals.end();++it) {
         Signal   s=(*it);
         if(s.isStart()) {
@@ -203,11 +232,18 @@ int main(int argc,char**argv) {
         if(write==2 && s.isHead2()) {
             head2.push_back(s);
         }
+        if(write==3)
+            dt=0;
+
         if(s.is1()) {
             v1s.push_back(s);
         }
         if(s.is0()) {
             v0s.push_back(s);
+        }
+        dt+=s.tOn+s.tOff;
+        if(write>2) {
+            dtS.push_back(DT(dt,write-2));
         }
         write++;
 //        if(isStart(s));
@@ -218,6 +254,7 @@ anal(head1);
 anal(head2);
 anal(v0s);
 anal(v1s);
+anal(dtS);
 
 
 }
