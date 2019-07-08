@@ -23,6 +23,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-rf433ctl}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-settings}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-espcore}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266HTTPClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266HTTPClient/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266httpUpdate}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266httpUpdate/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266WiFi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/PubSubClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/PubSubClient/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.1366074794" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -32,6 +41,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-rf433ctl}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-settings}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-espcore}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266HTTPClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266HTTPClient/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266httpUpdate}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266httpUpdate/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266WiFi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/PubSubClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/PubSubClient/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.1040335636" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -41,6 +59,15 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-rf433ctl}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-settings}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/k-espcore}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266HTTPClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266HTTPClient/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266httpUpdate}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266httpUpdate/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266WiFi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/ESP8266WiFi/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/PubSubClient}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_shutterctl/libraries/PubSubClient/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.979951386" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>
