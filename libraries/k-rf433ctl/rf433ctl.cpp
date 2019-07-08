@@ -26,27 +26,28 @@ void RF433Ctl::cmd(uint8_t id,int8_t direction){
 	transmitX(msg);
 }
 
+#define	TX_SIGNAL_H			703,	10074
+#define	TX_SIGNAL_I			4781,	1522
+#define	TX_SIGNAL_0			345,	739
+#define	TX_SIGNAL_1			704,	378
+
 void RF433Ctl::transmitX(uint64_t msg) {
-	// 688,10143
-	transmit_signal(688, 10143);
-	transmit_signal(4769, 1538);
+	transmit_signal(TX_SIGNAL_H);
+	transmit_signal(TX_SIGNAL_I);
 
 	uint64_t m = 1;
 	m<<=38;
-//	Serial.print(sizeof(long));
-//	Serial.println("S");
-//	Serial.print(m==0);
-//	Serial.println("H");
+
 	while (m > 0ll) {
 		uint8_t bit = (msg & m) ? 1 : 0;
 		if (bit) {
-			transmit_signal(687, 394);
+			transmit_signal(TX_SIGNAL_1);
 		} else {
-			transmit_signal(328, 756);
+			transmit_signal(TX_SIGNAL_0);
 		}
 		m >>= 1;
 	}
-	transmit_signal(688, 10143);
+	transmit_signal(TX_SIGNAL_H);
 //	Serial.println("x");
 }
 
