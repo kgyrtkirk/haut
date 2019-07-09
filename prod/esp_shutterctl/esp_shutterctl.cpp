@@ -23,23 +23,22 @@ struct ShutterMove {
 };
 std::vector<ShutterMove> moves;
 
-int	w1=0;
-int	w2=0;
-
-// add N_SHUTTER positions
+#define N_SHUTTER 1000
 
 void addMove(int idx,long delta){
+	Serial.printf("addMove idx:%d	delta:%ld\r\n",idx,delta);
 	ShutterMove m;
 	m.started=0;
 	m.idx=idx;
 	m.direction=delta>0?1:-1;
-	m.moveTime=delta*40000/1000;
+	m.moveTime=delta*40000/N_SHUTTER;
 	if(m.moveTime<0)
 		m.moveTime=-m.moveTime;
 	moves.push_back(m);
 }
 
 void 	moveShutter(int idx,int targetPos) {
+	Serial.printf("moveShutter idx:%d	targetPos:%ld\r\n",idx,targetPos);
 	ShutterState &s=shutter[idx];
 	if(s.position==targetPos)
 		return;
@@ -47,22 +46,44 @@ void 	moveShutter(int idx,int targetPos) {
 	s.position=targetPos;
 	if (s.position < 0)
 		s.position = 0;
-	if (s.position > 1000)
-		s.position = 1000;
+	if (s.position > N_SHUTTER)
+		s.position = N_SHUTTER;
 }
 
+void 	moveShutter(int idx, byte* payload, unsigned int length) {
+	if(length>=10) {
+		return;
+	}
+	char	tmp[10];
+	strncpy(tmp,(char*)payload,length);
+	tmp[length]=0;
+	moveShutter(idx,atoi(tmp));
+}
 
+void c0(char* topic, byte* payload, unsigned int length) {
+	moveShutter(0,payload, length);
+}
 void c1(char* topic, byte* payload, unsigned int length) {
-	moveShutter(1,atoi((const char*)payload));
+	moveShutter(1,payload, length);
 }
 void c2(char* topic, byte* payload, unsigned int length) {
-
+	moveShutter(2,payload, length);
+}
+void c3(char* topic, byte* payload, unsigned int length) {
+	moveShutter(3,payload, length);
+}
+void c4(char* topic, byte* payload, unsigned int length) {
+	moveShutter(4,payload, length);
 }
 
 void setup() {
 	Serial.begin(115200);
 	kmqtt.init("shutterctl");
+	kmqtt.subscribe("shutterctl/window0",&c0);
 	kmqtt.subscribe("shutterctl/window1",&c1);
+	kmqtt.subscribe("shutterctl/window2",&c2);
+	kmqtt.subscribe("shutterctl/window3",&c3);
+	kmqtt.subscribe("shutterctl/window4",&c4);
 
 	// initialise digital pin LED_SONOFF as an output.
 	pinMode(LED_SONOFF, OUTPUT);
@@ -81,6 +102,7 @@ void processCommands(){
 	for(auto it=moves.begin();it!=moves.end();it++) {
 		long tMillis=millis();
 		auto &m=*it;
+		//Serial.printf("d:%d	t: %ld	started: %ld	moveTime: %ld\r\n",m.direction,tMillis,m.started,m.moveTime);
 		if(!m.started) {
 			m.started=tMillis;
 			rfctl.cmd(m.idx, m.direction);
