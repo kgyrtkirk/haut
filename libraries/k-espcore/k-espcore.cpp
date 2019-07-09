@@ -12,10 +12,18 @@
 #include <ESP8266httpUpdate.h>
 #include <k-settings.h>
 #include <k-espcore.h>
+#include <string>
 
 ESP8266WiFiMulti WiFiMulti;
 WiFiClient espClient;
 PubSubClient client(espClient);
+
+struct Reg {
+	Reg(const char*_t,T_CALL _c) : topic(_t),callback(_c) {};
+	const char*topic;
+	T_CALL callback;
+};
+std::vector<Reg> regs;
 
 const char*devicePrefix = "unknown";
 
@@ -23,10 +31,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	Serial.print("Message arrived [");
 	Serial.print(topic);
 	Serial.print("] ");
+
 	for (int i = 0; i < length; i++) {
 		Serial.print((char) payload[i]);
 	}
 	Serial.println();
+
+
+	for(int i=0;i<regs.size();i++){
+		if(!strcmp(topic,regs[i].topic)){
+			Serial.println("dispatching to callback");
+			regs[i].callback(topic,payload,length);
+			return;
+		}
+	}
 
 	if ((char) payload[0] == 'R') {
 		ESP.restart();
@@ -55,8 +73,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	}
 }
 
-
-
 void reconnectTry() {
 	// Loop until we're reconnected
 	Serial.print("Attempting MQTT connection...");
@@ -67,9 +83,14 @@ void reconnectTry() {
 	if (client.connect(clientId.c_str())) {
 		Serial.println("connected");
 		// Once connected, publish an announcement...
-		client.publish("outTopic", "XH3ll0 World");
+		client.publish(devicePrefix, "online");
 		// ... and resubscribe
-		client.subscribe("ctrl");
+		char	tmp[128];
+		sprintf(tmp,"%s/control",devicePrefix);
+		client.subscribe(tmp);
+		for(auto i=regs.begin(); i!=regs.end();i++) {
+			client.subscribe(i->topic);
+		}
 	} else {
 		Serial.print("failed, rc=");
 		Serial.print(client.state());
@@ -87,24 +108,25 @@ void reconnect() {
 
 void setup_wifi();
 
-void	KMqttClient::init(){
+void KMqttClient::init(const char*_devicePrefix) {
 	setup_wifi();
 	client.setServer(MQTT_SERVER, 1883);
 	client.setCallback(callback);
-
+	devicePrefix=_devicePrefix;
 }
 
-void	KMqttClient::loop(){
+void KMqttClient::loop() {
 	if (!client.connected()) {
 		reconnect();
 	} else {
 		client.loop();
 	}
 }
-
+void KMqttClient::subscribe(const char*topic,T_CALL callback) {
+	regs.push_back(Reg(topic,callback));
+}
 
 void setup_wifi() {
-	devicePrefix = "custom";
 
 	delay(10);
 	Serial.println();
@@ -113,7 +135,6 @@ void setup_wifi() {
 	Serial.println(WIFI_SSID);
 	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
-
 
 	while (WiFiMulti.run() != WL_CONNECTED) {
 		delay(500);
@@ -127,6 +148,4 @@ void setup_wifi() {
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
 }
-
-
 
