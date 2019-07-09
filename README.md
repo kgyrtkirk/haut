@@ -46,6 +46,8 @@ it might come handy :)
 * startup ota server:
   docker build -t esp-ota .
   docker run -p8181:8181 -it -v $HOME/Documents/sloeber-workspace:/ws/ --rm esp-ota
+  v2:
+  docker run -p8181:8181 -it -v `pwd`/../:/ws/ --rm esp-ota
 * and the story of GPIO16 and the removal of _PULLUP because it doesnt work with it :D
   change INPUT_PULLUP to PULLUP in DHT.cpp if GPIO16 (esp-gen1)
 * initiate ota upgrade
