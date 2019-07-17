@@ -149,3 +149,25 @@ void setup_wifi() {
 	Serial.println(WiFi.localIP());
 }
 
+
+
+void b(int BLINK_DURATION) {
+	digitalWrite(LED_SONOFF, LOW); // LOW will turn on the LED
+	delay(BLINK_DURATION);
+	digitalWrite(LED_SONOFF, HIGH); // HIGH will turn off the LED
+	delay(BLINK_DURATION);
+
+}
+
+void bl() {
+	int k=1000;
+	int j=50;
+	b(j);k-=j+j;
+	b(j);k-=j+j;
+	b(j);k-=j+j;
+	delay(k);
+}
+
+void KMqttClient::blink(){
+	bl();
+}

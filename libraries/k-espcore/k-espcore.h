@@ -9,4 +9,5 @@ public:
 	void	init(const char*_devicePrefix);
 	void	loop();
 	void	subscribe(const char*topic,T_CALL callback);
+	void	blink();
 };
