@@ -127,6 +127,9 @@ void KMqttClient::subscribe(const char*topic,T_CALL callback) {
 }
 
 void xbl() ;
+extern "C" {
+#include "user_interface.h"
+}
 void setup_wifi() {
 
 	delay(10);
@@ -134,6 +137,8 @@ void setup_wifi() {
 	Serial.println("Startup...");
 	Serial.print("connecting to ");
 	Serial.println(WIFI_SSID);
+	wifi_set_phy_mode(PHY_MODE_11G);
+	system_phy_set_max_tpw(40);
 	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 	xbl();
