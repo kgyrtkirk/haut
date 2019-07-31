@@ -42,6 +42,11 @@
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/variants/generic</locationURI>
 		</link>
 		<link>
+			<name>libraries/DHT_sensor_library</name>
+			<type>2</type>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/DHT_sensor_library/1.3.0</locationURI>
+		</link>
+		<link>
 			<name>libraries/ESP8266HTTPClient</name>
 			<type>2</type>
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266HTTPClient</locationURI>
@@ -62,9 +67,19 @@
 			<location>/home/kirk/projects/haut/libraries/pubsubclient</location>
 		</link>
 		<link>
+			<name>libraries/Wire</name>
+			<type>2</type>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/Wire</locationURI>
+		</link>
+		<link>
 			<name>libraries/k-espcore</name>
 			<type>2</type>
 			<location>/home/kirk/projects/haut/libraries/k-espcore</location>
+		</link>
+		<link>
+			<name>libraries/k-fader</name>
+			<type>2</type>
+			<location>/home/kirk/projects/haut/libraries/k-fader</location>
 		</link>
 		<link>
 			<name>libraries/k-settings</name>

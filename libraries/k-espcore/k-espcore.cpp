@@ -126,6 +126,7 @@ void KMqttClient::subscribe(const char*topic,T_CALL callback) {
 	regs.push_back(Reg(topic,callback));
 }
 
+void xbl() ;
 void setup_wifi() {
 
 	delay(10);
@@ -135,9 +136,9 @@ void setup_wifi() {
 	Serial.println(WIFI_SSID);
 	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
-
+	xbl();
 	while (WiFiMulti.run() != WL_CONNECTED) {
-		delay(500);
+		xbl();
 		Serial.print(".");
 	}
 
@@ -151,7 +152,8 @@ void setup_wifi() {
 
 
 
-void b(int BLINK_DURATION) {
+void xb(int BLINK_DURATION) {
+	int LED_SONOFF = 2;
 	digitalWrite(LED_SONOFF, LOW); // LOW will turn on the LED
 	delay(BLINK_DURATION);
 	digitalWrite(LED_SONOFF, HIGH); // HIGH will turn off the LED
@@ -159,15 +161,15 @@ void b(int BLINK_DURATION) {
 
 }
 
-void bl() {
+void xbl() {
 	int k=1000;
 	int j=50;
-	b(j);k-=j+j;
-	b(j);k-=j+j;
-	b(j);k-=j+j;
+	xb(j);k-=j+j;
+	xb(j);k-=j+j;
+	xb(j);k-=j+j;
 	delay(k);
 }
 
 void KMqttClient::blink(){
-	bl();
+	xbl();
 }

@@ -31,6 +31,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/k-settings}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/PubSubClient}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/PubSubClient/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/DHT_sensor_library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/k-fader}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/Wire}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.1051008433" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -48,6 +51,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/k-settings}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/PubSubClient}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/PubSubClient/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/DHT_sensor_library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/k-fader}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/Wire}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.1312618003" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -65,6 +71,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/k-settings}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/PubSubClient}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/PubSubClient/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/DHT_sensor_library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/k-fader}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/esp_gen3/libraries/Wire}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.789402647" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>
