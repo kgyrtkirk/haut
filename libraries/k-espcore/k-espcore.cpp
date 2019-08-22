@@ -99,6 +99,8 @@ void reconnectTry() {
 	}
 }
 
+
+
 void reconnect() {
 	// Loop until we're reconnected
 	while (!client.connected()) {
@@ -126,6 +128,16 @@ void KMqttClient::subscribe(const char*topic,T_CALL callback) {
 	regs.push_back(Reg(topic,callback));
 }
 
+void	KMqttClient::publishMetric(std::string topic,long value) {
+	if(client.connected()) {
+		auto newTopic=topic.replace(topic.find(std::string("@")), 1, std::string(devicePrefix));
+
+		// FIXME: why don't we have std::to_string(value) ?
+		char s[128];
+		sprintf(s,"%ld",value);
+		client.publish(newTopic.c_str(), s);
+	}
+}
 void xbl() ;
 extern "C" {
 #include "user_interface.h"
@@ -174,6 +186,8 @@ void xbl() {
 	xb(j);k-=j+j;
 	delay(k);
 }
+
+
 
 void KMqttClient::blink(){
 	xbl();

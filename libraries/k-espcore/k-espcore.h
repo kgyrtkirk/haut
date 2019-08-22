@@ -8,6 +8,8 @@ class KMqttClient{
 public:
 	void	init(const char*_devicePrefix);
 	void	loop();
+	// FIXME: introduce @/xxx to refer prefix
 	void	subscribe(const char*topic,T_CALL callback);
 	void	blink();
+	void	publishMetric(std::string topic,long value);
 };

@@ -71,13 +71,17 @@ void everySecond(){
 	hum = (dht.readHumidity() * 100);
 	temp = (dht.readTemperature() * 100);
 	int lum = analogRead(A0);
-//	if (lum < 300)
-//	if(millis() % 20000 > 10000)
-//		setLamp(255, false);
-//	else
-	setLamp(lampVal, false);
+
 	int pir = digitalRead(5);
 	printf("temp:	%d 	hum:	%d	lum:	%d	pir:	%d\r\n",hum,temp,lum,pir);
+	kmqtt.publishMetric("@/humidity",hum);
+	kmqtt.publishMetric("@/temperature",temp);
+	kmqtt.publishMetric("@/pir",pir);
+	kmqtt.publishMetric("@/lum",lum);
+	kmqtt.publishMetric("@/uptime",millis());
+
+	// to make sure the slave's wdt is happy; retransmit lampVal
+	setLamp(lampVal, false);
 }
 
 
