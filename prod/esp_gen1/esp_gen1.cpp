@@ -17,11 +17,13 @@ char channel[128];
 int value = 0;
 const char*devicePrefix = "unknown";
 
+bool bathroom=false;
 #define MAC_BATHROOM	"60:01:94:10:16:AE"
 #define MAC_KITCHEN		"60:01:94:0F:CE:44"
 void setup_wifi() {
 	if (WiFi.macAddress() == MAC_BATHROOM) {
 		devicePrefix = "bathroom";
+		bathroom=true;
 	}
 	if (WiFi.macAddress() == MAC_KITCHEN) {
 		devicePrefix = "kitchen";
@@ -197,6 +199,11 @@ void setup() {
 #define	LAMP_ON_3_TIME_MS		300*1000
 #endif
 
+bool isHumidityHigh(){
+	float hum = dht.readHumidity();
+	return (65.0f <= hum && hum <= 101.0f);
+}
+
 void loop() {
 //	if(WiFiMulti.run() == WL_CONNECTED) {
 //		  if (!client.connected()) {
@@ -245,21 +252,25 @@ void loop() {
 		sprintf(channel, "%s/lum", devicePrefix);
 		client.publish(channel, msg);
 
-		sprintf(msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d",
-				value, temp, hum, lum, pir, irv, hall);
+		sprintf(msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d HH:%d",
+				value, temp, hum, lum, pir, irv, hall,isHumidityHigh());
 		Serial.print("Publish message: ");
 		Serial.println(msg);
 		client.publish("outTopic", msg);
 		sprintf(msg, "%d", pir);
 		sprintf(channel, "%s/pir", devicePrefix);
 		client.publish(channel, msg);
+		if (bathroom && isHumidityHigh()) {
+			client.publish("sonoff/run", "600");
+		}
 	}
 	delay(10);
 	{
 
 		if (now > manualUntil) {
 			int pir = digitalRead(5);
-			if (pir) {
+			bool highHumidity=isHumidityHigh();
+			if (pir || highHumidity) {
 				lampCtrl.command(3, now + LAMP_ON_1_TIME_MS, 255);
 				lampCtrl.command(2, now + LAMP_ON_2_TIME_MS, 192);
 				lampCtrl.command(1, now + LAMP_ON_3_TIME_MS, 1);

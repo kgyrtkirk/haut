@@ -71,6 +71,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	}
 	Serial.println();
 
+	if (!strcmp(topic, "sonoff/run")) {
+		manualUntil = millis() + 600 * 1000;
+		return;
+	}
+
 	if ((char) payload[0] == 'R') {
 		ESP.restart();
 	}
@@ -120,9 +125,10 @@ void reconnectTry() {
 	if (client.connect(clientId.c_str())) {
 		Serial.println("connected");
 		// Once connected, publish an announcement...
-		client.publish("outTopic", "XH3ll0 World");
+		client.publish("sonoff", "XH3ll0 World");
 		// ... and resubscribe
 		client.subscribe("sonoff/command");
+		client.subscribe("sonoff/run");
 	} else {
 		Serial.print("failed, rc=");
 		Serial.print(client.state());
@@ -166,21 +172,31 @@ void bl() {
 }
 
 void loop() {
-	bl();
 	if (!client.connected()) {
+		bl();
 		reconnect();
 	}
 
 	client.loop();
 
 	long now = millis();
-	if (now - lastMsg > 1000) {
+	if(client.connected()) {
+		if (now - lastMsg > 1000) {
 
-		int state = now;
-		sprintf(msg, "S%d", state);
-		client.publish("sonoff/state", msg);
-
+			int state = now;
+			sprintf(msg, "S%d", state);
+			client.publish("sonoff/state", msg);
+			lastMsg=now;
+		}
 	}
+		if (now < manualUntil) {
+			digitalWrite(RELAY, HIGH);
+		} else {
+			if (manualUntil != 0) {
+				digitalWrite(RELAY, LOW);
+				manualUntil = 0;
+			}
+		}
 	delay(10);
 
 }

@@ -67,3 +67,14 @@ it might come handy :)
     -U lfuse:w:0xE2:m	-U hfuse:w:0xDF:m
 
 
+### PIR anti noise
+
+https://www.letscontrolit.com/forum/viewtopic.php?t=671&start=10
+* reduce tx power; use G
+```
+wifi_set_phy_mode(PHY_MODE_11G);
+system_phy_set_max_tpw(40);
+```
+  it seems to be working :)
+* 220nF ceramic capacitor across pin12 und pin13 of the chip (BISS0001) 
+  not yet tried
