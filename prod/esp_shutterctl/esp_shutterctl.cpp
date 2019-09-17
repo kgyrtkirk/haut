@@ -7,7 +7,7 @@
 int LED_SONOFF = 2;
 int LED_SONOFF2 = 16;
 
-RF433Ctl rfctl(3);
+RF433Ctl rfctl(15);
 KMqttClient	kmqtt;
 
 struct ShutterState {
