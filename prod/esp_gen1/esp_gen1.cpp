@@ -52,9 +52,11 @@ void setup_wifi() {
 }
 
 uint64_t manualUntil = 0;
+int		lampManualVal;
 #define	MANUAL_TIME_S	600
 
 int last_lamp_val = -1;
+
 void setLamp(int val, bool force) {
 	if (last_lamp_val == val && !force)
 		return;
@@ -108,6 +110,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 		sprintf(msg, "analog: %d", val);
 		client.publish("outTopic", msg);
 
+		lampManualVal=val;
 		setLamp(val, true);
 
 	}
@@ -270,12 +273,16 @@ void loop() {
 		if (now > manualUntil) {
 			int pir = digitalRead(5);
 			bool highHumidity=isHumidityHigh();
+			bool force=secPassed;
 			if (pir || highHumidity) {
+				force |= lampCtrl.getActiveValue() != 255;
 				lampCtrl.command(3, now + LAMP_ON_1_TIME_MS, 255);
 				lampCtrl.command(2, now + LAMP_ON_2_TIME_MS, 192);
 				lampCtrl.command(1, now + LAMP_ON_3_TIME_MS, 1);
 			}
-			setLamp(lampCtrl.getActiveValue(), secPassed);
+			setLamp(lampCtrl.getActiveValue(), force);
+		} else {
+			setLamp(lampManualVal, secPassed);
 		}
 	}
 }

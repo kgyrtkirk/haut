@@ -78,3 +78,8 @@ system_phy_set_max_tpw(40);
   it seems to be working :)
 * 220nF ceramic capacitor across pin12 und pin13 of the chip (BISS0001) 
   not yet tried
+
+
+### pending improvements
+* add metric to show total publish time
+* move critical section from main
