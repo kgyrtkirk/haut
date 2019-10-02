@@ -41,6 +41,23 @@ uint8_t 	val=0;
 unsigned long int cmd_time;
 
 #define LED_PIN 1
+
+void i2c_rx(uint8_t n) {
+	if (n == 3) {
+		uint8_t new_target_val = TinyWireS.receive();
+		speed_up = TinyWireS.receive();
+		speed_down = TinyWireS.receive();
+		wdt_reset();
+		state = !state;
+		digitalWrite(LED_PIN, state);
+		if (new_target_val != target_val) {
+			target_val = new_target_val;
+			cmd_time = millis();
+			orig_val = val;
+		}
+	}
+}
+
 void setup() {
 	MCUSR &= ~(1<<WDRF); // reset status flag
 	wdt_disable();
@@ -50,6 +67,7 @@ void setup() {
 	state=1;
 	digitalWrite(LED_PIN, state);
 	TinyWireS.begin(0x33); // initialize I2C lib & setup slave's address (7 bit - same as Wire)
+	TinyWireS.onReceive(&i2c_rx);
 	analogWrite(4,128);
 /*	speed_up=speed_down=1;
 	orig_val=val=0;
@@ -58,19 +76,8 @@ void setup() {
 }
 
 void loop() {
-	if (TinyWireS.available()) {
-		uint8_t new_target_val=TinyWireS.receive();
-		speed_up=TinyWireS.receive();
-		speed_down=TinyWireS.receive();
-		wdt_reset();
-		state=!state;
-		digitalWrite(LED_PIN, state);
-		if(new_target_val != target_val) {
-			target_val=new_target_val;
-			cmd_time=millis();
-			orig_val=val;
-		}
-	}
+	TinyWireS_stop_check();
+
 	if (val != target_val) {
 		uint16_t dt = (millis() - cmd_time);
 		if (val < target_val) {
