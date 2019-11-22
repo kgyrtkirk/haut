@@ -1,0 +1,5 @@
+  avrdude -C/home/kirk/sdk/sloeber//arduinoPlugin/packages/ATTinyCore/hardware/avr/1.1.4/avrdude.conf  \
+   -pattiny85 -carduino -P/dev/ttyACM0 -b19200 \
+    -Uflash:v:/home/kirk/Documents/sloeber-workspace/pwm_slave/Release/pwm_slave.hex:i  \
+    -U lfuse:v:0xE2:m	-U hfuse:v:0xDF:m
+
