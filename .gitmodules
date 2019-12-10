@@ -56,3 +56,6 @@
 [submodule "external/paho.mqtt.cpp"]
 	path = old/external/paho.mqtt.cpp
 	url = https://github.com/eclipse/paho.mqtt.cpp.git
+[submodule "old/libraries/Adafruit_VL53L0X"]
+	path = old/libraries/Adafruit_VL53L0X
+	url = https://github.com/adafruit/Adafruit_VL53L0X
