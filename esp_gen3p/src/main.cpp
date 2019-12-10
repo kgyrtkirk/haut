@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include "k-espcore.h"
 #include "DelayControlValue.h"
 DelayControlValue<uint8_t, 8> lampCtrl;
 
