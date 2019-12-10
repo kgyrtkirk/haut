@@ -16,3 +16,4 @@ rules.ninja
 .ninja*
 valgrind.log
 *.bin
+.vscode
