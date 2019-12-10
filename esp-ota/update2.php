@@ -67,6 +67,7 @@ $db = array (
         "DC:4F:22:37:7B:9F" => "sonoff_basic",      # sonoff.basic #1
         "BC:DD:C2:0E:04:C1" => "sonoff_basic",      # sonoff.basic #2
         "84:0D:8E:A5:7F:AA" => "esp_shutterctl",    # breadboard esp8266 module
+	"2C:F4:32:17:3C:0D" => "esp_gen3p",         # nodemcu (amica)
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
@@ -78,7 +79,10 @@ exit();
 $fwName = $db[$_SERVER['HTTP_X_ESP8266_STA_MAC']];
 
 //$localBinary = sprintf("%s/%s/Release/%s.bin",$workspace,$fwName,$fwName);
-$localBinary = sprintf("%s/prod/%s/Release/%s.bin",$workspace,$fwName,$fwName);
+//$localBinary = sprintf("%s/prod/%s/Release/%s.bin",$workspace,$fwName,$fwName);
+$localBinary = sprintf("%s/%s/.pio/build/nodemcuv2/firmware.bin",$workspace,$fwName);
+
+
 error_log("serving binary from path:");
 error_log("$localBinary");
 
