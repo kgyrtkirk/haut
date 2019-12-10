@@ -1,58 +1,58 @@
 [submodule "rweather"]
-	path = external/rweather
+	path = old/external/rweather
 	url = https://github.com/rweather/arduinolibs
 [submodule "optiboot"]
-	path = external/optiboot
+	path = old/external/optiboot
 	url = git@github.com:kgyrtkirk/optiboot
 [submodule "external/pubsubclient"]
-	path = external/pubsubclient
+	path = old/external/pubsubclient
 	url = git@github.com:knolleary/pubsubclient.git
 [submodule "external/ESP8266_new_pwm"]
-	path = external/ESP8266_new_pwm
+	path = old/external/ESP8266_new_pwm
 	url = git@github.com:StefanBruens/ESP8266_new_pwm.git
 [submodule "external/IRremoteESP8266"]
-	path = external/IRremoteESP8266
+	path = old/external/IRremoteESP8266
 	url = git@github.com:markszabo/IRremoteESP8266.git
 [submodule "external/IRremoteESP8266_ff"]
-	path = external/IRremoteESP8266_ff
+	path = old/external/IRremoteESP8266_ff
 	url = git@github.com:AndrewMohawk/IRremoteESP8266.git
 [submodule "external/DHT-sensor-library"]
-	path = external/DHT-sensor-library
+	path = old/external/DHT-sensor-library
 	url = https://github.com/adafruit/DHT-sensor-library
 [submodule "external/TinyWire"]
-	path = external/TinyWire
+	path = old/external/TinyWire
 	url = https://github.com/rambo/TinyWire/
 [submodule "external/RFremote"]
-	path = external/RFremote
+	path = old/external/RFremote
 	url = https://github.com/renatoaloi/RFremote
 [submodule "external/rc-switch-sui77"]
-	path = external/rc-switch-sui77
+	path = old/external/rc-switch-sui77
 	url = https://github.com/sui77/rc-switch
 [submodule "external/rc-switch-ml-protocoldet"]
-	path = external/rc-switch-ml-protocoldet
+	path = old/external/rc-switch-ml-protocoldet
 	url = https://github.com/Martin-Laclaustra/rc-switch
 	branch = protocollessreceiver
 [submodule "external/Adalight-FastLED"]
-	path = external/Adalight-FastLED
+	path = old/external/Adalight-FastLED
 	url = https://github.com/dmadison/Adalight-FastLED/
 [submodule "external/FastLED"]
-	path = external/FastLED
+	path = old/external/FastLED
 	url = https://github.com/FastLED/FastLED
 [submodule "external/Adalight"]
-	path = external/Adalight
+	path = old/external/Adalight
 	url = https://github.com/adafruit/Adalight/
 [submodule "external/AFMotor"]
-	path = external/AFMotor
+	path = old/external/AFMotor
 	url = https://github.com/adafruit/Adafruit-Motor-Shield-library
 [submodule "external/vl53l0x-arduino"]
-	path = external/vl53l0x-arduino
+	path = old/external/vl53l0x-arduino
 	url = https://github.com/pololu/vl53l0x-arduino
 [submodule "external/wiringPi"]
-	path = external/wiringPi
+	path = old/external/wiringPi
 	url = git://git.drogon.net/wiringPi
 [submodule "external/paho.mqtt"]
-	path = external/paho.mqtt
+	path = old/external/paho.mqtt
 	url = https://github.com/eclipse/paho.mqtt.c.git
 [submodule "external/paho.mqtt.cpp"]
-	path = external/paho.mqtt.cpp
+	path = old/external/paho.mqtt.cpp
 	url = https://github.com/eclipse/paho.mqtt.cpp.git

@@ -6,3 +6,4 @@
 * move program hdr under esp?
 * thicken dht22 legs
 
+* use internal pullups?
