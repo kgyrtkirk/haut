@@ -5,6 +5,8 @@
  *      Author: kirk
  */
 
+#include <ESP8266WebServer.h>
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <ESP8266WiFiMulti.h>
@@ -24,6 +26,9 @@ struct Reg {
 	T_CALL callback;
 };
 std::vector<Reg> regs;
+
+#include <WebServer.h>
+ESP8266WebServer server(80);
 
 const char*devicePrefix = "unknown";
 

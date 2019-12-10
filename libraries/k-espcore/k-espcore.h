@@ -13,3 +13,15 @@ public:
 	void	blink();
 	void	publishMetric(std::string topic,long value);
 };
+
+
+class KPrometheusService{
+public:
+	void	init();
+	void	loop();
+	// FIXME: introduce @/xxx to refer prefix
+	void	subscribe(const char*topic,T_CALL callback);
+	void	blink();
+	void	publishMetric(std::string topic,long value);
+};
+

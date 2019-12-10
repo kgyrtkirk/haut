@@ -2,6 +2,7 @@
 #include "esp_gen3.h"
 
 
+
 // Pin config
 int LED_SONOFF = 2;
 
@@ -64,6 +65,27 @@ void setLamp(int val, bool force) {
 	Wire.endTransmission();
 }
 
+class PrometheusExporterStream {
+
+	void write(const String&name, const String&type,const String&value) {
+
+	}
+public:
+	void writeGauge(const String&name, int value) {
+		write(name, "gauge", String(value));
+	}
+
+};
+
+struct PromValues {
+	int	humidity;
+	int temperature;
+
+	void sendValues(PrometheusExporterStream&pp) {
+		pp.writeGauge("haut_humidity", humidity);
+		pp.writeGauge("haut_temperature", temperature);
+	}
+};
 
 void everySecond(){
 	int hum;
@@ -82,6 +104,10 @@ void everySecond(){
 
 	// to make sure the slave's wdt is happy; retransmit lampVal
 	setLamp(lampVal, false);
+
+
+
+
 }
 
 
