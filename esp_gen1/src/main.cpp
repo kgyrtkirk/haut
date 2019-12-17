@@ -20,13 +20,15 @@ const char*devicePrefix = "unknown";
 void setup1();
 
 struct PromValues {
-        int     humidity=3;
-        int temperature=33;
+        float     humidity=3;
+        float temperature=33;
+		unsigned long uptime=0;
 
         String getValues() {
     String s;
     s+="haut_humidity "+String(humidity)+String("\n");
     s+="haut_temperature "+String(temperature)+String("\n");
+    s+="haut_uptime "+String(uptime)+String("\n");
     return s;
         }
 } promValues;
@@ -244,13 +246,19 @@ void loop() {
 		++value;
 		int hum = 0;
 		int temp = 0;
+
 		hum = (dht.readHumidity() * 100);
 		temp = (dht.readTemperature() * 100);
+		promValues.humidity=dht.readHumidity();
+		promValues.temperature=dht.readTemperature();
+		promValues.uptime= millis();
 //    hum=3;
 		int lum = analogRead(A0);
 //    analogRead(0);
 		int pir = digitalRead(5);
 		int hall = digitalRead(HALL_PIN);
+
+
 //    int lum=1;int pir=3;int hall=2;
 
 		int irv = 0;
