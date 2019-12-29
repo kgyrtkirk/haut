@@ -62,7 +62,7 @@ $db = array (
 		"60:01:94:0F:8A:5E" => "fx1",
 		"60:01:94:0F:A8:5E" => "esp_gen3",		# esp12e breadboard spider
 		"60:01:94:10:16:AE" => "esp_gen1",	        # assembled pcb.1 (bathroom)
-		"60:01:94:0F:CE:44" => "esp_gen1",	        # assembled pcb.2 (kitchen)
+		"60:01:94:0F:CE:44X" => "esp_gen1",	        # assembled pcb.2 (kitchen)
 		"60:01:94:0F:67:7F" => "esp_gen3",		# assembled g3.1
         "DC:4F:22:37:7B:9F" => "sonoff_basic",      # sonoff.basic #1
         "BC:DD:C2:0E:04:C1" => "sonoff_basic",      # sonoff.basic #2
@@ -79,8 +79,8 @@ exit();
 $fwName = $db[$_SERVER['HTTP_X_ESP8266_STA_MAC']];
 
 //$localBinary = sprintf("%s/%s/Release/%s.bin",$workspace,$fwName,$fwName);
-//$localBinary = sprintf("%s/prod/%s/Release/%s.bin",$workspace,$fwName,$fwName);
-$localBinary = sprintf("%s/%s/.pio/build/nodemcuv2/firmware.bin",$workspace,$fwName);
+$localBinary = sprintf("%s/prod/%s/Release/%s.bin",$workspace,$fwName,$fwName);
+//$localBinary = sprintf("%s/%s/.pio/build/nodemcuv2/firmware.bin",$workspace,$fwName);
 
 
 error_log("serving binary from path:");

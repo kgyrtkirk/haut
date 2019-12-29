@@ -68,7 +68,8 @@ template<typename AnyType> void sortArrayReverse(AnyType array[], size_t sizeOfA
 #endif
 
 
-const	uint8_t radar_servo_offset[RADAR_DIR_MAX]={120,90,60};
+//const	uint8_t radar_servo_offset[RADAR_DIR_MAX]={120,90,60};
+const	uint8_t radar_servo_offset[RADAR_DIR_MAX]={60,90,120};
 
 Radar::Radar(Sonar&_sonar) : sonar(_sonar){
 }

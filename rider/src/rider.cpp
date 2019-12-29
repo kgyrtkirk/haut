@@ -39,20 +39,19 @@ int	th=0;
 #define	T_START	5000
 #define	T_END	65000
 
-void loop()
+void loop0()
 {
 //	radar.sweep();
 	delay(100);
 //    Serial.println("hello");
 	radar.debug();
-	pilot.drive(0,0);
-
+	pilot.drive(255,-255);
 
 }
 
 #define D_MIN 30
 long	radarTime=0;
-void loop1()
+void loop()
 {
 	long now=millis();
 	int t;
