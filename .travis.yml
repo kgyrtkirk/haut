@@ -20,6 +20,8 @@
 #
 
 language: python
+git:
+  submodules: false
 python:
     - "2.7"
 
