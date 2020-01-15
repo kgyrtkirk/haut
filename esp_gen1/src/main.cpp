@@ -25,11 +25,16 @@ struct PromValues {
 		unsigned long uptime=0;
 
         String getValues() {
-    String s;
-    s+="haut_humidity "+String(humidity)+String("\n");
-    s+="haut_temperature "+String(temperature)+String("\n");
-    s+="haut_uptime "+String(uptime)+String("\n");
-    return s;
+		    String s;
+			#define V(K)	s+="haut_" #K + " " + String(K) + String("\n");
+			V(humidity);
+			V(temperature);
+			V(uptime);
+			#undef V
+			s+="xhaut_humidity "+String(humidity)+String("\n");
+			s+="xhaut_temperature "+String(temperature)+String("\n");
+			s+="xhaut_uptime "+String(uptime)+String("\n");
+			return s;
         }
 } promValues;
 
