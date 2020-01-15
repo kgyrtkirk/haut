@@ -26,7 +26,7 @@ struct PromValues {
 
         String getValues() {
 		    String s;
-			#define V(K)	s+="haut_" #K + " " + String(K) + String("\n");
+			#define V(K)	s+="haut_" #K " " + String(K) + String("\n");
 			V(humidity);
 			V(temperature);
 			V(uptime);
