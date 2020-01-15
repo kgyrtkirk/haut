@@ -31,9 +31,6 @@ struct PromValues {
 			V(temperature);
 			V(uptime);
 			#undef V
-			s+="xhaut_humidity "+String(humidity)+String("\n");
-			s+="xhaut_temperature "+String(temperature)+String("\n");
-			s+="xhaut_uptime "+String(uptime)+String("\n");
 			return s;
         }
 } promValues;
