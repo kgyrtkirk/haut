@@ -20,9 +20,10 @@ const char*devicePrefix = "unknown";
 void setup1();
 
 struct PromValues {
-        float     humidity=3;
-        float temperature=33;
+        float   humidity=3;
+		float	temperature=33;
 		unsigned long uptime=0;
+		unsigned long commDelay=0;
 
         String getValues() {
 		    String s;
@@ -30,6 +31,7 @@ struct PromValues {
 			V(humidity);
 			V(temperature);
 			V(uptime);
+			V(commDelay);
 			#undef V
 			return s;
         }
@@ -228,13 +230,6 @@ bool isHumidityHigh(){
 }
 
 void loop() {
-//	if(WiFiMulti.run() == WL_CONNECTED) {
-//		  if (!client.connected()) {
-//		    reconnectTry();
-//		  } else {
-//
-//		  }
-//	}
 	if (!client.connected()) {
 		reconnect();
 	}
@@ -243,7 +238,8 @@ void loop() {
 
 	long now = millis();
 	bool secPassed = now - lastMsg > 1000;
-	if (secPassed) {
+	uint64_t t0=micros64();
+	if (secPassed && client.connected()) {
 		lastMsg = now;
 		++value;
 		int hum = 0;
@@ -293,6 +289,8 @@ void loop() {
 			client.publish("sonoff/run", "600");
 		}
 	}
+	promValues.commDelay+=micros64() - t0;
+
 	delay(10);
 	{
 
