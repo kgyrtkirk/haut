@@ -3,6 +3,11 @@
 
 uint64_t shutter_ids[]={ SHUTTER_IDS };
 
+#define	TX_SIGNAL_H			703,	10074
+#define	TX_SIGNAL_I			4781,	1522
+#define	TX_SIGNAL_0			345,	739
+#define	TX_SIGNAL_1			704,	378
+
 void RF433Ctl::cmd(uint8_t id,int8_t direction){
 	if (id >= sizeof(shutter_ids) / sizeof(long)) {
 		return;
@@ -19,17 +24,17 @@ void RF433Ctl::cmd(uint8_t id,int8_t direction){
 	}
 	//Serial.print("dir:");
 //	Serial.println(direction);
+
+	for(int i=0;i<18;i++) {
+		transmit_signal(TX_SIGNAL_0);
+		transmit_signal(TX_SIGNAL_1);
+	}
 	transmitX(msg);
 	transmitX(msg);
 	transmitX(msg);
 	transmitX(msg);
 	transmitX(msg);
 }
-
-#define	TX_SIGNAL_H			703,	10074
-#define	TX_SIGNAL_I			4781,	1522
-#define	TX_SIGNAL_0			345,	739
-#define	TX_SIGNAL_1			704,	378
 
 void RF433Ctl::transmitX(uint64_t msg) {
 	transmit_signal(TX_SIGNAL_H);
@@ -48,6 +53,8 @@ void RF433Ctl::transmitX(uint64_t msg) {
 		m >>= 1;
 	}
 	transmit_signal(TX_SIGNAL_H);
+	transmit_signal(TX_SIGNAL_I);
+//	transmit_signal(TX_SIGNAL_H);
 //	Serial.println("x");
 }
 
