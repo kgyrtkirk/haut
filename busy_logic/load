@@ -1,0 +1,2 @@
+python3 -m platformio remote run -t upload
+
