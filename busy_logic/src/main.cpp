@@ -50,10 +50,62 @@ public:
 
 };
 
+
+class XEvaluable {
+public:
+virtual uint8_t evaluate(XEvaluable &e...)=0;
+};
+
+class Input : XEvaluable {
+  uint8_t pin;
+public:
+  Input(uint8_t _pin) : pin(_pin) {}
+  void  init(){
+    pinMode(pin,INPUT);
+  }
+
+  uint8_t evaluate() {
+    return digitalRead(pin);
+  }
+};
+
+class Output : XEvaluable {
+  uint8_t pin;
+public:
+  Output(uint8_t _pin) : pin(_pin) {}
+  void  init(){
+    pinMode(pin,OUTPUT);
+  }
+
+  uint8_t evaluate() {
+    uint8_t  val=1;
+    digitalWrite(pin, val);
+    return digitalRead(val);
+  }
+}
+;
+
+
+
+
 Gate g0(2,3,4, Gate::Mode::AND );
 Gate g1(5,6,7, Gate::Mode::XOR );
 Gate g2(8,9,10, Gate::Mode::XOR );
 Gate g3(16,14,15, Gate::Mode::XOR );
+
+int I1=2;
+int I2=3;
+int I3=5;
+int I4=6;
+int I5=8;
+int I6=9;
+int I7=16;
+int I8=14;
+
+int O1=4;
+int O2=7;
+int O3=10;
+int O4=15;
 
 void setup()
 {
@@ -62,6 +114,8 @@ void setup()
 
   // initialize LED digital pin as an output.
   pinMode(LED_BUILTIN, OUTPUT);
+  
+
 
   g0.init();
   g1.init();
@@ -85,10 +139,33 @@ void sb(int t){
 }
 
 void loop() {
-  g0.update();
-  g1.update();
-  g2.update();
-  g3.update();
-  sb(100);
+//  g0.update();
+//  g1.update();
+//  g2.update();
+//  g3.update();
+
+  int i1=digitalRead(I1);
+  int i2=digitalRead(I2);
+  int i3=digitalRead(I3);
+  int i4=digitalRead(I4);
+  int i5=digitalRead(I5);
+  int i6=digitalRead(I6);
+  int i7=digitalRead(I7);
+  int i8=digitalRead(I8);
+
+  int o1=i1 && i8;
+  int o2=i4 && i6;
+  int o3=i2 ^ i5;
+  int o4=i3 ^ i7;
+  // int o1=i1^i4^i6^i7^i8;
+  // int o2=i1^i3^i5^i7;
+  // int o3=i2^i4^i6^i7^i8;
+  // int o4=i1^i2^i3^i4^i5^i6^i7^i8;
+
+  digitalWrite(O1,o1);
+  digitalWrite(O2,o2);
+  digitalWrite(O3,o3);
+  digitalWrite(O4,o4);
+  sb(10);
 }
 

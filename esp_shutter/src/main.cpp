@@ -112,6 +112,7 @@ void processCommands(){
 		}
 	}
 }
+
 void loop() {
 	kmqtt.loop();
 
