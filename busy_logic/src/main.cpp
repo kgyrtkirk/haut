@@ -153,10 +153,10 @@ void loop() {
   int i7=digitalRead(I7);
   int i8=digitalRead(I8);
 
-  int o1=i1 && i8;
-  int o2=i4 && i6;
-  int o3=i2 ^ i5;
-  int o4=i3 ^ i7;
+  int o1=i1 ^ i4;
+  int o2=i2 &&  i6 && i7;
+  int o3=i3 ^ i5;
+  int o4=!i8;
   // int o1=i1^i4^i6^i7^i8;
   // int o2=i1^i3^i5^i7;
   // int o3=i2^i4^i6^i7^i8;
