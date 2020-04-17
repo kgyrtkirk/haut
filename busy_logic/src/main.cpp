@@ -138,6 +138,17 @@ void sb(int t){
   delay(t);
 }
 
+struct bField {
+  uint32_t  b1:1;
+  uint32_t  b2:1;
+  uint32_t  b3:1;
+  uint32_t  b4:1;
+  uint32_t  b5:1;
+  uint32_t  b6:1;
+  uint32_t  b7:1;
+  uint32_t  b8:1;
+};
+
 void loop() {
 //  g0.update();
 //  g1.update();
@@ -153,10 +164,10 @@ void loop() {
   int i7=digitalRead(I7);
   int i8=digitalRead(I8);
 
-  int o1=!i1 ^ i7;
-  int o2=i1 ^ i5 ^ i8;
-  int o3=i3 && !i5 && i6;
-  int o4=i2 && i4 ;
+  int o1=i1 ^ !i8;
+  int o2=i1 ^ i2 ^ i5 ^ i8;
+  int o3=i2 && !i3 && i7;
+  int o4=i4 ^ i3 ^ i7;
   // int o1=i1^i4^i6^i7^i8;
   // int o2=i1^i3^i5^i7;
   // int o3=i2^i4^i6^i7^i8;
@@ -169,3 +180,8 @@ void loop() {
   sb(10);
 }
 
+
+bField riddle(bField i) {
+  bField r;
+  return r;
+}
