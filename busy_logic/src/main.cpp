@@ -95,8 +95,8 @@ Gate g3(16,14,15, Gate::Mode::XOR );
 
 int I1=2;
 int I2=3;
-int I3=5;
-int I4=6;
+int I3=6;
+int I4=5;
 int I5=8;
 int I6=9;
 int I7=16;
@@ -164,10 +164,10 @@ void loop() {
   int i7=digitalRead(I7);
   int i8=digitalRead(I8);
 
-  int o1=i1 ^ !i8;
-  int o2=i1 ^ i2 ^ i5 ^ i8;
-  int o3=i2 && !i3 && i7;
-  int o4=i4 ^ i3 ^ i7;
+  int o1=i3 ^ !i4;
+  int o2=i3 ^ i1 ^ i8;
+  int o3=i2 && i6 && i7;
+  int o4=i1 ^ i7 ^ !i8;
   // int o1=i1^i4^i6^i7^i8;
   // int o2=i1^i3^i5^i7;
   // int o3=i2^i4^i6^i7^i8;
