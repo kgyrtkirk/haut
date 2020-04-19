@@ -13,7 +13,21 @@ struct bField {
 
 
 
-bField riddle(bField i) {
+bField bb_puzzle(bField i) {
   bField r;
+#define i1 i.b1
+#define i2 i.b2
+#define i3 i.b3
+#define i4 i.b4
+#define i5 i.b5
+#define i6 i.b6
+#define i7 i.b7
+#define i8 i.b8
+
+  r.b1=i3 ^ !i4;
+  r.b2=i3 ^ i1 ^ i8;
+  r.b3=i2 && i6 && i7;
+  r.b4=i1 ^ i7 ^ !i8;
+
   return r;
 }

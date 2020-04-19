@@ -155,27 +155,11 @@ void loop() {
   i.b7=digitalRead(I7);
   i.b8=digitalRead(I8);
 
-  int i2=digitalRead(I2);
-  int i3=digitalRead(I3);
-  int i4=digitalRead(I4);
-  int i5=digitalRead(I5);
-  int i6=digitalRead(I6);
-  int i7=digitalRead(I7);
-  int i8=digitalRead(I8);
+  bField o=bb_puzzle(i);
 
-
-  int o1=i3 ^ !i4;
-  int o2=i3 ^ i1 ^ i8;
-  int o3=i2 && i6 && i7;
-  int o4=i1 ^ i7 ^ !i8;
-  // int o1=i1^i4^i6^i7^i8;
-  // int o2=i1^i3^i5^i7;
-  // int o3=i2^i4^i6^i7^i8;
-  // int o4=i1^i2^i3^i4^i5^i6^i7^i8;
-
-  digitalWrite(O1,o1);
-  digitalWrite(O2,o2);
-  digitalWrite(O3,o3);
-  digitalWrite(O4,o4);
+  digitalWrite(O1,o.b1);
+  digitalWrite(O2,o.b2);
+  digitalWrite(O3,o.b3);
+  digitalWrite(O4,o.b4);
   sb(10);
 }
