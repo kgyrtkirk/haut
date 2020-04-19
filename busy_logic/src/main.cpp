@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include "bb_puzzle.h"
 
 // Set LED_BUILTIN if it is not defined by Arduino framework
 #define LED_BUILTIN 17
@@ -138,24 +139,22 @@ void sb(int t){
   delay(t);
 }
 
-struct bField {
-  uint32_t  b1:1;
-  uint32_t  b2:1;
-  uint32_t  b3:1;
-  uint32_t  b4:1;
-  uint32_t  b5:1;
-  uint32_t  b6:1;
-  uint32_t  b7:1;
-  uint32_t  b8:1;
-};
-
 void loop() {
 //  g0.update();
 //  g1.update();
 //  g2.update();
 //  g3.update();
 
-  int i1=digitalRead(I1);
+  bField i;
+  i.b1=digitalRead(I1);
+  i.b2=digitalRead(I2);
+  i.b3=digitalRead(I3);
+  i.b4=digitalRead(I4);
+  i.b5=digitalRead(I5);
+  i.b6=digitalRead(I6);
+  i.b7=digitalRead(I7);
+  i.b8=digitalRead(I8);
+
   int i2=digitalRead(I2);
   int i3=digitalRead(I3);
   int i4=digitalRead(I4);
@@ -163,6 +162,7 @@ void loop() {
   int i6=digitalRead(I6);
   int i7=digitalRead(I7);
   int i8=digitalRead(I8);
+
 
   int o1=i3 ^ !i4;
   int o2=i3 ^ i1 ^ i8;
@@ -178,10 +178,4 @@ void loop() {
   digitalWrite(O3,o3);
   digitalWrite(O4,o4);
   sb(10);
-}
-
-
-bField riddle(bField i) {
-  bField r;
-  return r;
 }

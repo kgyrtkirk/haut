@@ -1,5 +1,6 @@
 #include <unity.h>
 #include <stdio.h>
+#include <bb_puzzle.h>
 
 void riddletest_begin() {
 
@@ -10,6 +11,7 @@ void riddletest_putchar(char c) {
 }
 
 void riddletest_flush() {
+  TEST_ASSERT_TRUE(false);
   fflush(stdout);
 }
 
