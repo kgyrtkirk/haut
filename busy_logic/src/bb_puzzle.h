@@ -24,10 +24,10 @@ bField bb_puzzle(bField i) {
 #define i7 i.b7
 #define i8 i.b8
 
-  r.b1=i2 ^ !i4 ^ i6 ^ i7;
-  r.b2=i4 ^ i1 ^ i8;
-  r.b3=i1 && !i2 && i8;
-  r.b4=i4 ^ i5 ^ !i3;
+  r.b1=i1&&i3 && i5 && i7;
+  r.b2=i2 ^ i4;
+  r.b3=i4 ^ i6;
+  r.b4=i6 ^ i8;
 
   return r;
 }
