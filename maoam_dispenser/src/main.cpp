@@ -1,28 +1,5 @@
-/*
- * cheapStepper_move.ino
- * ///////////////////////////////////////////
- * using CheapStepper Arduino library v.0.2.0
- * created by Tyler Henry, 7/2016
- * ///////////////////////////////////////////
- * 
- * This sketch illustrates the library's
- * "blocking" move functions -
- * i.e. the move will "pause" the arduino sketch
- * -- for non-blocking moves, see cheapStepper_newMoveTo.ino example
- * 
- * This sketch also shows how to set the RPM
- * and shows a few different types of move functions
- * - by steps or by degrees.
- * 
- * Blocking moves are useful if you need a specific RPM
- * but don't need your arduino to perform other functions
- * while the stepper is moving.
- * 
- * //////////////////////////////////////////////////////
- */
 
-// first, include the library :)
-
+#include "k-espcore.h"
 #include <CheapStepper.h>
 
 // next, declare the stepper
@@ -30,12 +7,45 @@
 
 CheapStepper stepper (D5,D6,D7,D8); 
 
- // let's create a boolean variable to save the direction of our rotation
 
 boolean moveClockwise = true;
 
+KMqttClient     kmqtt;
+
+void move(int steps){ 
+  Serial.print(" move: ");
+  Serial.println(steps);
+  if(steps<0) {
+    stepper.moveDegrees (true, -steps);
+  }else{
+    stepper.moveDegrees (false, steps);
+  }
+  stepper.off();
+}
+
+void moveCall(char* topic, byte* payload, unsigned int length) {
+    if(length>=10) {
+        return;
+    }
+    char    tmp[10];
+    strncpy(tmp,(char*)payload,length);
+    tmp[length]=0;
+    move(atoi(tmp));
+}
+
+void dispenseCall(char* topic, byte* payload, unsigned int length) {
+  int n=4.5*360/12;
+  move(n);
+}
 
 void setup() {
+  Serial.begin(115200);
+  kmqtt.init("maoam");
+
+//  kmqtt.subscribe("shutterctl/dispense",&dispense);
+  kmqtt.subscribe("maoam/move",&moveCall);
+  kmqtt.subscribe("maoam/dispense",&dispenseCall);
+
 
   // let's set a custom speed of 20rpm (the default is ~16.25rpm)
   
@@ -57,6 +67,7 @@ void setup() {
   Serial.print(" microseconds between steps");
   Serial.println();
   
+  stepper.off();
   // stepper.setTotalSteps(4076);
   /* you can uncomment the above line if you think your motor
    * is geared 63.68395:1 (measured) rather than 64:1 (advertised)
@@ -66,60 +77,6 @@ void setup() {
 }
 
 void loop() {
-
-    // let's do a clockwise move first
-  
-    moveClockwise = true;
-
-    // let's move the stepper clockwise to position 2048
-    // which is 180 degrees, a half-turn (if using default of 4096 total steps)
-    
-    stepper.moveTo (moveClockwise, 2048);
-
-    // now let's print the stepper position to the console
-    
-    Serial.print("step position: ");  
-    Serial.print(stepper.getStep()); // get the current step position
-    Serial.print(" / 4096");
-    Serial.println();
-
-    // now let's wait one second
-    
-    delay(1000); // wait a sec
-
-    // and now let's move another 90 degrees (a quarter-turn) clockwise
-
-    stepper.moveDegrees (moveClockwise, 90);
-    // stepper.moveDegreesCW (90); <--- another way to do a clockwise 90 degree turn
-
-    // let's print the stepper position to the console again
-    
-    Serial.print("step position: ");
-    Serial.print(stepper.getStep());
-    Serial.print(" / 4096");
-    Serial.println();
-
-    // and wait another second
-    
-    delay(1000);
-
-    // ok, now let's reverse directions (to counter-clockwise)
-    
-    moveClockwise = false;
-
-    // and move back to the start position (0 degree)
-   
-    stepper.moveToDegree (moveClockwise, 0);
-    // moveClockwise is now false, so move counter-clockwise back to start
-
-    // let's print the position to the console once again
-    
-    Serial.print("step position: ");
-    Serial.print(stepper.getStep());
-    Serial.print(" / 4096");
-    Serial.println();
-
-    // and wait another second before starting loop() over
-    
-    delay(1000);  
+    kmqtt.loop();
+    delay(50);  
 }
