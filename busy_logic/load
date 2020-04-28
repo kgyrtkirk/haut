@@ -2,5 +2,6 @@
 
 set -e
 python3 -m platformio test -e native 
+#python3 -m platformio run -t upload -e sparkfun_promicro16
 python3 -m platformio remote run -t upload -e sparkfun_promicro16
 
