@@ -23,28 +23,61 @@ void move(int steps){
   stepper.off();
 }
 
-void moveCall(char* topic, byte* payload, unsigned int length) {
+int parseInt(byte* payload, unsigned int length) {
     if(length>=10) {
-        return;
+        return 0;
     }
     char    tmp[10];
     strncpy(tmp,(char*)payload,length);
     tmp[length]=0;
-    move(atoi(tmp));
+    return atoi(tmp);
+}
+
+void moveCall(char* topic, byte* payload, unsigned int length) {
+    move(parseInt(payload,length));
 }
 
 void dispenseCall(char* topic, byte* payload, unsigned int length) {
   int n=4.5*360/12;
   move(n);
 }
+void dispenseCall2(char* topic, byte* payload, unsigned int length) {
+  int n=4.5*360/12;
+  move(-n);
+}
+
+int permits=0;
+int bbSolved=0;
+
+void permitsCall(char* topic, byte* payload, unsigned int length) {
+  permits=parseInt(payload,length);
+  bbSolved=0;
+}
+
+void winCheck() {
+  if( bbSolved && permits>0) {
+    bbSolved=0;
+    kmqtt.publishMetric(std::string("@/permits"), --permits);
+    dispenseCall(0,0,0);
+  }
+}
+
+void bbCall(char* topic, byte* payload, unsigned int length) {
+  bbSolved= (parseInt(payload, length)==1111);
+}
+
 
 void setup() {
   Serial.begin(115200);
   kmqtt.init("maoam");
+  
 
 //  kmqtt.subscribe("shutterctl/dispense",&dispense);
   kmqtt.subscribe("maoam/move",&moveCall);
   kmqtt.subscribe("maoam/dispense",&dispenseCall);
+  kmqtt.subscribe("maoam/dispense2",&dispenseCall2);
+  kmqtt.subscribe("maoam/permits",&permitsCall);
+  kmqtt.subscribe("busy_board/state",&bbCall);
 
 
   // let's set a custom speed of 20rpm (the default is ~16.25rpm)
@@ -79,4 +112,5 @@ void setup() {
 void loop() {
     kmqtt.loop();
     delay(50);  
+    winCheck();
 }

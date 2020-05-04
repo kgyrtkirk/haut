@@ -141,7 +141,7 @@ void	KMqttClient::publishMetric(std::string topic,long value) {
 		// FIXME: why don't we have std::to_string(value) ?
 		char s[128];
 		sprintf(s,"%ld",value);
-		client.publish(newTopic.c_str(), s);
+		client.publish(newTopic.c_str(), s,true);
 	}
 }
 void xbl() ;
@@ -166,6 +166,7 @@ void setup_wifi() {
 	}
 
 	randomSeed(micros());
+
 
 	Serial.println("");
 	Serial.println("WiFi connected");

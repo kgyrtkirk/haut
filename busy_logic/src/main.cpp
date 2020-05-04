@@ -108,6 +108,16 @@ int O2=7;
 int O3=10;
 int O4=15;
 
+
+// MISO
+// MOSI
+// SCK
+// SS
+// MSC_RESET
+// 5v
+// gnd
+
+
 void setup()
 {
   Serial.begin(115200);
@@ -139,6 +149,8 @@ void sb(int t){
   delay(t);
 }
 
+long tNextReport=0;
+
 void loop() {
 //  g0.update();
 //  g1.update();
@@ -162,4 +174,20 @@ void loop() {
   digitalWrite(O3,o.b3);
   digitalWrite(O4,o.b4);
   sb(10);
+
+
+  long now=millis();
+  if(now > tNextReport) {
+    tNextReport=now+1000;
+
+    Serial.print("state=");
+    Serial.print(o.b1);
+    Serial.print(o.b2);
+    Serial.print(o.b3);
+    Serial.print(o.b4);
+    Serial.print(".");
+    Serial.println();
+  }
+
+
 }
