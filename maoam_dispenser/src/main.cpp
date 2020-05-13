@@ -48,14 +48,16 @@ void dispenseCall2(char* topic, byte* payload, unsigned int length) {
 
 int permits=0;
 int bbSolved=0;
+int rfidCard=0;
 
 void permitsCall(char* topic, byte* payload, unsigned int length) {
   permits=parseInt(payload,length);
   bbSolved=0;
+  rfidCard=0;
 }
 
 void winCheck() {
-  if( bbSolved && permits>0) {
+  if( rfidCard && bbSolved && permits>0) {
     bbSolved=0;
     kmqtt.publishMetric(std::string("@/permits"), --permits);
     dispenseCall(0,0,0);
@@ -64,6 +66,10 @@ void winCheck() {
 
 void bbCall(char* topic, byte* payload, unsigned int length) {
   bbSolved= (parseInt(payload, length)==1111);
+}
+
+void rfidCall(char* topic, byte* payload, unsigned int length) {
+  rfidCard= (parseInt(payload, length)>0);
 }
 
 
@@ -78,6 +84,7 @@ void setup() {
   kmqtt.subscribe("maoam/dispense2",&dispenseCall2);
   kmqtt.subscribe("maoam/permits",&permitsCall);
   kmqtt.subscribe("busy_board/state",&bbCall);
+  kmqtt.subscribe("rfid/card",&rfidCall);
 
 
   // let's set a custom speed of 20rpm (the default is ~16.25rpm)

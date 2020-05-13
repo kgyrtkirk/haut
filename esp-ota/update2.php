@@ -67,7 +67,7 @@ $db = array (
         "DC:4F:22:37:7B:9F" => "sonoff_basic",      # sonoff.basic #1
         "BC:DD:C2:0E:04:C1" => "sonoff_basic",      # sonoff.basic #2
         "84:0D:8E:A5:7F:AA" => "maoam_dispenser",   # maoam
-    	"2C:F4:32:17:3C:0D" => "esp_shutterctl",         # nodemcu (amica)
+    	"2C:F4:32:17:3C:0D" => "esp-rfidread",         # nodemcu (amica)
 );
 
 if(!isset($db[$_SERVER['HTTP_X_ESP8266_STA_MAC']])) {
