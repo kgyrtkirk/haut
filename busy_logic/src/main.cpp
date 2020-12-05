@@ -149,7 +149,75 @@ void sb(int t){
   delay(t);
 }
 
+enum State {
+  INITIAL,
+  INTRO,
+  GAME,
+//  WON,
+};
+
+
 long tNextReport=0;
+State state=INITIAL;
+bField introState;
+
+bField intro(bField i) {
+  if(introState!=i) {
+    state=GAME;
+  }
+  long t=millis()/1000;
+
+  bField o;
+  o.b1= (t>>0)&1;
+  o.b2= (t>>1)&1;
+  o.b3= (t>>2)&1;
+  o.b4= (t>>3)&1;
+  long now=millis();
+  if(now > tNextReport) {
+    tNextReport=now+1000;
+
+    Serial.print("intro=");
+    Serial.print(o.b1);
+    Serial.print(o.b2);
+    Serial.print(o.b3);
+    Serial.print(o.b4);
+    Serial.print(".");
+    Serial.println();
+  }
+  return o;
+}
+
+bField game(bField i) {
+  bField o=bb_puzzle(i);
+  long now=millis();
+  if(now > tNextReport) {
+    tNextReport=now+1000;
+
+    Serial.print("state=");
+    Serial.print(o.b1);
+    Serial.print(o.b2);
+    Serial.print(o.b3);
+    Serial.print(o.b4);
+    Serial.print(".");
+    Serial.println();
+  }
+  return o;
+}
+
+
+
+bField processInputs(bField&i) {
+  switch(state) {
+    case INITIAL:
+      introState=i;
+      state=INTRO;
+    case INTRO:
+      return intro(i);
+    case GAME:
+      return game(i);
+  }
+  state=INTRO;
+}
 
 void loop() {
 //  g0.update();
@@ -167,27 +235,11 @@ void loop() {
   i.b7=digitalRead(I7);
   i.b8=digitalRead(I8);
 
-  bField o=bb_puzzle(i);
+  bField o=processInputs(i);
 
   digitalWrite(O1,o.b1);
   digitalWrite(O2,o.b2);
   digitalWrite(O3,o.b3);
   digitalWrite(O4,o.b4);
   sb(10);
-
-
-  long now=millis();
-  if(now > tNextReport) {
-    tNextReport=now+1000;
-
-    Serial.print("state=");
-    Serial.print(o.b1);
-    Serial.print(o.b2);
-    Serial.print(o.b3);
-    Serial.print(o.b4);
-    Serial.print(".");
-    Serial.println();
-  }
-
-
 }
