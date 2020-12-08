@@ -94,8 +94,8 @@ Gate g1(5,6,7, Gate::Mode::XOR );
 Gate g2(8,9,10, Gate::Mode::XOR );
 Gate g3(16,14,15, Gate::Mode::XOR );
 
-int I1=2;
-int I2=3;
+int I1=18;
+int I2=19;
 int I3=6;
 int I4=5;
 int I5=8;
