@@ -45,12 +45,28 @@ KMqttClient     kmqtt;
 
 void setup() { 
   Serial.begin(115200);
-  Wire.begin(D2,D1);
-  Wire.setClock(10000);
+  Wire.begin(D1,D2);
+//  Wire.setClock(10000);
   
-  SPI.begin(); // Init SPI bus
+
+while(true)  {
+  Wire.beginTransmission(0x3b);
+  Wire.write('@');
+  for(int i=0;i<256;i++) 
+  Wire.write(0x33);
+
+  int err=Wire.endTransmission();
+
+  Serial.print(F("sent!:"));
+  Serial.println(err);
+    delay(1000);  
+  
+}
+
+    SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
 
+  kmqtt.init("rfid");
  
   for (byte i = 0; i < 6; i++) {
     key.keyByte[i] = 0xFF;
@@ -63,20 +79,6 @@ void setup() {
   Serial.println(F("pr!:"));
 
 
-while(true)  {
-  Wire.beginTransmission(0x08);
-  Wire.write('@');
-  for(int i=0;i<256;i++) 
-  Wire.write(0x33);
-
-  int err=Wire.endTransmission();
-
-  Serial.print(F("sent!:"));
-  Serial.println(err);
-    delay(1000);  
-  
-}
-  kmqtt.init("rfid");
 
 }
 

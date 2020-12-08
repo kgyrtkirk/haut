@@ -149,7 +149,7 @@ void setup()
   Serial.println("startup...");
 #endif
 
-  Wire.begin(0x08);
+  Wire.begin(0x3b);
   Wire.onReceive(processI2C);
 
   // initialize LED digital pin as an output.
@@ -320,7 +320,7 @@ void processByte(char c) {
 }
 
 void processI2C(int n) {
-  while(Wire.available()) {
+  while(Wire.available()>0) {
     processByte(Wire.read());
   }
 }
