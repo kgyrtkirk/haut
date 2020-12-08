@@ -127,7 +127,6 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   
 
-
   g0.init();
   g1.init();
   g2.init();
@@ -168,10 +167,10 @@ bField intro(bField i) {
   long t=millis()/1000;
 
   bField o;
-  o.b1= (t>>0)&1;
-  o.b2= (t>>1)&1;
-  o.b3= (t>>2)&1;
-  o.b4= (t>>3)&1;
+  o.b4= (t>>0)&1;
+  o.b3= (t>>1)&1;
+  o.b2= (t>>2)&1;
+  o.b1= (t>>3)&1;
   long now=millis();
   if(now > tNextReport) {
     tNextReport=now+1000;
@@ -187,13 +186,39 @@ bField intro(bField i) {
   return o;
 }
 
+#define NSTATE 256
+byte oState[NSTATE];
+
+bField lookupState(bField i) {
+  int idx=i.toInt();
+  int st=oState[idx];
+  bField o;
+  o.b4= (st>>0)&1;
+  o.b3= (st>>1)&1;
+  o.b2= (st>>2)&1;
+  o.b1= (st>>3)&1;
+  return o;
+}
+
 bField game(bField i) {
-  bField o=bb_puzzle(i);
+  static bField lastI;
+//  bField o=bb_puzzle(i);
+  bField o=lookupState(i);
   long now=millis();
-  if(now > tNextReport) {
+  if(now > tNextReport || lastI != i) {
+    lastI=i;
     tNextReport=now+1000;
 
     Serial.print("state=");
+    Serial.print(i.b1);
+    Serial.print(i.b2);
+    Serial.print(i.b3);
+    Serial.print(i.b4);
+    Serial.print(i.b5);
+    Serial.print(i.b6);
+    Serial.print(i.b7);
+    Serial.print(i.b8);
+    Serial.print(",");
     Serial.print(o.b1);
     Serial.print(o.b2);
     Serial.print(o.b3);
@@ -219,11 +244,50 @@ bField processInputs(bField&i) {
   state=INTRO;
 }
 
+
+int xval(char c) {
+  if('0'<=c && c<='9')
+      return c-'0';
+  if('a'<=c && c<='f')
+    return c-'a'+10;
+  return -1;
+}
+
+
+void processSerial() {
+  static int readState = -1;
+  while (Serial.available() > 0) {
+    char c = Serial.read();
+    if(c=='@') {
+      readState=0;
+      continue;
+    }
+    if(readState<0) {
+      continue;
+    }
+    int val=xval(c);
+    if(val < 0) {
+      readState=-1;
+      continue;
+    }
+
+    if(readState<NSTATE) {
+      oState[readState]=val;
+      readState++;
+    }
+    if(readState>=NSTATE) {
+      Serial.println("programmed!");
+      readState=-1;
+    }
+  }
+}
+
 void loop() {
 //  g0.update();
 //  g1.update();
 //  g2.update();
 //  g3.update();
+  processSerial();
 
   bField i;
   i.b1=digitalRead(I1);
