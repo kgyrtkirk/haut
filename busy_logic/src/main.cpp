@@ -1,5 +1,11 @@
 #include "Arduino.h"
 #include "bb_puzzle.h"
+#include <Wire.h>
+
+#define S
+#ifndef S
+#pragma GCC poison Serial
+#endif
 
 // Set LED_BUILTIN if it is not defined by Arduino framework
 #define LED_BUILTIN 17
@@ -129,10 +135,22 @@ int bitCount(int u) {
 
 }
 
+
+
+
+
+void processI2C(int n);
+
+
 void setup()
 {
+#ifdef S
   Serial.begin(115200);
   Serial.println("startup...");
+#endif
+
+  Wire.begin(0x08);
+  Wire.onReceive(processI2C);
 
   // initialize LED digital pin as an output.
   pinMode(LED_BUILTIN, OUTPUT);
@@ -190,6 +208,7 @@ bField intro(bField i) {
   if(now > tNextReport) {
     tNextReport=now+1000;
 
+#ifdef S
     Serial.print("intro=");
     Serial.print(o.b1);
     Serial.print(o.b2);
@@ -197,6 +216,7 @@ bField intro(bField i) {
     Serial.print(o.b4);
     Serial.print(".");
     Serial.println();
+#endif
   }
   return o;
 }
@@ -212,6 +232,8 @@ bField lookupState(bField i) {
   return o;
 }
 
+ int processed=0;
+
 bField game(bField i) {
   static bField lastI;
 //  bField o=bb_puzzle(i);
@@ -221,6 +243,7 @@ bField game(bField i) {
     lastI=i;
     tNextReport=now+1000;
 
+#ifdef S
     Serial.print("state=");
     Serial.print(i.b1);
     Serial.print(i.b2);
@@ -236,7 +259,9 @@ bField game(bField i) {
     Serial.print(o.b3);
     Serial.print(o.b4);
     Serial.print(".");
+      Serial.print(processed);
     Serial.println();
+#endif
   }
   return o;
 }
@@ -266,40 +291,56 @@ int xval(char c) {
 }
 
 
-void processSerial() {
+void processByte(char c) {
+  processed++;
   static int readState = -1;
-  while (Serial.available() > 0) {
-    char c = Serial.read();
-    if(c=='@') {
-      readState=0;
-      continue;
-    }
-    if(readState<0) {
-      continue;
-    }
-    int val=xval(c);
-    if(val < 0) {
-      readState=-1;
-      continue;
-    }
+  if(c=='@') {
+    readState=0;
+    return;
+  }
+  if(readState<0) {
+    return;
+  }
+  int val=xval(c);
+  if(val < 0) {
+    readState=-1;
+    return;
+  }
 
-    if(readState<NSTATE) {
-      oState[readState]=val;
-      readState++;
-    }
-    if(readState>=NSTATE) {
+  if(readState<NSTATE) {
+    oState[readState]=val;
+    readState++;
+  }
+  if(readState>=NSTATE) {
+    #ifdef S
       Serial.println("programmed!");
-      readState=-1;
-    }
+    #endif
+    readState=-1;
   }
 }
 
+void processI2C(int n) {
+  while(Wire.available()) {
+    processByte(Wire.read());
+  }
+}
+
+#ifdef S
+void processSerial() {
+  while (Serial.available() > 0) {
+    processByte(Serial.read());
+  }
+}
+#endif
 void loop() {
 //  g0.update();
 //  g1.update();
 //  g2.update();
 //  g3.update();
+#ifdef S
   processSerial();
+#endif
+  processI2C(1);
 
   bField i;
   i.b1=digitalRead(I1);
@@ -318,4 +359,5 @@ void loop() {
   digitalWrite(O3,o.b3);
   digitalWrite(O4,o.b4);
   sb(10);
+
 }
