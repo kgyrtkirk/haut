@@ -117,6 +117,17 @@ int O4=15;
 // 5v
 // gnd
 
+#define NSTATE 256
+byte oState[NSTATE];
+
+
+int bitCount(int u) {
+     unsigned int uCount;
+
+     uCount = u - ((u >> 1) & 033333333333) - ((u >> 2) & 011111111111);
+     return ((uCount + (uCount >> 3)) & 030707070707) % 63;
+
+}
 
 void setup()
 {
@@ -131,6 +142,10 @@ void setup()
   g1.init();
   g2.init();
   g3.init();
+
+  for(int i=0;i<NSTATE;i++ ) {
+    oState[i]=(bitCount(i)%2)?0xf:0;
+  }
 }
 
 void sb(int t){
@@ -185,9 +200,6 @@ bField intro(bField i) {
   }
   return o;
 }
-
-#define NSTATE 256
-byte oState[NSTATE];
 
 bField lookupState(bField i) {
   int idx=i.toInt();
