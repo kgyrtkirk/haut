@@ -50,16 +50,17 @@ void setup() {
   
 
 while(true)  {
-  Wire.beginTransmission(0x3b);
-  Wire.write('@');
-  for(int i=0;i<256;i++) 
-  Wire.write(0x33);
+  for(int k=0;k<60;k++) {
+    Wire.beginTransmission(0x3b);
+    for(int i=0;i<k;i++) 
+    Wire.write(0x33);
 
-  int err=Wire.endTransmission();
+    int err=Wire.endTransmission();
 
-  Serial.print(F("sent!:"));
-  Serial.println(err);
-    delay(1000);  
+    Serial.print(F("sent!:"));
+    Serial.println(err);
+      delay(1000);  
+  }
   
 }
 
