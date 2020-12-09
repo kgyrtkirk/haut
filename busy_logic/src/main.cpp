@@ -233,6 +233,8 @@ bField lookupState(bField i) {
 }
 
  int processed=0;
+   static int readState = -1;
+
 
 bField game(bField i) {
   static bField lastI;
@@ -260,6 +262,9 @@ bField game(bField i) {
     Serial.print(o.b4);
     Serial.print(".");
       Serial.print(processed);
+    Serial.print(";");
+      Serial.print(readState);
+      
     Serial.println();
 #endif
   }
@@ -292,10 +297,13 @@ int xval(char c) {
 
 
 void processByte(char c) {
+
   processed++;
-  static int readState = -1;
-  if(c=='@') {
+  if(c=='!') {
     readState=0;
+    return;
+  }
+  if(c=='@') {
     return;
   }
   if(readState<0) {
