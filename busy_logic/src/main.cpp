@@ -340,10 +340,6 @@ void processSerial() {
 }
 #endif
 void loop() {
-//  g0.update();
-//  g1.update();
-//  g2.update();
-//  g3.update();
 #ifdef S
   processSerial();
 #endif
@@ -367,7 +363,7 @@ void loop() {
   digitalWrite(O4,o.b4);
   sb(1);
 
-  static int k=0;
+  static unsigned int k=0;
   k++;
 
   int bc=o.b1+o.b2+o.b3+o.b4;
