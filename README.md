@@ -83,3 +83,26 @@ system_phy_set_max_tpw(40);
 ### pending improvements
 * add metric to show total publish time
 * move critical section from main
+
+#### busy board next
+
+* add analog display
+* add more leds to busy_logic if possible
+* add sound16 with a switch 
+  * move hdr and pwr to back?
+  * cover?
+* add rfid reader to board plane
+  * move hdr to back
+* create esp8266 center board
+  * rfid connector on back
+  * angled 5v i2c connetor(s) ?
+* small i2c screen?
+* 2 row lcd screen?
+* potmeter?
+* hall sensor(s)
+  * 1 unit = 1 hall sensor + led to show state
+  * check sense distance - across board
+* possibly need hdr to program pro mini
+
+
+

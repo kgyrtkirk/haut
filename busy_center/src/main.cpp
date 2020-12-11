@@ -30,7 +30,7 @@
 #include <Wire.h>
  
 constexpr uint8_t RST_PIN = D0;     // Configurable, see typical pin layout above
-constexpr uint8_t SS_PIN = D3;     // Configurable, see typical pin layout above
+constexpr uint8_t SS_PIN = D8;// D3;     // Configurable, see typical pin layout above
  
 MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
  

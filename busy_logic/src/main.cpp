@@ -2,15 +2,13 @@
 #include "bb_puzzle.h"
 #include <Wire.h>
 
-#define S
+//#define S
 #ifndef S
 #pragma GCC poison Serial
 #endif
 
 // Set LED_BUILTIN if it is not defined by Arduino framework
 #define LED_BUILTIN 17
-
-
 
 class Gate {
 public:
@@ -144,6 +142,7 @@ void processI2C(int n);
 
 void setup()
 {
+    pinMode(A2,OUTPUT);
 #ifdef S
   Serial.begin(115200);
   Serial.println("startup...");
@@ -366,6 +365,23 @@ void loop() {
   digitalWrite(O2,o.b2);
   digitalWrite(O3,o.b3);
   digitalWrite(O4,o.b4);
-  sb(10);
+  sb(1);
 
+  static int k=0;
+  k++;
+
+  int bc=o.b1+o.b2+o.b3+o.b4;
+  long t=millis()/1000;
+
+  bool desired=((k%4)<bc);
+  // if((t%37)==0)
+  //   desired=1;
+  // if((t%41)==0)
+  //   desired=0;
+
+  if(desired) 
+    digitalWrite(A2,1);
+  else 
+   digitalWrite(A2,0);
+  
 }
