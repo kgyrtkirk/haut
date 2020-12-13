@@ -1,5 +1,6 @@
 #define MAIN
 #ifdef MAIN
+
 /*
  * ----------------------------------------------------------------------
  * Example program showing how to read new NUID from a PICC to serial.
@@ -63,14 +64,36 @@ void sendConf(byte *st) {
     }
     int err=Wire.endTransmission();
 
-    Serial.print(F("sent!:"));
-    Serial.println(err);
-    if(err>0)
+    if(err>0) {
+      Serial.print(F("i2c send error:"));
+      Serial.println(err);
       Wire.begin(D1,D2);
+      break;
+    }
   }
-  delay(1000);  
 }  
 
+
+void updateBusyLogic() {
+  byte  s[256];
+  for(int i=0;i<256;i++) {
+    s[i]=(~i)&0xf;
+//    s[i]=i&0xf;
+  }
+  sendConf(s);
+
+  if(Wire.requestFrom(0x3b,1) == 1) {
+    int solved=Wire.read();
+    if(solved) {
+      // FIXME: backward compat
+      kmqtt.publishMetric(std::string("busy_board/state"),1111);
+    } else {
+      kmqtt.publishMetric(std::string("busy_board/state"),1234);
+    }
+  } else {
+    Serial.println("error reading bb state!");
+  }
+}
 
 void setup() { 
   Serial.begin(115200);
@@ -95,13 +118,6 @@ void setup() {
 
   Serial.println(F("pr!:"));
 
-
-  byte  s[256];
-  for(int i=0;i<256;i++) {
-    s[i]=(~i)&0xf;
-    s[i]=i;
-  }
-  sendConf(s);
 }
 
 void readCard() {
@@ -148,7 +164,6 @@ void readCard() {
   }
   else Serial.println(F("Card read previously."));
  
-  
   // Halt PICC
   rfid.PICC_HaltA();
  
@@ -161,10 +176,12 @@ void readCard() {
 
   
  void loop() {
-    kmqtt.loop();
-    delay(50);  
+  Serial.print("loop:");
+  Serial.println(millis());
+  kmqtt.loop();
+  delay(50);  
   readCard();
-   
+  updateBusyLogic();
  }
 
  

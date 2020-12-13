@@ -137,8 +137,9 @@ int bitCount(int u) {
 
 
 
+// FIXME rename
 void processI2C(int n);
-
+void i2c_request();
 
 void setup()
 {
@@ -150,6 +151,7 @@ void setup()
 
   Wire.begin(0x3b);
   Wire.onReceive(processI2C);
+  Wire.onRequest(i2c_request);
 
   // initialize LED digital pin as an output.
   pinMode(LED_BUILTIN, OUTPUT);
@@ -220,6 +222,8 @@ bField intro(bField i) {
   return o;
 }
 
+bool solved=false;
+
 bField lookupState(bField i) {
   int idx=i.toInt();
   int st=oState[idx];
@@ -243,6 +247,11 @@ bField game(bField i) {
   if(now > tNextReport || lastI != i) {
     lastI=i;
     tNextReport=now+1000;
+
+    if(o.b1 && o.b2 && o.b3 && o.b4) {
+      solved=true;
+    }
+
 
 #ifdef S
     Serial.print("state=");
@@ -298,6 +307,11 @@ int xval(char c) {
 void processByte(char c) {
 
   processed++;
+  if(readState==-1 && c=='R') {
+    solved=false;
+    state=INITIAL;
+    return;
+  }
   if(c=='!') {
     readState=0;
     return;
@@ -332,6 +346,16 @@ void processI2C(int n) {
   }
 }
 
+void i2c_request() {
+  if(solved)
+    Wire.write('S');
+  else
+    Wire.write('.');
+}
+
+
+
+
 #ifdef S
 void processSerial() {
   while (Serial.available() > 0) {
@@ -343,7 +367,7 @@ void loop() {
 #ifdef S
   processSerial();
 #endif
-  processI2C(1);
+//  processI2C(1);
 
   bField i;
   i.b1=digitalRead(I1);
