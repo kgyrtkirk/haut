@@ -24,6 +24,7 @@ long random(long howbig)
 
 #define DEBUG printf
 #else
+#include <Arduino.h>
 #define DEBUG
 #endif
 
@@ -32,7 +33,7 @@ public:
     Gate() {};
     virtual ~Gate() {};
     virtual bool evaluate(int input) {}
-    virtual void print(ostream&os) const  { os << "?GATE?";}
+    virtual void print() { DEBUG("?GATE?"); }
 };
 
 class InputGate  : public Gate {
@@ -40,6 +41,7 @@ class InputGate  : public Gate {
 public:
     InputGate(const int&_idx) : idx(_idx) {}
     bool evaluate(int input) { return (input&(1<<idx)) != 0; }
+    virtual void print() { DEBUG("I%d",idx); }
 };
 
 class NotGate  : public Gate {
@@ -47,6 +49,7 @@ class NotGate  : public Gate {
 public:
     NotGate(const Gate _g) : g(_g) {}
     bool evaluate(int input) { return !g.evaluate(input); }
+    virtual void print() { DEBUG("!"); g.print(); }
 };
 
 class AndGate : public Gate {
@@ -61,6 +64,14 @@ public:
         }
         return true;
     }
+    virtual void print() {
+        DEBUG("AND ( ");
+        for(auto it=inputs.begin();it!=inputs.end();it++) {
+            it->print();
+            DEBUG(" ");
+        }
+            DEBUG(")");
+    }
 };
 class OrGate : public Gate{
     list<Gate> inputs;
@@ -74,6 +85,7 @@ public:
         }
         return false;
     }
+    virtual void print() { DEBUG("OR"); }
 };
 class XorGate : public Gate{
     list<Gate> inputs;
@@ -86,6 +98,7 @@ public:
         }
         return val;
     }
+    virtual void print() { DEBUG("XOR"); }
 };
 
 Gate buildIGate() {
@@ -104,16 +117,16 @@ Gate buildXGate() {
     return XorGate(li);
 }
 
-Gate buildAGate() {
+Gate* buildAGate() {
     list<Gate> li;
     for(int i=random(3);i>=0;i--) {
         li.push_back(buildXGate());
     }
   //  AndGate ret=AndGate(li);
 //    cout << ret;
-    return AndGate(li);
+    return new AndGate(li);
 }
-
+/*
 ostream& operator<<(ostream& os, const Gate& g) {
     g.print(os);
     return os;
@@ -122,15 +135,15 @@ ostream& operator<<(ostream& os, const AndGate& g) {
     g.print(os);
     return os;
 }
-
+*/
 Puzzle genPuzzle(const PuzzleSpec&spec) {
     Puzzle p;
     randomSeed(100);
     for(int i=0;i<10;i++) {
-        Gate g=buildAGate();
+        Gate *g=buildAGate();
 
         int r=random(100);
-        cout << g;
+        g->print();
         DEBUG("%d ", r);
 
         

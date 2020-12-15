@@ -30,6 +30,7 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Wire.h>
+#include "bb_puzzle_gen.h"
  
 constexpr uint8_t RST_PIN = D0;     // Configurable, see typical pin layout above
 constexpr uint8_t SS_PIN = D8;// D3;     // Configurable, see typical pin layout above
