@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <list>
+#include <vector>
 
 using namespace std;
 
@@ -43,15 +44,15 @@ class CGate {
 public:
     CGate(int inputIdx) : type(INPUT), idx(inputIdx) {
     }
-    CGate(GateType _type, list<CGate> operands) : type(_type), operands(_operands) {
+    CGate(GateType _type, list<CGate> _operands) : type(_type), operands(_operands) {
     }
-    virtual bool evaluate(int input) {
+    bool evaluate(int input) {
         bool val=false;
         switch (type) {
         case INPUT:
             return (input&(1<<idx)) != 0;;
         case NOT:
-            return ;
+            return !operands.begin()->evaluate(input);
         case AND:
             for(auto it=operands.begin();it!=operands.end();it++) {
                 if(!(*it).evaluate(input)) {
@@ -71,13 +72,26 @@ public:
                 val^=(*it).evaluate(input);
             }
             return val;
-        }
 
         default:
             break;
         }
     }
-
+    void  print() {
+        switch(type) {
+            case AND: DEBUG("AND"); break;
+            case OR: DEBUG("OR"); break;
+            case XOR: DEBUG("XOR"); break;
+            case NOT: DEBUG("NOT"); break;
+            case INPUT: DEBUG("I%d",idx); return;
+        }
+        DEBUG("(");
+        for(auto it=operands.begin();it!=operands.end();it++) {
+            it->print();
+            printf(" ");
+        }
+        DEBUG(")");
+    }
 
 
 };
@@ -122,7 +136,6 @@ public:
         DEBUG("AND ( ");
         for(auto it=inputs.begin();it!=inputs.end();it++) {
             it->print();
-            DEBUG(" ");
         }
             DEBUG(")");
     }
@@ -155,30 +168,32 @@ public:
     virtual void print() { DEBUG("XOR"); }
 };
 
-Gate buildIGate() {
-    Gate g=InputGate(random(PUZZLE_N));
+CGate buildIGate() {
+    CGate g=CGate(random(PUZZLE_N));
     if(random(2)) {
-        g=NotGate(g);
+        list<CGate> li;
+        li.push_back(g);
+        g=CGate(NOT, li);
     }
     return g;
 }
 
-Gate buildXGate() {
-    list<Gate> li;
+CGate buildXGate() {
+    list<CGate> li;
     for(int i=random(3);i>=0;i--) {
         li.push_back(buildIGate());
     }
-    return XorGate(li);
+    return CGate(XOR, li);
 }
 
-Gate* buildAGate() {
-    list<Gate> li;
+CGate buildAGate() {
+    list<CGate> li;
     for(int i=random(3);i>=0;i--) {
         li.push_back(buildXGate());
     }
   //  AndGate ret=AndGate(li);
 //    cout << ret;
-    return new AndGate(li);
+    return CGate(AND,li);
 }
 /*
 ostream& operator<<(ostream& os, const Gate& g) {
@@ -193,15 +208,29 @@ ostream& operator<<(ostream& os, const AndGate& g) {
 Puzzle genPuzzle(const PuzzleSpec&spec) {
     Puzzle p;
     randomSeed(100);
+    vector<CGate> candidates;
     for(int i=0;i<10;i++) {
-        Gate *g=buildAGate();
-
-        int r=random(100);
-        g->print();
-        DEBUG("%d ", r);
-
-        
+        CGate g=buildAGate();
+        candidates.push_back(g);
+        // int r=random(100);
+        g.print();
+        // for(int j=0;j<256;j++) {
+        //     DEBUG("%08x  => %d\n", j,         g.evaluate(j));
+        // }
     }
+    for(int j=0;j<PUZZLE_N_STATES;j++) {
+        vector<int> t;
+        for(int i=0;i<10;i++) {
+            if(candidates[i].evaluate(j)) {
+                t.push_back(i);
+            }
+            if(t.size() >= PUZZLE_OUTS) {
+                DEBUG("FOPUND!");
+            }
+        }
+    }
+
+
     DEBUG("\n");
 //    Serial.println();
 }
