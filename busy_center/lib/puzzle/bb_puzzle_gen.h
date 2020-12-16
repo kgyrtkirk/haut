@@ -6,6 +6,7 @@
 #define PUZZLE_N_STATES (1<<PUZZLE_N)
 
 struct Puzzle {
+    bool    valid;
     uint8_t state[PUZZLE_N_STATES];
 };
 

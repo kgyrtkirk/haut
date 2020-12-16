@@ -205,34 +205,60 @@ ostream& operator<<(ostream& os, const AndGate& g) {
     return os;
 }
 */
+
+#define GEN_K (PUZZLE_OUTS+1)
+
+Puzzle fillPuzzle(    vector<CGate> candidates ) {
+    Puzzle p;
+    for(int j=0;j<PUZZLE_N_STATES;j++) {
+        int s=0;
+        for(int i=0;i<candidates.size();i++) {
+            if(candidates[i].evaluate(j)) {
+                s|=1<<i;
+            }
+        }
+        p.state[j]=s;
+    }
+    p.valid=true;
+    return p;
+}
+
 Puzzle genPuzzle(const PuzzleSpec&spec) {
     Puzzle p;
-    randomSeed(100);
+    randomSeed(spec.seed);
     vector<CGate> candidates;
-    for(int i=0;i<10;i++) {
+    for(int i=0;i<GEN_K;i++) {
         CGate g=buildAGate();
         candidates.push_back(g);
         // int r=random(100);
         g.print();
+        DEBUG("\n");
         // for(int j=0;j<256;j++) {
         //     DEBUG("%08x  => %d\n", j,         g.evaluate(j));
         // }
     }
     for(int j=0;j<PUZZLE_N_STATES;j++) {
         vector<int> t;
-        for(int i=0;i<10;i++) {
+        for(int i=0;i<GEN_K;i++) {
             if(candidates[i].evaluate(j)) {
                 t.push_back(i);
             }
             if(t.size() >= PUZZLE_OUTS) {
-                DEBUG("FOPUND!");
+                DEBUG("FOUND!\n");
+                // populate puzzle
+                for(int k=0;k<PUZZLE_OUTS;k++) {
+                    candidates[k]=t[k];
+                }
+                while(candidates.size()>PUZZLE_OUTS)
+                    candidates.pop_back();
+                // return p;
+                // candidates.resize(PUZZLE_OUTS);
+                return fillPuzzle(candidates);
             }
         }
     }
-
-
-    DEBUG("\n");
-//    Serial.println();
+    p.valid=false;
+    return p;
 }
 
 
