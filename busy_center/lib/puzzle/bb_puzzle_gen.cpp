@@ -28,6 +28,60 @@ long random(long howbig)
 #define DEBUG
 #endif
 
+enum GateType {
+    INPUT,
+    AND,
+    OR,
+    XOR,
+    NOT,
+};
+
+class CGate {
+    GateType type;
+    int idx;
+    list<CGate> operands;
+public:
+    CGate(int inputIdx) : type(INPUT), idx(inputIdx) {
+    }
+    CGate(GateType _type, list<CGate> operands) : type(_type), operands(_operands) {
+    }
+    virtual bool evaluate(int input) {
+        bool val=false;
+        switch (type) {
+        case INPUT:
+            return (input&(1<<idx)) != 0;;
+        case NOT:
+            return ;
+        case AND:
+            for(auto it=operands.begin();it!=operands.end();it++) {
+                if(!(*it).evaluate(input)) {
+                    return false;
+                }
+            }
+            return true;
+        case OR:
+            for(auto it=operands.begin();it!=operands.end();it++) {
+                if((*it).evaluate(input)) {
+                    return true;
+                }
+            }
+        return false;
+        case XOR:
+            for(auto it=operands.begin();it!=operands.end();it++) {
+                val^=(*it).evaluate(input);
+            }
+            return val;
+        }
+
+        default:
+            break;
+        }
+    }
+
+
+
+};
+
 class Gate {
 public:
     Gate() {};
