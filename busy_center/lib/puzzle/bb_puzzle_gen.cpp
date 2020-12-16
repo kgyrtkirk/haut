@@ -26,15 +26,15 @@ long random(long howbig)
 #define DEBUG printf
 #else
 #include <Arduino.h>
-#define DEBUG
+#define DEBUG printf
 #endif
 
 enum GateType {
-    INPUT,
-    AND,
-    OR,
-    XOR,
-    NOT,
+    GATE_INPUT,
+    GATE_AND,
+    GATE_OR,
+    GATE_XOR,
+    GATE_NOT,
 };
 
 class CGate {
@@ -42,32 +42,32 @@ class CGate {
     int idx;
     list<CGate> operands;
 public:
-    CGate(int inputIdx) : type(INPUT), idx(inputIdx) {
+    CGate(int inputIdx) : type(GATE_INPUT), idx(inputIdx) {
     }
     CGate(GateType _type, list<CGate> _operands) : type(_type), operands(_operands) {
     }
     bool evaluate(int input) {
         bool val=false;
         switch (type) {
-        case INPUT:
+        case GATE_INPUT:
             return (input&(1<<idx)) != 0;;
-        case NOT:
+        case GATE_NOT:
             return !operands.begin()->evaluate(input);
-        case AND:
+        case GATE_AND:
             for(auto it=operands.begin();it!=operands.end();it++) {
                 if(!(*it).evaluate(input)) {
                     return false;
                 }
             }
             return true;
-        case OR:
+        case GATE_OR:
             for(auto it=operands.begin();it!=operands.end();it++) {
                 if((*it).evaluate(input)) {
                     return true;
                 }
             }
         return false;
-        case XOR:
+        case GATE_XOR:
             for(auto it=operands.begin();it!=operands.end();it++) {
                 val^=(*it).evaluate(input);
             }
@@ -79,11 +79,11 @@ public:
     }
     void  print() {
         switch(type) {
-            case AND: DEBUG("AND"); break;
-            case OR: DEBUG("OR"); break;
-            case XOR: DEBUG("XOR"); break;
-            case NOT: DEBUG("NOT"); break;
-            case INPUT: DEBUG("I%d",idx); return;
+            case GATE_AND: DEBUG("AND"); break;
+            case GATE_OR: DEBUG("OR"); break;
+            case GATE_XOR: DEBUG("XOR"); break;
+            case GATE_NOT: DEBUG("NOT"); break;
+            case GATE_INPUT: DEBUG("I%d",idx); return;
         }
         DEBUG("(");
         for(auto it=operands.begin();it!=operands.end();it++) {
@@ -173,7 +173,7 @@ CGate buildIGate() {
     if(random(2)) {
         list<CGate> li;
         li.push_back(g);
-        g=CGate(NOT, li);
+        g=CGate(GATE_NOT, li);
     }
     return g;
 }
@@ -183,17 +183,17 @@ CGate buildXGate() {
     for(int i=random(3);i>=0;i--) {
         li.push_back(buildIGate());
     }
-    return CGate(XOR, li);
+    return CGate(GATE_XOR, li);
 }
 
 CGate buildAGate() {
     list<CGate> li;
-    for(int i=random(3);i>=0;i--) {
+    for(int i=random(3)+1;i>=0;i--) {
         li.push_back(buildXGate());
     }
   //  AndGate ret=AndGate(li);
 //    cout << ret;
-    return CGate(AND,li);
+    return CGate(GATE_AND,li);
 }
 /*
 ostream& operator<<(ostream& os, const Gate& g) {
@@ -210,6 +210,11 @@ ostream& operator<<(ostream& os, const AndGate& g) {
 
 Puzzle fillPuzzle(    vector<CGate> candidates ) {
     Puzzle p;
+for(int i=0;i<candidates.size();i++) {
+            candidates[i].print();
+        DEBUG("\r\n");
+}
+
     for(int j=0;j<PUZZLE_N_STATES;j++) {
         int s=0;
         for(int i=0;i<candidates.size();i++) {
@@ -218,6 +223,9 @@ Puzzle fillPuzzle(    vector<CGate> candidates ) {
             }
         }
         p.state[j]=s;
+        if(s==(1<<PUZZLE_OUTS) - 1) {
+            DEBUG("solution: %04x\n",j);
+        }
     }
     p.valid=true;
     return p;
@@ -232,7 +240,7 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
         candidates.push_back(g);
         // int r=random(100);
         g.print();
-        DEBUG("\n");
+        DEBUG("\r\n");
         // for(int j=0;j<256;j++) {
         //     DEBUG("%08x  => %d\n", j,         g.evaluate(j));
         // }
@@ -244,16 +252,15 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
                 t.push_back(i);
             }
             if(t.size() >= PUZZLE_OUTS) {
-                DEBUG("FOUND!\n");
+                DEBUG("FOUND!\r\n");
                 // populate puzzle
+                vector<CGate> pfn;
                 for(int k=0;k<PUZZLE_OUTS;k++) {
-                    candidates[k]=t[k];
+                    pfn.push_back(candidates[t[k]]);
                 }
-                while(candidates.size()>PUZZLE_OUTS)
-                    candidates.pop_back();
                 // return p;
                 // candidates.resize(PUZZLE_OUTS);
-                return fillPuzzle(candidates);
+                return fillPuzzle(pfn);
             }
         }
     }

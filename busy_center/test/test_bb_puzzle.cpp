@@ -9,6 +9,7 @@ void riddletest_begin() {
 
 void bb_puzzle_satifiable() {
   PuzzleSpec spec;
+  spec.seed=100;
   //Serial.begin();
   Puzzle p=  genPuzzle(spec);
   printf("asd\n");

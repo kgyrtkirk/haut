@@ -75,27 +75,29 @@ void sendConf(byte *st) {
   }
 }
 
-void q() {
-  randomSeed(100);
-  for(int i=0;i<10;i++) {
-    int r=random(100);
-    Serial.print(r);
-    Serial.print(" ");
-  }
-  Serial.println();
+Puzzle p;
+
+void q(int seed) {
+  int n=10;
+  do { 
+    PuzzleSpec spec;
+    spec.seed=seed+n;
+    p=genPuzzle(spec);
+  } while(!p.valid && n-->0);
+
 }
 
 void updateBusyLogic() {
-  byte  s[256];
-  for(int i=0;i<256;i++) {
-    s[i]=(~i)&0xf;
-//    s[i]=i&0xf;
-  }
-  sendConf(s);
+//   byte  s[256];
+//   for(int i=0;i<256;i++) {
+//     s[i]=(~i)&0xf;
+// //    s[i]=i&0xf;
+//   }
+  sendConf(p.state);
 
   if(Wire.requestFrom(0x3b,1) == 1) {
     int solved=Wire.read();
-    if(solved) {
+    if(solved=='S') {
       // FIXME: backward compat
       kmqtt.publishMetric(std::string("busy_board/state"),1111);
     } else {
@@ -117,11 +119,7 @@ void setup() {
     SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
 
-   q();
-   q();
-   q();
-   q();
-   q();
+   q(100);
 
   kmqtt.init("rfid");
  
@@ -193,7 +191,6 @@ void readCard() {
 
   
  void loop() {
-   q();
   Serial.print("loop:");
   Serial.println(millis());
   kmqtt.loop();
