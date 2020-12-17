@@ -3,6 +3,7 @@
 
 #define PUZZLE_N        8
 #define PUZZLE_OUTS     4
+#define PUZZLE_MAX_TO_GENERATE 30
 #define PUZZLE_N_STATES (1<<PUZZLE_N)
 
 struct Puzzle {

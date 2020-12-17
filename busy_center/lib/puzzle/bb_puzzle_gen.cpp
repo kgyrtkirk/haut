@@ -264,7 +264,7 @@ Puzzle genOnePuzzle(const PuzzleSpec&spec) {
 Puzzle genPuzzle(const PuzzleSpec&spec) {
     Puzzle p;
     randomSeed(spec.seed);
-    for(int t=0;t<30;t++) {
+    for(int t=0;t<PUZZLE_MAX_TO_GENERATE;t++) {
         p = genOnePuzzle(spec);
         if(p.valid) {
             return p;
