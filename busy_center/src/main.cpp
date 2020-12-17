@@ -26,7 +26,7 @@
  * GND         GND          GND
  */
  
- #include "k-espcore.h"
+#include "k-espcore.h"
 
 #include <SPI.h>
 #include <MFRC522.h>
@@ -56,6 +56,13 @@ char hexChar(int i) {
 
 KMqttClient     kmqtt;
 
+int resetBoardWinState() {
+  Wire.beginTransmission(0x3b);
+  Wire.write('R');
+  int err=Wire.endTransmission();
+  return err;
+}
+
 void sendConf(byte *st) {
 
   int page=16;
@@ -78,22 +85,7 @@ void sendConf(byte *st) {
 
 Puzzle p;
 
-void q(int seed) {
-  int n=10;
-  do { 
-    PuzzleSpec spec;
-    spec.seed=seed+n;
-    p=genPuzzle(spec);
-  } while(!p.valid && n-->0);
-
-}
-
 void updateBusyLogic() {
-//   byte  s[256];
-//   for(int i=0;i<256;i++) {
-//     s[i]=(~i)&0xf;
-// //    s[i]=i&0xf;
-//   }
   sendConf(p.state);
 
   if(Wire.requestFrom(0x3b,1) == 1) {
@@ -109,20 +101,35 @@ void updateBusyLogic() {
   }
 }
 
+void newPuzzle(int seed){
+  PuzzleSpec spec;
+  spec.seed=seed;
+  p=genPuzzle(spec);
+  resetBoardWinState();
+}
+
+void c0(char* topic, byte* payload, unsigned int length) {
+  if(length>=10) {
+    return;
+  }
+  char    tmp[10];
+  strncpy(tmp,(char*)payload,length);
+  tmp[length]=0;
+  int seed=atoi(tmp);
+
+  newPuzzle(seed);
+}
+
 void setup() { 
   Serial.begin(115200);
   Wire.begin(D1,D2);
 //  Wire.setClock(10000);
-  
 
-
-
-    SPI.begin(); // Init SPI bus
+  SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
 
-   q(100);
-
   kmqtt.init("rfid");
+  kmqtt.subscribe("busy_center/seed",&c0);
  
   for (byte i = 0; i < 6; i++) {
     key.keyByte[i] = 0xFF;
