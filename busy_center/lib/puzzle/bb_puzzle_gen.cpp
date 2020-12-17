@@ -231,9 +231,8 @@ for(int i=0;i<candidates.size();i++) {
     return p;
 }
 
-Puzzle genPuzzle(const PuzzleSpec&spec) {
+Puzzle genOnePuzzle(const PuzzleSpec&spec) {
     Puzzle p;
-    randomSeed(spec.seed);
     vector<CGate> candidates;
     for(int i=0;i<GEN_K;i++) {
         CGate g=buildAGate();
@@ -254,8 +253,6 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
                 for(int k=0;k<PUZZLE_OUTS;k++) {
                     pfn.push_back(candidates[t[k]]);
                 }
-                // return p;
-                // candidates.resize(PUZZLE_OUTS);
                 return fillPuzzle(pfn);
             }
         }
@@ -263,3 +260,16 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
     p.valid=false;
     return p;
 }
+
+Puzzle genPuzzle(const PuzzleSpec&spec) {
+    Puzzle p;
+    randomSeed(spec.seed);
+    for(int t=0;t<10;t++) {
+        p = genOnePuzzle(spec);
+        if(p.valid) {
+            return p;
+        }
+    }
+    return p;
+}
+
