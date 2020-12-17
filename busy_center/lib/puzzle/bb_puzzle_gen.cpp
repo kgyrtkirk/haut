@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#ifdef UNIT_TEST
+#ifndef ESP8266
 #include <iostream>
 void randomSeed(unsigned long seed)
 {
@@ -238,12 +238,8 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
     for(int i=0;i<GEN_K;i++) {
         CGate g=buildAGate();
         candidates.push_back(g);
-        // int r=random(100);
         g.print();
         DEBUG("\r\n");
-        // for(int j=0;j<256;j++) {
-        //     DEBUG("%08x  => %d\n", j,         g.evaluate(j));
-        // }
     }
     for(int j=0;j<PUZZLE_N_STATES;j++) {
         vector<int> t;
@@ -266,10 +262,4 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
     }
     p.valid=false;
     return p;
-}
-
-
-
-void asdasd(){
-    
 }

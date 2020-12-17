@@ -7,13 +7,21 @@ void riddletest_begin() {
 
 }
 
-void bb_puzzle_satifiable() {
+void bb_puzzle_check_one(int seed) {
   PuzzleSpec spec;
-  spec.seed=100;
-  //Serial.begin();
+  spec.seed=seed;
   Puzzle p=  genPuzzle(spec);
-  printf("asd\n");
-  TEST_FAIL_MESSAGE("not satisifable!");
+  TEST_ASSERT(p.valid);
+}
+
+void bb_puzzle_check_all() {
+  for(int i=0;i<1000;i++) {
+     bb_puzzle_check_one(i);
+  }
+}
+
+void bb_puzzle_check_one() {
+  bb_puzzle_check_one(0);
 }
 
 void riddletest_end() {
@@ -22,7 +30,8 @@ void riddletest_end() {
 
 void process() {
     UNITY_BEGIN();
-    RUN_TEST(bb_puzzle_satifiable);
+    RUN_TEST(bb_puzzle_check_one);
+    RUN_TEST(bb_puzzle_check_all);
     UNITY_END();
 }
 

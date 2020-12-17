@@ -1,5 +1,6 @@
+#ifdef ESP8266
 
-#define MAIN
+#define MAIN 
 #ifdef MAIN
 
 /*
@@ -653,3 +654,4 @@ void testanimate(const uint8_t *bitmap, uint8_t w, uint8_t h) {
 }
 
 #endif
+#endif 
