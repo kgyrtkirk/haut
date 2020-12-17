@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define SHOW_FUNCTIONS 0
+
 #ifndef ESP8266
 #include <iostream>
 void randomSeed(unsigned long seed)
@@ -23,10 +25,14 @@ long random(long howbig)
   return rand() % howbig;
 }
 
-#define DEBUG printf
+#define DEBUG(...)
+//#define DEBUG(...) printf(__VA_ARGS__)
+#define WDT_RESET()     
 #else
 #include <Arduino.h>
-#define DEBUG printf
+#define DEBUG(...)
+//#define DEBUG Serial.printf
+#define WDT_RESET()     ESP.wdtFeed();
 #endif
 
 enum GateType {
@@ -210,10 +216,11 @@ ostream& operator<<(ostream& os, const AndGate& g) {
 
 Puzzle fillPuzzle(    vector<CGate> candidates ) {
     Puzzle p;
-for(int i=0;i<candidates.size();i++) {
-            candidates[i].print();
+    if(SHOW_FUNCTIONS)
+    for(int i=0;i<candidates.size();i++) {
+        candidates[i].print();
         DEBUG("\r\n");
-}
+    }
 
     for(int j=0;j<PUZZLE_N_STATES;j++) {
         int s=0;
@@ -237,8 +244,10 @@ Puzzle genOnePuzzle(const PuzzleSpec&spec) {
     for(int i=0;i<GEN_K;i++) {
         CGate g=buildAGate();
         candidates.push_back(g);
-        g.print();
-        DEBUG("\r\n");
+        if(SHOW_FUNCTIONS) {
+            g.print();
+            DEBUG("\r\n");
+        }
     }
     for(int j=0;j<PUZZLE_N_STATES;j++) {
         vector<int> t;
@@ -265,6 +274,7 @@ Puzzle genPuzzle(const PuzzleSpec&spec) {
     Puzzle p;
     randomSeed(spec.seed);
     for(int t=0;t<PUZZLE_MAX_TO_GENERATE;t++) {
+        WDT_RESET();
         p = genOnePuzzle(spec);
         if(p.valid) {
             return p;
