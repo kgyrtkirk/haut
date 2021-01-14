@@ -7,17 +7,16 @@
 #include <Wire.h>
 
 #include "k-settings.h"
+#include "k-espcore.h"
 
-ESP8266WiFiMulti WiFiMulti;
-WiFiClient espClient;
-PubSubClient client(espClient);
+extern ESP8266WiFiMulti WiFiMulti;
+extern WiFiClient espClient;
+extern PubSubClient client;
 long lastMsg = 0;
 char msg[128];
 char channel[128];
 int value = 0;
-const char*devicePrefix = "unknown";
-
-void setup1();
+extern const char*devicePrefix ;
 
 struct PromValues {
         float   humidity=3;
@@ -40,14 +39,7 @@ struct PromValues {
 bool bathroom=false;
 #define MAC_BATHROOM	"60:01:94:10:16:AE"
 #define MAC_KITCHEN		"60:01:94:0F:CE:44"
-void setup_wifi() {
-	if (WiFi.macAddress() == MAC_BATHROOM) {
-		devicePrefix = "bathroom";
-		bathroom=true;
-	}
-	if (WiFi.macAddress() == MAC_KITCHEN) {
-		devicePrefix = "kitchen";
-	}
+void setup_wifi0() {
 
 	delay(10);
 	Serial.println();
@@ -69,6 +61,7 @@ void setup_wifi() {
 	Serial.println("WiFi connected");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
+	
 }
 
 uint64_t manualUntil = 0;
@@ -78,8 +71,8 @@ int		lampManualVal;
 int last_lamp_val = -1;
 
 void setLamp(int val, bool force) {
-	if (last_lamp_val == val && !force)
-		return;
+//	if (last_lamp_val == val && !force)
+//		return;
 	last_lamp_val = val;
 	Wire.beginTransmission(0x33);
 	Wire.write(val);
@@ -88,7 +81,7 @@ void setLamp(int val, bool force) {
 	Wire.endTransmission();
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
+void callback0(char* topic, byte* payload, unsigned int length) {
 	Serial.print("Message arrived [");
 	Serial.print(topic);
 	Serial.print("] ");
@@ -136,7 +129,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	}
 }
 
-void reconnectTry() {
+void reconnectTry0() {
 	// Loop until we're reconnected
 	Serial.print("Attempting MQTT connection...");
 // Create a random client ID
@@ -157,10 +150,10 @@ void reconnectTry() {
 	}
 }
 
-void reconnect() {
+void reconnect0() {
 	// Loop until we're reconnected
 	while (!client.connected()) {
-		reconnectTry();
+		reconnectTry0();
 	}
 }
 
@@ -189,31 +182,93 @@ DHT dht(DHTPIN, DHTTYPE);
 #include "DelayControlValue.h"
 DelayControlValue<uint8_t, 8> lampCtrl;
 
+KWebServer webServer;
+
+// FIXME: how to use ref to class method?
+String getMetricsValues1() {
+//	return "asd";
+	return promValues.getValues();
+}
+
+KMqttClient     kmqtt;
+
+int parseInt(byte* payload, unsigned int length) {
+	if(length>=10) {
+		return 128;
+	}
+	char    tmp[10];
+	strncpy(tmp,(char*)payload,length);
+	tmp[length]=0;
+
+	return atoi(tmp);
+}
+
+void lampCallback(char* topic, byte* payload, unsigned int length) {
+	manualUntil = millis() + MANUAL_TIME_S * 1000;
+	int val = parseInt(payload,length);
+	
+	char msg[128];
+	sprintf(msg, "analog: %d", val);
+	client.publish("outTopic", msg);
+
+	lampManualVal=val;
+	setLamp(val, true);
+}
+
+int maxLight=255;
+
+void maxLightCallback(char* topic, byte* payload, unsigned int length) { 
+	int val = parseInt(payload,length);
+	if(val>0 && val<=255)
+		maxLight=val;
+}
+
 void setup() {
+
+	const char*devicePrefix = "unknown";
+
+	if (WiFi.macAddress() == MAC_BATHROOM) {
+		devicePrefix = "bathroom";
+		bathroom=true;
+	}
+	if (WiFi.macAddress() == MAC_KITCHEN) {
+		devicePrefix = "kitchen";
+	}
+	if (WiFi.macAddress() == "60:01:94:0F:67:7F") {
+		devicePrefix = "g3";
+	}
+
+	Serial.begin(115200);
+
 	lampCtrl.command(0, 0, 0);
 	pinMode(A0, INPUT);
-
-	pinMode(16, INPUT);     // Initialize the BUILTIN_LED pin as an output
-
-	pinMode(BUILTIN_LED, OUTPUT); // Initialize the BUILTIN_LED pin as an output
-	Serial.begin(115200);
-	setup_wifi();
-	client.setServer(MQTT_SERVER, 1883);
-	client.setCallback(callback);
-	dht.begin();
-
-	pinMode(4, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
-
+	pinMode(16, INPUT);
+	pinMode(4, OUTPUT);
+	pinMode(HALL_PIN, INPUT);
+	pinMode(IR_RECV_PIN, INPUT);
+	pinMode(BUILTIN_LED, OUTPUT);
 	Wire.pins(12, 13);
 	Wire.begin();
 
-	pinMode(HALL_PIN, INPUT);
-	pinMode(IR_RECV_PIN, INPUT);
+	dht.begin();
 
-	setup1();
+	kmqtt.init(devicePrefix);
+	kmqtt.subscribe("lamp", lampCallback);
+
+	kmqtt.subscribe("maxLight", maxLightCallback);
+
+//	setup_wifi();
+	client.setServer(MQTT_SERVER, 1883);
+//	client.setCallback(callback);
+
+	webServer.init(getMetricsValues1);
+
+
+
+
 
 }
-
+//#define LIGHT_DEBUG
 #ifdef LIGHT_DEBUG
 #define	LAMP_ON_1_TIME_MS		3*1000
 #define	LAMP_ON_2_TIME_MS		6*1000
@@ -230,11 +285,7 @@ bool isHumidityHigh(){
 }
 
 void loop() {
-	if (!client.connected()) {
-		reconnect();
-	}
-
-	client.loop();
+	kmqtt.loop();
 
 	long now = millis();
 	bool secPassed = now - lastMsg > 1000;
@@ -261,7 +312,7 @@ void loop() {
 
 		int irv = 0;
 
-		sprintf(msg, "%ld", now);
+	/*	sprintf(msg, "%ld", now);
 		sprintf(channel, "%s/uptime", devicePrefix);
 		client.publish(channel, msg);
 
@@ -276,15 +327,15 @@ void loop() {
 		sprintf(msg, "%d", lum);
 		sprintf(channel, "%s/lum", devicePrefix);
 		client.publish(channel, msg);
-
-		sprintf(msg, "eadings #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d HH:%d",
+*/
+		sprintf(msg, "eadingsX #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d HH:%d",
 				value, temp, hum, lum, pir, irv, hall,isHumidityHigh());
 		Serial.print("Publish message: ");
 		Serial.println(msg);
 		client.publish("outTopic", msg);
-		sprintf(msg, "%d", pir);
-		sprintf(channel, "%s/pir", devicePrefix);
-		client.publish(channel, msg);
+//		sprintf(msg, "%d", pir);
+//		sprintf(channel, "%s/pir", devicePrefix);
+//		client.publish(channel, msg);
 		if (bathroom && isHumidityHigh()) {
 			client.publish("sonoff/run", "600");
 		}
@@ -300,8 +351,8 @@ void loop() {
 			bool force=secPassed;
 			if (pir || highHumidity) {
 				force |= lampCtrl.getActiveValue() != 255;
-				lampCtrl.command(3, now + LAMP_ON_1_TIME_MS, 255);
-				lampCtrl.command(2, now + LAMP_ON_2_TIME_MS, 192);
+				lampCtrl.command(3, now + LAMP_ON_1_TIME_MS, maxLight);
+				lampCtrl.command(2, now + LAMP_ON_2_TIME_MS, maxLight/4*3);
 				lampCtrl.command(1, now + LAMP_ON_3_TIME_MS, 1);
 			}
 			setLamp(lampCtrl.getActiveValue(), force);
@@ -312,78 +363,3 @@ void loop() {
 }
 
 
-
-
-
-
-#include <Arduino.h>
-#ifdef ESP32
-#include <WiFi.h>
-#include <AsyncTCP.h>
-#elif defined(ESP8266)
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
-#endif
-#include <ESPAsyncWebServer.h>
-
-AsyncWebServer server(80);
-
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
-
-const char* PARAM_MESSAGE = "message";
-
-void notFound(AsyncWebServerRequest *request) {
-    request->send(404, "text/plain", "Not found");
-}
-
-void setup1() {
-
-    // Serial.begin(115200);
-    // WiFi.mode(WIFI_STA);
-    // WiFi.begin(ssid, password);
-    // if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    //     Serial.printf("WiFi Failed!\n");
-    //     return;
-    // }
-
-    // Serial.print("IP Address: ");
-    // Serial.println(WiFi.localIP());
-
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/plain", "try /metrics");
-    });
-
-    server.on("/metrics", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send(200, "text/plain", promValues.getValues());
-    });
-
-    // Send a GET request to <IP>/get?message=<message>
-    server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
-        String message;
-        if (request->hasParam(PARAM_MESSAGE)) {
-            message = request->getParam(PARAM_MESSAGE)->value();
-        } else {
-            message = "No message sent";
-        }
-        request->send(200, "text/plain", "Hello, GET: " + message);
-    });
-
-    // Send a POST request to <IP>/post with a form field message set to <message>
-    server.on("/post", HTTP_POST, [](AsyncWebServerRequest *request){
-        String message;
-        if (request->hasParam(PARAM_MESSAGE, true)) {
-            message = request->getParam(PARAM_MESSAGE, true)->value();
-        } else {
-            message = "No message sent";
-        }
-        request->send(200, "text/plain", "Hello, POST: " + message);
-    });
-
-    server.onNotFound(notFound);
-
-    server.begin();
-}
-
-void loop1() {
-}

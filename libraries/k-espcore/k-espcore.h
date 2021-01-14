@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include <string>
 
 #define T_CALL std::function<void(char*, uint8_t*, unsigned int)>
+#define T_METRICS_VALUES std::function<String()>
 
 class KMqttClient{
 public:
@@ -12,6 +14,11 @@ public:
 	void	subscribe(const char*topic,T_CALL callback);
 	void	blink();
 	void	publishMetric(std::string topic,long value);
+};
+
+class KWebServer {
+public:
+	void init(T_METRICS_VALUES getMetricsValues);
 };
 
 

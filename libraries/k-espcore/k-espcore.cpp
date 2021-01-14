@@ -1,12 +1,4 @@
-/*
- * k-espcore.cpp
- *
- *  Created on: Jul 8, 2019
- *      Author: kirk
- */
-
 #include <Arduino.h>
-//#include <ESP8266WebServer.h>
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
@@ -109,21 +101,25 @@ void reconnectTry() {
 
 void reconnect() {
 	// Loop until we're reconnected
-	while (!client.connected()) {
+//	while (!client.connected()) {
 		reconnectTry();
-	}
+//	}
 }
 
 void setup_wifi();
 
 void KMqttClient::init(const char*_devicePrefix) {
 	setup_wifi();
+	
 	client.setServer(MQTT_SERVER, 1883);
 	client.setCallback(callback);
 	devicePrefix=_devicePrefix;
 }
 
 void KMqttClient::loop() {
+	if(WiFiMulti.run() != WL_CONNECTED) {
+		return;
+	}
 	if (!client.connected()) {
 		reconnect();
 	} else {
@@ -162,10 +158,10 @@ void setup_wifi() {
 	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 	xbl();
-	while (WiFiMulti.run() != WL_CONNECTED) {
-		xbl();
-		Serial.print(".");
-	}
+	// while (WiFiMulti.run() != WL_CONNECTED) {
+	// 	xbl();
+	// 	Serial.print(".");
+	// }
 
 	randomSeed(micros());
 
@@ -200,4 +196,64 @@ void xbl() {
 
 void KMqttClient::blink(){
 	xbl();
+}
+
+
+#include <Arduino.h>
+#ifdef ESP32
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#elif defined(ESP8266)
+#include <ESP8266WiFi.h>
+#include <ESPAsyncTCP.h>
+#endif
+#include <ESPAsyncWebServer.h>
+
+AsyncWebServer server(80);
+
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+
+const char* PARAM_MESSAGE = "message";
+
+void notFound(AsyncWebServerRequest *request) {
+    request->send(404, "text/plain", "Not found");
+}
+
+//promValues.getValues()
+void KWebServer::init(T_METRICS_VALUES getMetricsValues) {
+
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send(200, "text/plain", "try /metrics");
+    });
+
+    server.on("/metrics", HTTP_GET, [getMetricsValues](AsyncWebServerRequest *request){
+        request->send(200, "text/plain", getMetricsValues());
+    });
+
+    // Send a GET request to <IP>/get?message=<message>
+    server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
+        String message;
+        if (request->hasParam(PARAM_MESSAGE)) {
+            message = request->getParam(PARAM_MESSAGE)->value();
+        } else {
+            message = "No message sent";
+        }
+        request->send(200, "text/plain", "Hello, GET: " + message);
+    });
+
+    // Send a POST request to <IP>/post with a form field message set to <message>
+    server.on("/post", HTTP_POST, [](AsyncWebServerRequest *request){
+        String message;
+        if (request->hasParam(PARAM_MESSAGE, true)) {
+            message = request->getParam(PARAM_MESSAGE, true)->value();
+        } else {
+            message = "No message sent";
+        }
+        request->send(200, "text/plain", "Hello, POST: " + message);
+    });
+
+    server.onNotFound(notFound);
+
+    server.begin();
 }
