@@ -281,7 +281,7 @@ void setup() {
 
 bool isHumidityHigh(){
 	float hum = dht.readHumidity();
-	return (65.0f <= hum && hum <= 101.0f);
+	return (55.0f <= hum && hum <= 101.0f);
 }
 
 void loop() {
