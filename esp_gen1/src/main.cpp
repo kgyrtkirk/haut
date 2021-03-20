@@ -147,6 +147,10 @@ void maxLightCallback(char* topic, byte* payload, unsigned int length) {
 		maxLight=val;
 }
 
+bool hasStrip=false;
+#include <KStrip.h>
+KStrip kstrip;
+
 void setup() {
 
 	const char*devicePrefix = "unknown";
@@ -160,6 +164,10 @@ void setup() {
 	}
 	if (WiFi.macAddress() == "60:01:94:0F:67:7F") {
 		devicePrefix = "g3";
+	}
+	if (WiFi.macAddress() == "D8:F1:5B:02:5D:2B") {
+		devicePrefix = "wide-dev";
+		hasStrip = true;
 	}
 
 	Serial.begin(115200);
@@ -187,9 +195,9 @@ void setup() {
 
 	webServer.init(getMetricsValues1);
 
-
-
-
+	if(hasStrip) {
+		kstrip.init();
+	}
 
 }
 //#define LIGHT_DEBUG
@@ -254,6 +262,12 @@ void loop() {
 */
 		sprintf(msg, "eadingsX #%d temp:%d hum:%d lum:%d pir:%d irv:%08x h:%d HH:%d",
 				value, temp, hum, lum, pir, irv, hall,isHumidityHigh());
+
+		Serial.print(devicePrefix);
+		Serial.print(" @ ");
+		Serial.print(WiFi.macAddress());
+		Serial.print(":");
+
 		Serial.print("Publish message: ");
 		Serial.println(msg);
 		client.publish("outTopic", msg);
@@ -284,6 +298,10 @@ void loop() {
 			setLamp(lampManualVal, secPassed);
 		}
 	}
+	if(hasStrip) {
+		kstrip.update();
+	}
+
 }
 
 
