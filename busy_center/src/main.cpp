@@ -26,6 +26,7 @@
  * GND         GND          GND
  */
  
+#include "Arduino.h"
 #include "k-espcore.h"
 
 #include <SPI.h>
