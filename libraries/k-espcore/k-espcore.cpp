@@ -154,7 +154,7 @@ void setup_wifi() {
 	Serial.print("connecting to ");
 	Serial.println(WIFI_SSID);
 	wifi_set_phy_mode(PHY_MODE_11G);
-	system_phy_set_max_tpw(40);
+//	system_phy_set_max_tpw(40);
 	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 	xbl();

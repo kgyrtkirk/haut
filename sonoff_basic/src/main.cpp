@@ -63,7 +63,7 @@ uint64_t manualUntil = 0;
 #define	MANUAL_TIME_S	600
 
 void callback(char* topic, byte* payload, unsigned int length) {
-	Serial.print("Message arrived [");
+	Serial.print("Message arrived! [");
 	Serial.print(topic);
 	Serial.print("] ");
 	for (int i = 0; i < length; i++) {
@@ -146,7 +146,7 @@ void reconnect() {
 
 void setup() {
 	pinMode(LED_SONOFF, OUTPUT); // Initialize the BUILTIN_LED pin as an output
-	digitalWrite(LED_SONOFF, 1);
+	digitalWrite(LED_SONOFF, 0);
 	pinMode(RELAY, OUTPUT);
 	Serial.begin(115200);
 	setup_wifi();

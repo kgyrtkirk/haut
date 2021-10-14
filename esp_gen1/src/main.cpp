@@ -299,6 +299,7 @@ void loop() {
 		}
 	}
 	if(hasStrip) {
+		Serial.println("strip/update");
 		kstrip.update();
 	}
 
