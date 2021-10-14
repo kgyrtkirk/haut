@@ -133,10 +133,6 @@ int bitCount(int u) {
 
 }
 
-
-
-
-
 // FIXME rename
 void processI2C(int n);
 void i2c_request();
@@ -144,6 +140,7 @@ void i2c_request();
 void setup()
 {
     pinMode(A2,OUTPUT);
+  delay(1000);
 #ifdef S
   Serial.begin(115200);
   Serial.println("startup...");

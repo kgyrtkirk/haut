@@ -15,7 +15,7 @@ void bb_puzzle_check_one(int seed) {
 }
 
 void bb_puzzle_check_all() {
-  for(int i=0;i<1000;i++) {
+  for(int i=21000;i<22000;i++) {
      bb_puzzle_check_one(i);
   }
 }
