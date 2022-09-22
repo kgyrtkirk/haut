@@ -95,7 +95,7 @@ void updateBusyLogic() {
       // FIXME: backward compat
       kmqtt.publishMetric(std::string("busy_board/state"),1111);
     } else {
-      kmqtt.publishMetric(std::string("busy_board/state"),1234);
+      kmqtt.publishMetric(std::string("busy_board/state"),1202);
     }
   } else {
     Serial.println("error reading bb state!");

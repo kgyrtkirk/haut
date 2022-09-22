@@ -9,6 +9,10 @@
 
 #include "k-settings.h"
 
+// #define S
+#ifndef S
+#pragma GCC poison Serial
+#endif
 
 #define LED_SONOFF	13
 #define RELAY		12
@@ -22,28 +26,53 @@ long lastMsg = 0;
 char msg[128];
 int value = 0;
 
+void println() {
+	#ifdef S
+	Serial.println();
+	#endif
+}
+
+void print(const String&s) {
+	#ifdef S
+	Serial.print(s);
+	#endif
+}
+
+void println(const String&s) {
+	#ifdef S
+	Serial.println(s);
+	#endif
+}
+void println(const Printable&s) {
+	#ifdef S
+	Serial.println(s);
+	#endif
+}
+
+
 void setup_wifi() {
 
 	delay(10);
 	// We start by connecting to a WiFi network
-	Serial.println();
-	Serial.println("Welcome to the disclaimerZ9A! ");
-	Serial.print("Connecting to ");
-	Serial.println(WIFI_SSID);
+
+	println();
+	println("Welcome to the disclaimerZA! ");
+	print("Connecting to ");
+	println(WIFI_SSID);
 	WiFi.mode(WIFI_STA);
 	WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 
 	while (WiFiMulti.run() != WL_CONNECTED) {
 		delay(500);
-		Serial.print(".");
+		print(".");
 	}
 
 	randomSeed(micros());
 
-	Serial.println("");
-	Serial.println("WiFi connected");
-	Serial.println("IP address: ");
-	Serial.println(WiFi.localIP());
+	println("");
+	println("WiFi connected");
+	println("IP address: ");
+	println(WiFi.localIP());
 }
 
 #define PWM_CHANNELS 1
@@ -63,13 +92,13 @@ uint64_t manualUntil = 0;
 #define	MANUAL_TIME_S	600
 
 void callback(char* topic, byte* payload, unsigned int length) {
-	Serial.print("Message arrived! [");
-	Serial.print(topic);
-	Serial.print("] ");
+	print("Message arrived! [");
+	print(topic);
+	print("] ");
 	for (int i = 0; i < length; i++) {
-		Serial.print((char) payload[i]);
+		print(String((char) payload[i]));
 	}
-	Serial.println();
+	println();
 
 	if (!strcmp(topic, "sonoff/run")) {
 		manualUntil = millis() + 600 * 1000;
@@ -80,24 +109,26 @@ void callback(char* topic, byte* payload, unsigned int length) {
 		ESP.restart();
 	}
 	if ((char) payload[0] == 'U') {
-		Serial.println("attempting upgrade");
+		println("attempting upgrade");
 		t_httpUpdate_return ret = ESPhttpUpdate.update(
 				"http://192.168.128.70:8181/update2.php", "wow");
 		//t_httpUpdate_return  ret = ESPhttpUpdate.update("https://server/file.bin");
 
 		switch (ret) {
 		case HTTP_UPDATE_FAILED:
+		#ifdef S
 			Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n",
 					ESPhttpUpdate.getLastError(),
 					ESPhttpUpdate.getLastErrorString().c_str());
+					#endif
 			break;
 
 		case HTTP_UPDATE_NO_UPDATES:
-			Serial.println("HTTP_UPDATE_NO_UPDATES");
+			println("HTTP_UPDATE_NO_UPDATES");
 			break;
 
 		case HTTP_UPDATE_OK:
-			Serial.println("HTTP_UPDATE_OK");
+			println("HTTP_UPDATE_OK");
 			break;
 		}
 	}
@@ -119,20 +150,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnectTry() {
-	Serial.print("Attempting MQTT connection...");
+	print("Attempting MQTT connection...");
 	String clientId = "ESP8266Client-";
 	clientId += String(random(0xffff), HEX);
 	if (client.connect(clientId.c_str())) {
-		Serial.println("connected");
+		println("connected");
 		// Once connected, publish an announcement...
 		client.publish("sonoff", "XH3ll0 World");
 		// ... and resubscribe
 		client.subscribe("sonoff/command");
 		client.subscribe("sonoff/run");
 	} else {
-		Serial.print("failed, rc=");
-		Serial.print(client.state());
-		Serial.println("wait .5 seconds");
+		print("failed, rc=");
+		print(String(client.state()));
+		println("wait .5 seconds");
 		delay(500);
 	}
 }
@@ -148,7 +179,9 @@ void setup() {
 	pinMode(LED_SONOFF, OUTPUT); // Initialize the BUILTIN_LED pin as an output
 	digitalWrite(LED_SONOFF, 0);
 	pinMode(RELAY, OUTPUT);
+#ifdef S
 	Serial.begin(115200);
+#endif
 	setup_wifi();
 	client.setServer(MQTT_SERVER, 1883);
 	client.setCallback(callback);
